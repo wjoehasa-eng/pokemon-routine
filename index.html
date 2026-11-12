@@ -1746,6 +1746,17 @@
         </select>
       </div>
 
+            <div class="switch-row">
+        <div style="text-align: left;">
+          <div style="font-size: 13px; font-weight: 800; color: #2D3748;">🌱 함께한 날수(D-Day) 표시</div>
+          <div style="font-size: 11px; color: #718096;">상단에 '1일째' 표시를 켜거나 끕니다 (캐릭터별 카운트)</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="days-enable-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+
       <div class="switch-row">
         <div style="text-align: left;">
           <div style="font-size: 13px; font-weight: 800; color: #2D3748;">🎁 현실 선물 상자 기능</div>
@@ -2287,12 +2298,16 @@
           level: p.growthLevel || 0,
           exp: p.exp || 0,
           habitsDone: p.totalHabitsDone || 0,
+          firstDate: getTodayStr(),
           date: getTodayStr(),
           isChampion: (p.growthLevel >= 7)
         };
       } else {
         p.partnerHistory[p.partnerId].level = Math.max(p.partnerHistory[p.partnerId].level || 0, p.growthLevel || 0);
         p.partnerHistory[p.partnerId].exp = p.exp || 0;
+        if (!p.partnerHistory[p.partnerId].firstDate) {
+          p.partnerHistory[p.partnerId].firstDate = p.partnerHistory[p.partnerId].date || getTodayStr();
+        }
         if (p.growthLevel >= 7) p.partnerHistory[p.partnerId].isChampion = true;
       }
     }
@@ -3101,9 +3116,22 @@
       const stage = getStageSpec(p.growthLevel || 0, p);
       const currentSpecies = fam.species[stage.speciesIdx] || fam.species[0];
 
-      // 상단 정보
+      // 상단 정보 (캐릭터별 함께한 날수 & ON/OFF 스위치 반영)
       const daysEl = document.getElementById(`days-${pIdx}`);
-      if (daysEl) daysEl.innerHTML = `🏠 <strong>${p.companionDays || 1}일째</strong>`;
+      if (daysEl) {
+        if (p.showDays === false) {
+          daysEl.style.display = 'none';
+        } else {
+          daysEl.style.display = 'inline-flex';
+          const hist = p.partnerHistory && p.partnerHistory[p.partnerId];
+          const firstDateStr = (hist && hist.firstDate) || getTodayStr();
+          const d1 = new Date(firstDateStr);
+          const d2 = new Date(getTodayStr());
+          const diffTime = Math.abs(d2 - d1);
+          const charDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
+          daysEl.innerHTML = `🌱 <strong>${charDays}일째</strong>`;
+        }
+      }
       const berryEl = document.getElementById(`berry-${pIdx}`);
       if (berryEl) berryEl.innerText = p.berries || 0;
 
@@ -3581,12 +3609,14 @@
       const p = appData.profiles[targetPartnerSelectPIdx];
       ensurePartnerHistory(p);
 
-      // 현재 파트너 상태 저장 (레벨, 경험치 보존!)
+      // 현재 파트너 상태 저장 (레벨, 경험치, 캐릭터별 시작일 보존!)
+      const currFirstDate = (p.partnerHistory[p.partnerId] && p.partnerHistory[p.partnerId].firstDate) || getTodayStr();
       p.partnerHistory[p.partnerId] = {
         partnerId: p.partnerId,
         level: p.growthLevel || 0,
         exp: p.exp || 0,
         habitsDone: p.totalHabitsDone || 0,
+        firstDate: currFirstDate,
         date: getTodayStr(),
         isChampion: (p.growthLevel >= 6)
       };
@@ -3705,6 +3735,7 @@
       document.getElementById('coupon-setting-container').style.display = isEnabled ? 'block' : 'none';
       document.getElementById('coupon-setting-input').value = p.couponTitle || (pIdx === 0 ? '주말 아빠와 보드게임 30분권!' : '주말 뽀로로/타요 놀이터 가기!');
       document.getElementById('growth-speed-select').value = p.growthSpeed || 'monthly';
+      document.getElementById('days-enable-toggle').checked = (p.showDays !== false);
       renderManageList();
       document.getElementById('manage-modal').classList.add('active');
     }
@@ -3766,6 +3797,7 @@
         p.couponTitle = couponVal;
       }
       p.growthSpeed = document.getElementById('growth-speed-select').value;
+      p.showDays = document.getElementById('days-enable-toggle').checked;
       saveData();
       renderProfile(targetManagePIdx);
       closeManageModal();
