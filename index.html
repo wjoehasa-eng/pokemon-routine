@@ -2683,11 +2683,13 @@
         <div style="text-align: center;">
           <img src="heeyoon_face.png" class="child-avatar-lg" alt="희윤">
           <div style="font-size: 12px; font-weight: 800; color: #2B6CB0;">형아 희윤 (7세)</div>
+          <div id="synergy-partner-0" style="font-size: 12.5px; font-weight: 800; color: #E53E3E; margin-top: 2px;">🦖 꼬마 티라노</div>
         </div>
         <div style="font-size: 28px; color: #E53E3E; font-weight: 900;">⚡+⚡</div>
         <div style="text-align: center;">
           <img src="heegyeom_face.png" class="child-avatar-lg" alt="희겸">
           <div style="font-size: 12px; font-weight: 800; color: #C05621;">동생 희겸 (3세)</div>
+          <div id="synergy-partner-1" style="font-size: 12.5px; font-weight: 800; color: #E53E3E; margin-top: 2px;">🚜 꼬마 포크레인</div>
         </div>
       </div>
 
@@ -6434,8 +6436,10 @@
 
       const fam0 = getFamily(p0.partnerId);
       const fam1 = getFamily(p1.partnerId);
-      document.getElementById('synergy-partner-0').innerText = fam0.typeName.split(' ')[0] || '🔥';
-      document.getElementById('synergy-partner-1').innerText = fam1.typeName.split(' ')[0] || '🚜';
+      const sp0 = document.getElementById('synergy-partner-0');
+      if (sp0) sp0.innerText = `${fam0.typeName.split(' ')[0] || '🐾'} ${fam0.species[0].name}`;
+      const sp1 = document.getElementById('synergy-partner-1');
+      if (sp1) sp1.innerText = `${fam1.typeName.split(' ')[0] || '🐾'} ${fam1.species[0].name}`;
 
       if (appData.synergyDate === today) {
         // 이미 완료한 경우 축하 모달을 즐겁게 다시 감상할 수 있게 열어줌
