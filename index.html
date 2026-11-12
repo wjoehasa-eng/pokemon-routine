@@ -531,48 +531,93 @@
     .quest-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
     .quest-card {
       width: 100%;
-      min-height: 48px;
+      min-height: 58px;
       display: flex;
       align-items: center;
-      padding: 6px 10px;
-      background: #F8FAFC;
-      border: 2px solid #EDF2F7;
-      border-radius: 14px;
+      padding: 8px 12px;
+      background: #FFFFFF;
+      border: 2.5px solid #E2E8F0;
+      border-radius: 18px;
       cursor: pointer;
       text-align: left;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       touch-action: manipulation;
+      gap: 12px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
 
     .quest-card:active {
-      transform: scale(0.98);
-      background: #EDF2F7;
+      transform: scale(0.97);
     }
 
+    /* 막대 전체가 산뜻한 연두빛으로 바뀌며 체크! */
     .quest-card.completed {
-      background: #F0FFF4;
-      border-color: #68D391;
+      background: #F0FFF4 !important;
+      border-color: #48BB78 !important;
+      box-shadow: 0 3px 12px rgba(72, 187, 120, 0.22);
     }
 
-    .quest-checkbox-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: 2px solid #CBD5E0;
+    .quest-icon-tile {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: #EDF2F7;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 10px;
-      font-size: 18px;
+      font-size: 28px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transition: all 0.2s ease;
+    }
+
+    .quest-card.completed .quest-icon-tile {
+      background: #C6F6D5;
+      transform: scale(1.08) rotate(4deg);
+    }
+
+    .quest-body {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .quest-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #2D3748;
+      line-height: 1.35;
+      word-break: keep-all;
+      transition: color 0.2s ease;
+    }
+
+    .quest-card.completed .quest-title {
+      text-decoration: line-through;
+      color: #718096;
+    }
+
+    .quest-checkbox-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2.5px solid #CBD5E0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
       font-weight: 900;
       background: white;
       color: transparent;
       flex-shrink: 0;
+      margin-left: auto;
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -580,35 +625,7 @@
       background: #48BB78;
       border-color: #48BB78;
       color: white;
-      transform: scale(1.05);
-    }
-
-    .quest-body {
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .quest-title {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: #2D3748;
-      line-height: 1.25;
-      margin-bottom: 1px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .quest-card.completed .quest-title {
-      text-decoration: line-through;
-      color: #A0AEC0;
-    }
-
-    .quest-badge {
-      font-size: 10.5px;
-      font-weight: 800;
-      color: #E53E3E;
-      white-space: nowrap;
+      transform: scale(1.1);
     }
 
     /* ============================================================
@@ -2953,6 +2970,33 @@
     // =========================================================================
     // 🖥️ UI 렌더링 (형제 둘 다 각각 독립 렌더링!)
     // =========================================================================
+    
+    function getQuestIcon(q) {
+      if (q.icon) return q.icon;
+      const text = q.text || '';
+      if (text.includes('수학') || text.includes('숫자')) return '📐';
+      if (text.includes('영어') || text.includes('알파벳')) return '🔤';
+      if (text.includes('스스로 책') || text.includes('독서')) return '📖';
+      if (text.includes('그림책')) return '📚';
+      if (text.includes('자리') || text.includes('밥') || text.includes('식사') || text.includes('저녁')) return '🍚';
+      if (text.includes('수저') || text.includes('숟가락')) return '🥢';
+      if (text.includes('장난감') || text.includes('정리')) return '🧸';
+      if (text.includes('치카') || text.includes('양치') || text.includes('이빨')) return '🪥';
+      if (text.includes('떼쓰지') || text.includes('울지') || text.includes('예쁘게 말')) return '😊';
+      if (text.includes('신발')) return '👟';
+      if (text.includes('잠') || text.includes('자러') || text.includes('코코')) return '🛏️';
+
+      const match = text.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u);
+      if (match) return match[0];
+      return '⭐';
+    }
+
+    function getQuestCleanText(q) {
+      let txt = q.text || '';
+      txt = txt.replace(/^[\p{Emoji_Presentation}\p{Extended_Pictographic}\s]+/u, '').trim();
+      return txt || q.text;
+    }
+
     function renderProfile(pIdx) {
       const p = appData.profiles[pIdx];
       if (!p) return;
@@ -3063,12 +3107,15 @@
             handleQuestClick(pIdx, q.id);
           };
 
+          const icon = getQuestIcon(q);
+          const cleanText = getQuestCleanText(q);
+
           btn.innerHTML = `
-            <div class="quest-checkbox-icon">${q.completed ? '✓' : ''}</div>
+            <div class="quest-icon-tile">${icon}</div>
             <div class="quest-body">
-              <div class="quest-title">${q.text}</div>
-              <div class="quest-badge">+${q.exp} EXP · 🍎 +${q.berry}개</div>
+              <div class="quest-title">${cleanText}</div>
             </div>
+            <div class="quest-checkbox-icon">${q.completed ? '✓' : ''}</div>
           `;
           questListEl.appendChild(btn);
         });
