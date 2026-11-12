@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>우리 집 포켓몬 루틴 다마고치</title>
+  <title>우리 집 루틴 다마고치</title>
   <style>
     :root {
       --primary: #FF5350;
@@ -176,7 +176,17 @@
       position: relative;
       border-bottom: 2px dashed #CBD5E0;
       flex-shrink: 0;
+      transition: background 0.5s ease;
     }
+
+    /* 시간대별 무대 배경 테마 */
+    .stage-morning { background: linear-gradient(180deg, #EBF8FF 0%, #BEE3F8 100%); }
+    .stage-day { background: linear-gradient(180deg, #EBF4FF 0%, #D8ECFF 100%); }
+    .stage-evening { background: linear-gradient(180deg, #FED7AA 0%, #FDBA74 100%); }
+    .stage-night { background: linear-gradient(180deg, #2D3748 0%, #1A202C 100%); }
+    .stage-night .name-title { color: #F7FAFC !important; }
+    .stage-night .sub-title { color: #CBD5E0 !important; }
+    .stage-night .exp-labels { color: #CBD5E0 !important; }
 
     .pokemon-wrapper {
       position: relative;
@@ -209,19 +219,19 @@
     }
 
     .aura-sparkle {
-      box-shadow: 0 0 20px 6px rgba(255, 203, 5, 0.6);
+      box-shadow: 0 0 20px 6px rgba(255, 203, 5, 0.65);
       animation: auraPulse 2s ease-in-out infinite alternate;
       display: block;
     }
 
     .aura-fire {
-      box-shadow: 0 0 26px 8px rgba(255, 83, 80, 0.7);
+      box-shadow: 0 0 26px 8px rgba(255, 83, 80, 0.75);
       animation: auraPulse 1.5s ease-in-out infinite alternate;
       display: block;
     }
 
     .aura-champion {
-      box-shadow: 0 0 32px 10px rgba(255, 215, 0, 0.85);
+      box-shadow: 0 0 32px 12px rgba(255, 215, 0, 0.9);
       animation: auraPulse 1.2s ease-in-out infinite alternate;
       display: block;
     }
@@ -266,28 +276,37 @@
       50% { transform: translateY(-6px); }
     }
 
+    /* 말풍선 */
     .pokemon-speech {
       position: absolute;
       top: 4px;
-      right: 8px;
+      right: 4px;
       background: white;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 14px;
       font-size: 12px;
       font-weight: 800;
       color: #2B6CB0;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
       display: none;
       z-index: 10;
-      white-space: nowrap;
+      max-width: 220px;
+      white-space: normal;
+      line-height: 1.35;
+      animation: speechPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes speechPop {
+      0% { transform: scale(0.8) translateY(6px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
     }
 
     .pokemon-speech::after {
       content: '';
       position: absolute;
-      bottom: -5px;
-      left: 14px;
-      border-width: 5px 5px 0;
+      bottom: -6px;
+      left: 16px;
+      border-width: 6px 6px 0;
       border-style: solid;
       border-color: white transparent;
     }
@@ -414,63 +433,7 @@
     .btn-coupon { background: #E9D8FD; color: #6B46C1; display: none; }
     .btn-change { background: #E2E8F0; color: #4A5568; }
 
-    /* 토글 스위치 */
-    .switch-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 10px;
-      background: #F7FAFC;
-      border-radius: 12px;
-      margin: 10px 0 6px;
-      border: 1px solid #E2E8F0;
-    }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-      flex-shrink: 0;
-    }
-
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #CBD5E0;
-      transition: .25s;
-      border-radius: 24px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .25s;
-      border-radius: 50%;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-
-    input:checked + .slider {
-      background-color: #6B46C1;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
-
-    /* 미션 섹션 - 화면에 알맞게 압축 */
+    /* 미션 섹션 - 콤팩트 카드 */
     .quest-section {
       flex: 1;
       padding: 10px 14px 14px;
@@ -513,7 +476,6 @@
       gap: 8px;
     }
 
-    /* 콤팩트하면서 터치는 확실한 미션 카드 (높이 약 58px) */
     .quest-card {
       width: 100%;
       min-height: 56px;
@@ -591,6 +553,62 @@
       white-space: nowrap;
     }
 
+    /* 토글 스위치 */
+    .switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      background: #F7FAFC;
+      border-radius: 12px;
+      margin: 10px 0 6px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #CBD5E0;
+      transition: .25s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+      background-color: #6B46C1;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
     /* 모달 */
     .modal-overlay {
       position: fixed;
@@ -614,7 +632,7 @@
       background: white;
       border-radius: 24px;
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
       padding: 20px 16px;
       text-align: center;
       animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -648,12 +666,37 @@
       box-shadow: 0 4px 12px rgba(255, 83, 80, 0.3);
     }
 
-    /* 파트너 선택 그리드 */
+    /* 파트너 카테고리 탭 */
+    .partner-cat-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .cat-tab {
+      background: #EDF2F7;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #4A5568;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cat-tab.active {
+      background: #3182CE;
+      color: white;
+    }
+
     .select-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin: 12px 0;
+      margin: 8px 0;
       max-height: 340px;
       overflow-y: auto;
       padding: 2px;
@@ -666,14 +709,16 @@
       padding: 8px 4px;
       cursor: pointer;
       text-align: center;
+      transition: all 0.15s;
     }
 
     .select-card.active {
       border-color: #3182CE;
       background: #EBF8FF;
+      transform: scale(1.03);
     }
 
-    .select-card img {
+    .select-card img, .select-card svg {
       width: 55px;
       height: 55px;
       display: block;
@@ -822,15 +867,15 @@
     <!-- 상단 바 (슬림 & 노랩) -->
     <div class="header-bar">
       <div class="top-action-row">
-        <div class="app-title-badge">🐾 우리 집 반려몬</div>
+        <div class="app-title-badge">🐾 우리 집 루틴 다마고치</div>
         <div class="top-sync-btns">
           <button class="top-btn" onclick="openSyncModal()">☁️ 기기 동기화/백업</button>
         </div>
       </div>
 
       <div class="profile-tabs">
-        <button class="profile-tab active" id="tab-0" onclick="switchProfile(0)">👦 희겸이</button>
-        <button class="profile-tab" id="tab-1" onclick="switchProfile(1)">👧 희윤이</button>
+        <button class="profile-tab active" id="tab-0" onclick="switchProfile(0)">👦 희윤이 (7세)</button>
+        <button class="profile-tab" id="tab-1" onclick="switchProfile(1)">👶 희겸이 (3세)</button>
       </div>
 
       <div class="header-info">
@@ -844,8 +889,8 @@
     </div>
 
     <!-- 다마고치 무대 (아담하고 슬림하게) -->
-    <div class="stage">
-      <div class="pokemon-speech" id="pokemon-speech">고마워! 힘이 나! ✨</div>
+    <div class="stage" id="main-stage">
+      <div class="pokemon-speech" id="pokemon-speech">안녕! 오늘도 힘차게 출동! ✨</div>
       <div class="pokemon-wrapper" onclick="petPokemon()">
         <div class="pokemon-shadow"></div>
         <div class="aura-ring" id="aura-ring"></div>
@@ -855,17 +900,17 @@
       <div class="pokemon-name-tag">
         <div class="name-title-row">
           <span class="crown-icon" id="crown-icon">👑</span>
-          <span class="name-title" id="pokemon-name">파이리</span>
+          <span class="name-title" id="pokemon-name">꼬마 포크레인</span>
           <span class="stage-pill" id="pokemon-stage">기본형 (Lv.<span id="pokemon-lv">1</span>)</span>
         </div>
-        <span class="sub-title" id="pokemon-sub-title">아장아장 귀여운 아기 파이리</span>
+        <span class="sub-title" id="pokemon-sub-title">흙을 번쩍 들어 올리는 씩씩한 굴착기!</span>
         <span class="companion-stat-pill" id="companion-stat-pill">❤️ 행복도 100% · 함께 지킨 습관 0개</span>
       </div>
 
       <div class="exp-container">
         <div class="exp-labels">
           <span id="exp-hint-text">다음 성장까지</span>
-          <span><span id="current-exp">0</span> / <span id="max-exp">40</span> EXP</span>
+          <span><span id="current-exp">0</span> / <span id="max-exp">160</span> EXP</span>
         </div>
         <div class="exp-bar-bg">
           <div class="exp-bar-fill" id="exp-bar"></div>
@@ -881,7 +926,7 @@
       </div>
     </div>
 
-    <!-- 오늘의 할 일 퀘스트 목록 (한 화면에 쏙 들어오는 뷰) -->
+    <!-- 오늘의 할 일 퀘스트 목록 -->
     <div class="quest-section">
       <div class="section-header">
         <div class="section-title">
@@ -891,9 +936,7 @@
         <button class="btn-manage" onclick="openManageModal()">⚙️ 미션 관리</button>
       </div>
 
-      <div class="quest-list" id="quest-list">
-        <!-- 퀘스트 카드 삽입 -->
-      </div>
+      <div class="quest-list" id="quest-list"></div>
       
       <div style="text-align: center; margin-top: 12px;">
         <button style="background: none; border: none; color: #A0AEC0; font-size: 11px; cursor: pointer; text-decoration: underline;" onclick="resetQuestsPrompt()">🔄 오늘 미션 수동 새로고침</button>
@@ -915,8 +958,17 @@
   <!-- 파트너 선택 모달 -->
   <div class="modal-overlay" id="select-modal">
     <div class="modal-box">
-      <div style="font-size: 18px; font-weight: 900; margin-bottom: 3px;">함께할 파트너 포켓몬 선택</div>
-      <div style="font-size: 12px; color: #718096; margin-bottom: 10px;">처음엔 귀여운 알에서 시작해 부화합니다! 🥚</div>
+      <div style="font-size: 18px; font-weight: 900; margin-bottom: 3px;">함께할 파트너 선택</div>
+      <div style="font-size: 12px; color: #718096; margin-bottom: 8px;">원하는 캐릭터를 톡 골라보세요! 🥚</div>
+      
+      <div class="partner-cat-tabs" id="partner-cat-tabs">
+        <button class="cat-tab active" onclick="filterPartnerCat('all')">전체</button>
+        <button class="cat-tab" onclick="filterPartnerCat('heavy')">🚜 중장비·차</button>
+        <button class="cat-tab" onclick="filterPartnerCat('beast')">🦁 동물·공룡</button>
+        <button class="cat-tab" onclick="filterPartnerCat('cute')">💖 큐트·펫</button>
+        <button class="cat-tab" onclick="filterPartnerCat('pokemon')">⚡️ 포켓몬</button>
+      </div>
+
       <div class="select-grid" id="select-grid"></div>
       <button class="btn-confirm" onclick="closeSelectModal()" style="background: #718096;">닫기</button>
     </div>
@@ -926,7 +978,7 @@
   <div class="modal-overlay" id="sync-modal">
     <div class="modal-box">
       <div style="font-size: 18px; font-weight: 900; margin-bottom: 4px;">☁️ 기기 간 동기화 & 백업</div>
-      <div style="font-size: 12px; color: #718096; margin-bottom: 12px;">기기가 바뀌어도 소중한 포켓몬을 이어가세요!</div>
+      <div style="font-size: 12px; color: #718096; margin-bottom: 12px;">기기가 바뀌어도 소중한 기록을 이어가세요!</div>
 
       <div class="sync-section">
         <div class="sync-title">1. 백업 코드 복사 / 불러오기</div>
@@ -969,7 +1021,7 @@
   <!-- 관리자 모달 -->
   <div class="modal-overlay" id="manage-modal">
     <div class="modal-box">
-      <div style="font-size: 18px; font-weight: 900; margin-bottom: 10px;">🎯 미션 & 소원 관리 (부모 모드)</div>
+      <div style="font-size: 18px; font-weight: 900; margin-bottom: 10px;">🎯 미션 & 캐릭터 관리 (부모 모드)</div>
       
       <div style="text-align: left; font-size: 12px; font-weight: 800; color: #4A5568; margin-bottom: 4px;">➕ 새 미션 추가</div>
       <div class="input-row">
@@ -978,6 +1030,7 @@
       </div>
       <div class="manage-list" id="manage-list"></div>
 
+      <!-- 소원 상자 ON/OFF 토글 -->
       <div class="switch-row">
         <div>
           <div style="font-size: 13px; font-weight: 800; color: #2D3748;">🎁 선물 상자 기능 켜기</div>
@@ -994,17 +1047,103 @@
         <input type="text" class="input-text" id="coupon-setting-input" placeholder="예: 주말에 만화영화 1편 보기권">
       </div>
 
+      <!-- 성장 속도 조절 -->
+      <div style="text-align: left; font-size: 12px; font-weight: 800; color: #4A5568; margin: 10px 0 4px;">⏳ 성장 코스 기간 (속도 조절)</div>
+      <select id="growth-speed-select" class="input-text" style="margin-bottom: 12px; background: white;">
+        <option value="monthly">🐢 한 달 클래식 (약 3~4주, 습관 정착 추천!)</option>
+        <option value="fast">🐇 빠른 코스 (약 1~2주 완주)</option>
+        <option value="marathon">🌳 100일 대장정 (약 3개월 장기 완주)</option>
+      </select>
+
       <button class="btn-confirm" onclick="saveManageSettings()">설정 완료</button>
     </div>
   </div>
 
   <script>
-    // 12대 인기 포켓몬 패밀리
+    // 풍성한 캐릭터 라인업 (중장비, 동물, 공룡, 큐트펫, 포켓몬)
     const POKEMON_FAMILIES = [
+      // 1. 중장비 & 탈것 로봇 (희겸이 1순위!)
+      {
+        id: 'excavator',
+        category: 'heavy',
+        typeName: '🚜 중장비',
+        eggColor: '#F6AD55',
+        dialogueType: 'heavy',
+        species: [
+          { name: '꼬마 포크레인', img: 'https://images.unsplash.com/photo-1579829366248-204fe8413f31?w=300&auto=format&fit=crop&q=60', isCustomSvg: 'excavator_baby' },
+          { name: '메가 파워 덤프', img: '', isCustomSvg: 'dump_mega' },
+          { name: '중장비 타이탄 로봇', img: '', isCustomSvg: 'titan_robot' }
+        ]
+      },
+      {
+        id: 'firetruck',
+        category: 'heavy',
+        typeName: '🚒 긴급구조',
+        eggColor: '#FEB2B2',
+        dialogueType: 'heavy',
+        species: [
+          { name: '꼬마 순찰차', img: '', isCustomSvg: 'police_baby' },
+          { name: '메가 소방 사다리차', img: '', isCustomSvg: 'fire_mega' },
+          { name: '하이퍼 레스큐 로봇', img: '', isCustomSvg: 'rescue_robot' }
+        ]
+      },
+      // 2. 동물 & 공룡 (희겸이 최애!)
+      {
+        id: 'tyranno',
+        category: 'beast',
+        typeName: '🦖 공룡왕',
+        eggColor: '#68D391',
+        dialogueType: 'beast',
+        species: [
+          { name: '꼬마 티라노', img: '', isCustomSvg: 'dino_baby' },
+          { name: '가시뿔 파이터 티라노', img: '', isCustomSvg: 'dino_mid' },
+          { name: '절대군주 티라노사우루스 킹', img: '', isCustomSvg: 'dino_king' }
+        ]
+      },
+      {
+        id: 'lion',
+        category: 'beast',
+        typeName: '🦁 사자왕',
+        eggColor: '#ECC94B',
+        dialogueType: 'beast',
+        species: [
+          { name: '아기 심바 사자', img: '', isCustomSvg: 'lion_baby' },
+          { name: '용맹한 청년 사자', img: '', isCustomSvg: 'lion_mid' },
+          { name: '황금 갈기 사자왕', img: '', isCustomSvg: 'lion_king' }
+        ]
+      },
+      // 3. 큐트 펫 & 요정 (희윤이 최애!)
+      {
+        id: 'cat_fairy',
+        category: 'cute',
+        typeName: '🐱 마법냥이',
+        eggColor: '#FBB6CE',
+        dialogueType: 'cute',
+        species: [
+          { name: '아기 방울 냥이', img: '', isCustomSvg: 'cat_baby' },
+          { name: '딸기 모자 고양이', img: '', isCustomSvg: 'cat_mid' },
+          { name: '천사 날개 마법냥이', img: '', isCustomSvg: 'cat_fairy' }
+        ]
+      },
+      {
+        id: 'bunny_angel',
+        category: 'cute',
+        typeName: '🐰 솜사탕토끼',
+        eggColor: '#FED7AA',
+        dialogueType: 'cute',
+        species: [
+          { name: '아기 솜토끼', img: '', isCustomSvg: 'bunny_baby' },
+          { name: '당근 든 리본토끼', img: '', isCustomSvg: 'bunny_mid' },
+          { name: '무지개 달토끼 공주', img: '', isCustomSvg: 'bunny_angel' }
+        ]
+      },
+      // 4. 인기 포켓몬
       {
         id: 'charmander',
-        typeName: '불꽃 타입',
+        category: 'pokemon',
+        typeName: '불꽃 포켓몬',
         eggColor: '#FF7B54',
+        dialogueType: 'pokemon',
         species: [
           { name: '파이리', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png' },
           { name: '리자드', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png' },
@@ -1012,29 +1151,11 @@
         ]
       },
       {
-        id: 'squirtle',
-        typeName: '물 타입',
-        eggColor: '#63B3ED',
-        species: [
-          { name: '꼬부기', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png' },
-          { name: '어니부기', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png' },
-          { name: '거북왕', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png' }
-        ]
-      },
-      {
-        id: 'bulbasaur',
-        typeName: '풀 타입',
-        eggColor: '#68D391',
-        species: [
-          { name: '이상해씨', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png' },
-          { name: '이상해풀', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png' },
-          { name: '이상해꽃', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png' }
-        ]
-      },
-      {
         id: 'pikachu',
-        typeName: '전기 타입',
+        category: 'pokemon',
+        typeName: '전기 포켓몬',
         eggColor: '#F6E05E',
+        dialogueType: 'pokemon',
         species: [
           { name: '피츄', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/172.png' },
           { name: '피카츄', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png' },
@@ -1043,8 +1164,10 @@
       },
       {
         id: 'eevee',
-        typeName: '노말/요정',
+        category: 'pokemon',
+        typeName: '요정 포켓몬',
         eggColor: '#F6AD55',
+        dialogueType: 'pokemon',
         species: [
           { name: '이브이', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png' },
           { name: '샤미드', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/134.png' },
@@ -1052,97 +1175,165 @@
         ]
       },
       {
-        id: 'froakie',
-        typeName: '물/닌자',
-        eggColor: '#4FD1C5',
+        id: 'squirtle',
+        category: 'pokemon',
+        typeName: '물 포켓몬',
+        eggColor: '#63B3ED',
+        dialogueType: 'pokemon',
         species: [
-          { name: '개구마르', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/656.png' },
-          { name: '개굴반장', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/657.png' },
-          { name: '개굴닌자', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/658.png' }
+          { name: '꼬부기', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png' },
+          { name: '어니부기', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png' },
+          { name: '거북왕', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png' }
         ]
       },
       {
-        id: 'riolu',
-        typeName: '격투 타입',
-        eggColor: '#7F9CF5',
+        id: 'togepi',
+        category: 'pokemon',
+        typeName: '행복 포켓몬',
+        eggColor: '#FAF5FF',
+        dialogueType: 'pokemon',
         species: [
-          { name: '리오르', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/447.png' },
-          { name: '루카리오', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png' },
-          { name: '메가루카리오', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10059.png' }
-        ]
-      },
-      {
-        id: 'sprigatito',
-        typeName: '풀고양이',
-        eggColor: '#9AE6B4',
-        species: [
-          { name: '냐오하', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png' },
-          { name: '나로테', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/907.png' },
-          { name: '마스카나', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/908.png' }
-        ]
-      },
-      {
-        id: 'piplup',
-        typeName: '아기 펭귄',
-        eggColor: '#90CDF4',
-        species: [
-          { name: '팽도리', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/393.png' },
-          { name: '팽태자', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/394.png' },
-          { name: '엠페르트', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/395.png' }
-        ]
-      },
-      {
-        id: 'gengar',
-        typeName: '고스트',
-        eggColor: '#B794F4',
-        species: [
-          { name: '고오스', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/92.png' },
-          { name: '고우스트', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/93.png' },
-          { name: '팬텀', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png' }
-        ]
-      },
-      {
-        id: 'dratini',
-        typeName: '드래곤',
-        eggColor: '#ECC94B',
-        species: [
-          { name: '미뇽', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/147.png' },
-          { name: '신뇽', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/148.png' },
-          { name: '망나뇽', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png' }
-        ]
-      },
-      {
-        id: 'magikarp',
-        typeName: '대기만성',
-        eggColor: '#FEB2B2',
-        species: [
-          { name: '잉어킹', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/129.png' },
-          { name: '잉어킹(황금기운)', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/129.png' },
-          { name: '갸라도스', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/130.png' }
+          { name: '토게피', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/175.png' },
+          { name: '토게틱', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/176.png' },
+          { name: '토게키스', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/468.png' }
         ]
       }
     ];
 
-    // 8단계 성장 스펙
+    // 성장 모드별 경험치 테이블 (한 달 클래식 / 빠른 코스 / 100일 대장정)
+    const SPEED_PROFILES = {
+      monthly: { name: '한 달 클래식 (약 3~4주, 추천!)', expMultiplier: 1.0 },
+      fast: { name: '빠른 코스 (약 1~2주)', expMultiplier: 0.35 },
+      marathon: { name: '100일 대장정 (약 3개월)', expMultiplier: 3.0 }
+    };
+
+    // 8단계 성장 스펙 (한 달 클래식 기준: 총 30일 완주)
     const GROWTH_STAGES = [
-      { level: 0, maxExp: 40, stageName: '신비한 알 🥚', sub: '미션을 완료하면 알이 깨어나요!', scale: 0.95, aura: 'none', crown: false, speciesIdx: 0, isEgg: true },
-      { level: 1, maxExp: 50, stageName: '아기 포켓몬 🌱', sub: '아장아장 귀여운 아기 단계', scale: 0.8, aura: 'none', crown: false, speciesIdx: 0, isEgg: false },
-      { level: 2, maxExp: 60, stageName: '쑥쑥 포켓몬 ✨', sub: '몸집이 커지고 힘이 솟아요!', scale: 0.95, aura: 'sparkle', crown: false, speciesIdx: 0, isEgg: false },
-      { level: 3, maxExp: 75, stageName: '파워업 포켓몬 🔥', sub: '진화의 기운이 온몸에 가득!', scale: 1.05, aura: 'fire', crown: false, speciesIdx: 0, isEgg: false },
-      { level: 4, maxExp: 90, stageName: '1차 진화 달성! ⚡️', sub: '새로운 모습으로 멋지게 진화!', scale: 1.0, aura: 'sparkle', crown: false, speciesIdx: 1, isEgg: false },
-      { level: 5, maxExp: 110, stageName: '에이스 포켓몬 🌟', sub: '우리 집 든든한 챔피언 에이스!', scale: 1.1, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
-      { level: 6, maxExp: 130, stageName: '최종 진화! 🐉', sub: '하늘을 날아오르는 최강의 수호신!', scale: 1.15, aura: 'fire', crown: false, speciesIdx: 2, isEgg: false },
-      { level: 7, maxExp: 150, stageName: '황금 마스터 👑', sub: '모든 미션을 정복한 평생 반려몬!', scale: 1.2, aura: 'champion', crown: true, speciesIdx: 2, isEgg: false }
+      { level: 0, baseExp: 160, stageName: '신비한 알 🥚', sub: '미션을 완료하면 알이 서서히 깨어나요!', scale: 0.95, aura: 'none', crown: false, speciesIdx: 0, isEgg: true },
+      { level: 1, baseExp: 260, stageName: '아기 파트너 🌱', sub: '첫 주의 노력으로 태어난 귀여운 아기 단계!', scale: 0.8, aura: 'none', crown: false, speciesIdx: 0, isEgg: false },
+      { level: 2, baseExp: 340, stageName: '쑥쑥 자람 ✨', sub: '몸집이 커지고 황금빛 오라가 맴돌아요!', scale: 0.95, aura: 'sparkle', crown: false, speciesIdx: 0, isEgg: false },
+      { level: 3, baseExp: 420, stageName: '파워업 단계 🔥', sub: '진화의 기운이 온몸에 가득! (진화 직전)', scale: 1.05, aura: 'fire', crown: false, speciesIdx: 0, isEgg: false },
+      { level: 4, baseExp: 500, stageName: '1차 진화 달성! ⚡️', sub: '새로운 모습으로 멋지게 1차 진화 변신!', scale: 1.0, aura: 'sparkle', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 5, baseExp: 600, stageName: '슈퍼 에이스 🌟', sub: '3주 차 매일 해낸 든든한 우리 집 에이스!', scale: 1.1, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 6, baseExp: 750, stageName: '최종 진화! 🐉', sub: '한 달의 노력! 최강의 수호신으로 각성!', scale: 1.15, aura: 'fire', crown: false, speciesIdx: 2, isEgg: false },
+      { level: 7, baseExp: 1000, stageName: '황금 마스터 👑', sub: '한 달 습관을 정복한 평생 반려몬 등극!', scale: 1.2, aura: 'champion', crown: true, speciesIdx: 2, isEgg: false }
     ];
 
-    // 간결하고 줄바꿈 없는 깔끔한 기본 미션
-    const DEFAULT_QUESTS = [
-      { id: 'q1', text: '🪥 아침/저녁 치카치카 양치', exp: 20, berry: 1, completed: false },
+    // 7세 형아 희윤이 기본 미션 (학교 준비 & 스토리톡)
+    const HEE_YOON_QUESTS = [
+      { id: 'q1', text: '🪥 아침/저녁 스스로 치카치카', exp: 20, berry: 1, completed: false },
       { id: 'q2', text: '👟 현관 신발 가지런히 정리', exp: 20, berry: 1, completed: false },
-      { id: 'q3', text: '📖 재미있는 책 1권 읽기', exp: 25, berry: 1, completed: false },
-      { id: 'q4', text: '🧸 가지고 논 장난감 정리', exp: 20, berry: 1, completed: false },
-      { id: 'q5', text: '📝 오늘 숙제 / 스토리톡 하기', exp: 25, berry: 1, completed: false }
+      { id: 'q3', text: '📖 재미있는 책 1권 끝까지 읽기', exp: 25, berry: 1, completed: false },
+      { id: 'q4', text: '🧸 가지고 논 방 정리하기', exp: 20, berry: 1, completed: false },
+      { id: 'q5', text: '📝 스토리톡 / 오늘의 과제 하기', exp: 25, berry: 1, completed: false }
     ];
+
+    // 3세 꼬꼬마 동생 희겸이 기본 미션 (눈높이 유아 습관)
+    const HEE_GYEOM_QUESTS = [
+      { id: 'q1', text: '🪥 아빠랑 치카치카 양치하기', exp: 20, berry: 1, completed: false },
+      { id: 'q2', text: '👟 예쁜 신발 바르게 벗어두기', exp: 20, berry: 1, completed: false },
+      { id: 'q3', text: '🍚 밥 남기지 않고 냠냠 먹기', exp: 25, berry: 1, completed: false },
+      { id: 'q4', text: '🧸 장난감 상자에 쏙 정리하기', exp: 20, berry: 1, completed: false },
+      { id: 'q5', text: '🛏️ 밤에 일찍 누워서 코코 자기', exp: 25, berry: 1, completed: false }
+    ];
+
+    // 무한 다양 쓰담 멘트 엔진 (상황별·캐릭터별·시간대별 50종+ 조합)
+    const DIALOGUES = {
+      egg: [
+        "알이 토닥토닥 손길을 느끼고 있어요! 🥚",
+        "따뜻해~ 알 속에서 심장이 콩닥콩닥 뛰고 있어!",
+        "톡톡! 곧 깨어날 것 같아!",
+        "쓰다듬어주니까 알이 기분 좋게 흔들려요! ✨",
+        "엄마 아빠 손길처럼 포근해~ 🐣"
+      ],
+      heavy: [
+        "부릉부릉! 엔진 시동 완료! 쌩쌩 달려보자! 🚜",
+        "흙 100톤도 번쩍 퍼 올릴 수 있어! 힘이 불끈! 🏗️",
+        "삐용삐용~ 멋진 미션 완수 대원 출동 준비 완료! 🚨",
+        "바퀴에 기름칠 완료! 희겸이랑 달릴 준비 끝! 🏎️💨",
+        "엔진 소리 들려? 쿠구구궁~ 파워 만땅이야! 🔥",
+        "최강 합체 로봇으로 변신할 날이 얼마 안 남았어! 🤖",
+        "신발을 가지런히 두니까 주차장 차고지 같아서 멋지다! 👟",
+        "크락션 빵빵! 오늘 하루도 씩씩하게 전진! 🚜✨"
+      ],
+      beast: [
+        "크앙! 용맹한 기운이 솟아난다! 🦁",
+        "어흥~ 갈기 쓰다듬어줘서 기분 최고야! 👑",
+        "공룡 꼬리 파워 스윙! 슉슉! 🦖",
+        "희겸이 손길이 제일 따뜻해! 으르렁~ ❤️",
+        "발톱 쑥 넣고 얌전히 안겨 있을게! 순둥순둥~",
+        "사자왕의 포효! 쩌렁쩌렁! 힘이 넘쳐요! 🌟",
+        "티라노 발자국 쿵쿵! 미션도 쿵쿵 격파하자! 🐾"
+      ],
+      cute: [
+        "골골골~ 가르릉~ 쓰다듬어줘서 너무 좋아! 🐱❤️",
+        "토닥토닥 해주니까 행복 지수 100% 돌파! ✨",
+        "헤헤 간지러워~ 까르르! 볼에 부비부비~ 🐰",
+        "희윤이 품이 세상에서 제일 포근해! 🌸",
+        "천사 날개가 파닥파닥~ 기분 날아갈 것 같아! 🧚‍♀️",
+        "귀 쫑긋! 오늘 희윤이 칭찬 들으려고 기다렸어! 🎀",
+        "앙증맞은 발바닥 젤리 꾹꾹이 선물할게! 🐾"
+      ],
+      pokemon: [
+        "피카피카! 찌릿찌릿 사랑의 전기 방출! ⚡️",
+        "파이리 꼬리 불꽃이 활활 타오르고 있어! 🔥",
+        "꼬부기 물대포 슝슝~ 시원하고 상쾌해! 💦",
+        "이브이 귀가 쫑긋! 단짝 친구가 되어줘서 고마워! ❤️",
+        "쓰다듬기 공격 대성공! 경험치도 쑥쑥 자라나! 🌟",
+        "우린 영원한 최고의 파트너야! 헤헤~ ✨"
+      ],
+      morning: [
+        "좋은 아침! 오늘 하루도 씩씩하게 출동! ☀️",
+        "일어났어? 깨끗하게 치카치카 하고 힘내자! 🪥",
+        "아침 햇살처럼 반짝이는 멋진 하루 보내자! 🌈"
+      ],
+      night: [
+        "오늘 하루도 정말 열심히 해냈어! 대단해! 🌙",
+        "치카하고 폭신한 이불 덮으러 가자~ 잘 자! 🛏️",
+        "꿈나라에서도 신나게 같이 뛰어놀자! Zzz... ⭐"
+      ],
+      allDone: [
+        "오늘 미션 5개 올 클리어! 넌 진짜 최고야! 🏆🎉",
+        "와아아! 완벽해! 엉덩이 댄스가 절로 나와! 💃🕺",
+        "퍼펙트 데이! 오늘 밤엔 칭찬 듬뿍 받아야 해! 🌟"
+      ]
+    };
+
+    function getRandomDialogue(childName, partner) {
+      const fam = getFamily(partner.partnerId);
+      const stage = getStageSpec(partner.growthLevel || 0);
+
+      let pool = [];
+
+      if (stage.isEgg) {
+        pool = [...DIALOGUES.egg];
+      } else {
+        const dType = fam.dialogueType || 'pokemon';
+        pool = [...(DIALOGUES[dType] || DIALOGUES.pokemon)];
+      }
+
+      // 시간대
+      const hour = new Date().getHours();
+      if (hour >= 6 && hour < 11) {
+        pool.push(...DIALOGUES.morning);
+      } else if (hour >= 20 || hour < 6) {
+        pool.push(...DIALOGUES.night);
+      }
+
+      // 미션 전부 달성 시
+      const allDone = partner.quests && partner.quests.every(q => q.completed);
+      if (allDone) {
+        pool.push(...DIALOGUES.allDone);
+      }
+
+      // 이름 맞춤 멘트 보충
+      pool.push(`${childName}아~ 쓰다듬어줘서 너무 행복해! ❤️`);
+      pool.push(`우리 ${childName}이는 스스로 정리도 잘하는 멋쟁이! ✨`);
+      pool.push(`${childName}이가 최고야! 내가 항상 응원해! 🚀`);
+
+      const randIdx = Math.floor(Math.random() * pool.length);
+      return pool[randIdx];
+    }
 
     function getTodayStr() {
       const d = new Date();
@@ -1161,6 +1352,7 @@
         companionDays: 1,
         firstDate: getTodayStr(),
         lastDate: getTodayStr(),
+        growthSpeed: 'monthly',
         couponEnabled: false,
         couponTitle: '주말 아빠와 보드게임 30분권!',
         quests: JSON.parse(JSON.stringify(DEFAULT_QUESTS))
@@ -1171,14 +1363,46 @@
       activeProfile: 0,
       sheetsSyncUrl: '',
       profiles: [
-        createInitialProfile('희겸', 'charmander'),
-        createInitialProfile('희윤', 'eevee')
+        {
+          name: '희윤',
+          age: '7세',
+          partnerId: 'charmander',
+          growthLevel: 0,
+          exp: 0,
+          berries: 3,
+          streak: 1,
+          totalHabitsDone: 0,
+          companionDays: 1,
+          firstDate: getTodayStr(),
+          lastDate: getTodayStr(),
+          growthSpeed: 'monthly',
+          couponEnabled: false,
+          couponTitle: '주말 아빠와 보드게임 30분권!',
+          quests: JSON.parse(JSON.stringify(HEE_YOON_QUESTS))
+        },
+        {
+          name: '희겸',
+          age: '3세',
+          partnerId: 'excavator',
+          growthLevel: 0,
+          exp: 0,
+          berries: 3,
+          streak: 1,
+          totalHabitsDone: 0,
+          companionDays: 1,
+          firstDate: getTodayStr(),
+          lastDate: getTodayStr(),
+          growthSpeed: 'monthly',
+          couponEnabled: false,
+          couponTitle: '주말 뽀로로/타요 놀이터 가기!',
+          quests: JSON.parse(JSON.stringify(HEE_GYEOM_QUESTS))
+        }
       ]
     };
 
     function loadData() {
       try {
-        const raw = localStorage.getItem('pokemon_compact_v5');
+        const raw = localStorage.getItem('pokemon_routine_v6');
         if (raw) {
           appData = JSON.parse(raw);
         }
@@ -1216,7 +1440,7 @@
 
     function saveData() {
       try {
-        localStorage.setItem('pokemon_compact_v5', JSON.stringify(appData));
+        localStorage.setItem('pokemon_routine_v6', JSON.stringify(appData));
       } catch (e) {
         console.warn("Storage save fallback:", e);
       }
@@ -1254,7 +1478,7 @@
       } catch (e) {}
     }
 
-    // 사운드
+    // 오디오
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     let audioCtx = null;
 
@@ -1359,7 +1583,185 @@
 
     function getStageSpec(level) {
       const clamped = Math.min(level, GROWTH_STAGES.length - 1);
-      return GROWTH_STAGES[clamped];
+      const stage = GROWTH_STAGES[clamped];
+      const p = getCurrentProfile ? getCurrentProfile() : null;
+      const speed = p && p.growthSpeed ? p.growthSpeed : 'monthly';
+      const mult = (SPEED_PROFILES[speed] || SPEED_PROFILES.monthly).expMultiplier;
+      return {
+        ...stage,
+        maxExp: Math.max(40, Math.round(stage.baseExp * mult))
+      };
+    }
+
+    // 커스텀 귀여운 벡터 그래픽 생성기 (중장비, 동물, 큐트펫)
+    function renderCustomSvg(type, scale = 1.0) {
+      switch (type) {
+        case 'excavator_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <rect x="25" y="65" width="60" height="28" rx="8" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
+              <rect x="35" y="45" width="30" height="22" rx="4" fill="#63B3ED" stroke="#2B6CB0" stroke-width="2"/>
+              <ellipse cx="40" cy="95" rx="14" ry="10" fill="#4A5568"/>
+              <ellipse cx="70" cy="95" rx="14" ry="10" fill="#4A5568"/>
+              <line x1="26" y1="95" x2="84" y2="95" stroke="#2D3748" stroke-width="5" stroke-linecap="round"/>
+              <path d="M 75 55 L 100 40 L 110 55" stroke="#DD6B20" stroke-width="6" stroke-linecap="round" fill="none"/>
+              <path d="M 105 52 L 115 65 L 100 68 Z" fill="#E2E8F0" stroke="#718096" stroke-width="2"/>
+              <circle cx="48" cy="54" r="3" fill="#2D3748"/>
+              <circle cx="58" cy="54" r="3" fill="#2D3748"/>
+              <path d="M 50 60 Q 53 63 56 60" stroke="#2D3748" stroke-width="2" fill="none"/>
+            </svg>
+          `;
+        case 'dump_mega':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <path d="M 15 50 L 65 40 L 70 75 L 15 75 Z" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <rect x="70" y="52" width="35" height="25" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <rect x="85" y="55" width="16" height="12" rx="3" fill="#63B3ED"/>
+              <circle cx="30" cy="85" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+              <circle cx="55" cy="85" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+              <circle cx="90" cy="85" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+              <circle cx="92" cy="60" r="2.5" fill="#1A202C"/>
+            </svg>
+          `;
+        case 'titan_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
+              <rect x="42" y="15" width="36" height="28" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <rect x="48" y="24" width="24" height="8" rx="2" fill="#3182CE"/>
+              <circle cx="55" cy="28" r="2.5" fill="#FFF"/>
+              <circle cx="65" cy="28" r="2.5" fill="#FFF"/>
+              <rect x="35" y="44" width="50" height="40" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <polygon points="60,48 50,68 70,68" fill="#F6E05E"/>
+              <rect x="16" y="46" width="18" height="35" rx="6" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
+              <rect x="86" y="46" width="18" height="35" rx="6" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
+              <rect x="38" y="85" width="18" height="30" rx="4" fill="#4A5568"/>
+              <rect x="64" y="85" width="18" height="30" rx="4" fill="#4A5568"/>
+            </svg>
+          `;
+        case 'police_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <rect x="25" y="60" width="70" height="28" rx="10" fill="#FFF" stroke="#2B6CB0" stroke-width="3"/>
+              <rect x="40" y="44" width="38" height="18" rx="6" fill="#63B3ED" stroke="#2B6CB0" stroke-width="2"/>
+              <circle cx="59" cy="40" r="5" fill="#E53E3E"/>
+              <circle cx="42" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="78" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="50" cy="52" r="3" fill="#2D3748"/>
+              <circle cx="65" cy="52" r="3" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'fire_mega':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <rect x="20" y="55" width="80" height="32" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <line x1="25" y1="46" x2="85" y2="38" stroke="#CBD5E0" stroke-width="7" stroke-linecap="round"/>
+              <line x1="30" y1="44" x2="33" y2="48" stroke="#4A5568" stroke-width="2"/>
+              <line x1="45" y1="42" x2="48" y2="46" stroke="#4A5568" stroke-width="2"/>
+              <line x1="60" y1="40" x2="63" y2="44" stroke="#4A5568" stroke-width="2"/>
+              <circle cx="36" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="60" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="84" cy="88" r="11" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'rescue_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="26" rx="6" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <rect x="50" y="24" width="20" height="8" rx="2" fill="#F6E05E"/>
+              <rect x="32" y="42" width="56" height="42" rx="8" fill="#FFF" stroke="#2B6CB0" stroke-width="3"/>
+              <polygon points="60,48 52,65 68,65" fill="#E53E3E"/>
+              <rect x="14" y="44" width="18" height="36" rx="6" fill="#E53E3E"/>
+              <rect x="88" y="44" width="18" height="36" rx="6" fill="#E53E3E"/>
+              <rect x="38" y="85" width="18" height="30" rx="4" fill="#2B6CB0"/>
+              <rect x="64" y="85" width="18" height="30" rx="4" fill="#2B6CB0"/>
+            </svg>
+          `;
+        case 'dino_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <path d="M 40 45 Q 65 30 80 45 Q 90 60 75 75 Q 65 85 45 80 Q 25 75 30 55 Z" fill="#68D391" stroke="#276749" stroke-width="3"/>
+              <circle cx="68" cy="48" r="5" fill="#FFF"/>
+              <circle cx="69" cy="48" r="3" fill="#2D3748"/>
+              <ellipse cx="50" cy="90" rx="8" ry="12" fill="#48BB78"/>
+              <ellipse cx="68" cy="90" rx="8" ry="12" fill="#48BB78"/>
+              <path d="M 28 65 Q 15 60 12 70" stroke="#276749" stroke-width="4" stroke-linecap="round" fill="none"/>
+            </svg>
+          `;
+        case 'dino_king':
+          return `
+            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
+              <path d="M 35 40 Q 75 15 95 38 Q 105 55 85 70 Q 75 90 45 85 Q 18 80 25 50 Z" fill="#48BB78" stroke="#22543D" stroke-width="4"/>
+              <polygon points="90,48 85,55 95,58" fill="#FFF"/>
+              <polygon points="80,52 75,58 85,62" fill="#FFF"/>
+              <circle cx="75" cy="35" r="7" fill="#F6E05E"/>
+              <circle cx="76" cy="35" r="4" fill="#1A202C"/>
+              <rect x="36" y="85" width="16" height="28" rx="6" fill="#2F855A"/>
+              <rect x="62" y="85" width="16" height="28" rx="6" fill="#2F855A"/>
+              <polygon points="40,25 45,35 35,35" fill="#DD6B20"/>
+              <polygon points="30,35 35,45 25,45" fill="#DD6B20"/>
+              <polygon points="20,45 25,55 15,55" fill="#DD6B20"/>
+            </svg>
+          `;
+        case 'lion_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <circle cx="60" cy="60" r="35" fill="#F6AD55" stroke="#C05621" stroke-width="3"/>
+              <circle cx="36" cy="36" r="12" fill="#ED8936"/>
+              <circle cx="84" cy="36" r="12" fill="#ED8936"/>
+              <circle cx="50" cy="55" r="4.5" fill="#2D3748"/>
+              <circle cx="70" cy="55" r="4.5" fill="#2D3748"/>
+              <polygon points="60,63 56,69 64,69" fill="#E53E3E"/>
+              <path d="M 54 74 Q 60 78 66 74" stroke="#2D3748" stroke-width="2.5" fill="none"/>
+            </svg>
+          `;
+        case 'lion_king':
+          return `
+            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
+              <circle cx="60" cy="62" r="44" fill="#C05621" stroke="#7B341E" stroke-width="4"/>
+              <circle cx="60" cy="62" r="30" fill="#F6AD55"/>
+              <circle cx="50" cy="58" r="5" fill="#1A202C"/>
+              <circle cx="70" cy="58" r="5" fill="#1A202C"/>
+              <polygon points="60,67 55,74 65,74" fill="#E53E3E"/>
+              <path d="M 52 80 Q 60 85 68 80" stroke="#1A202C" stroke-width="3" fill="none"/>
+            </svg>
+          `;
+        case 'cat_baby':
+        case 'cat_fairy':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <polygon points="32,25 45,50 25,48" fill="#FBB6CE"/>
+              <polygon points="88,25 95,48 75,50" fill="#FBB6CE"/>
+              <ellipse cx="60" cy="65" rx="34" ry="28" fill="#FFF" stroke="#ED64A6" stroke-width="3"/>
+              <circle cx="48" cy="62" r="4.5" fill="#2D3748"/>
+              <circle cx="72" cy="62" r="4.5" fill="#2D3748"/>
+              <polygon points="60,69 57,73 63,73" fill="#F687B3"/>
+              <line x1="30" y1="68" x2="42" y2="69" stroke="#CBD5E0" stroke-width="2"/>
+              <line x1="90" y1="68" x2="78" y2="69" stroke="#CBD5E0" stroke-width="2"/>
+            </svg>
+          `;
+        case 'bunny_baby':
+        case 'bunny_angel':
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+              <ellipse cx="45" cy="30" rx="8" ry="24" fill="#FFF" stroke="#FEB2B2" stroke-width="3"/>
+              <ellipse cx="75" cy="30" rx="8" ry="24" fill="#FFF" stroke="#FEB2B2" stroke-width="3"/>
+              <ellipse cx="45" cy="30" rx="4" ry="16" fill="#FED7D7"/>
+              <ellipse cx="75" cy="30" rx="4" ry="16" fill="#FED7D7"/>
+              <circle cx="60" cy="70" r="30" fill="#FFF" stroke="#FEB2B2" stroke-width="3"/>
+              <circle cx="50" cy="68" r="4" fill="#2D3748"/>
+              <circle cx="70" cy="68" r="4" fill="#2D3748"/>
+              <polygon points="60,75 57,78 63,78" fill="#F56565"/>
+            </svg>
+          `;
+        default:
+          return `
+            <svg viewBox="0 0 120 120" width="115" height="115">
+              <circle cx="60" cy="60" r="35" fill="#ECC94B"/>
+              <circle cx="50" cy="55" r="4" fill="#2D3748"/>
+              <circle cx="70" cy="55" r="4" fill="#2D3748"/>
+            </svg>
+          `;
+      }
     }
 
     function renderEggSvg(color, hasCrack) {
@@ -1382,17 +1784,33 @@
       `;
     }
 
+    function updateTimeTheme() {
+      const stageEl = document.getElementById('main-stage');
+      const hour = new Date().getHours();
+      stageEl.className = 'stage';
+      if (hour >= 6 && hour < 11) {
+        stageEl.classList.add('stage-morning');
+      } else if (hour >= 11 && hour < 17) {
+        stageEl.classList.add('stage-day');
+      } else if (hour >= 17 && hour < 20) {
+        stageEl.classList.add('stage-evening');
+      } else {
+        stageEl.classList.add('stage-night');
+      }
+    }
+
     function renderUI() {
+      updateTimeTheme();
       const p = getCurrentProfile();
       const fam = getFamily(p.partnerId);
       const stage = getStageSpec(p.growthLevel || 0);
-      const currentSpecies = fam.species[stage.speciesIdx];
+      const currentSpecies = fam.species[stage.speciesIdx] || fam.species[0];
 
-      // 탭
+      // 탭 (형제 프로필)
       document.getElementById('tab-0').classList.toggle('active', appData.activeProfile === 0);
       document.getElementById('tab-1').classList.toggle('active', appData.activeProfile === 1);
-      document.getElementById('tab-0').innerText = `👦 ${appData.profiles[0].name}이`;
-      document.getElementById('tab-1').innerText = `👧 ${appData.profiles[1].name}이`;
+      document.getElementById('tab-0').innerText = `👦 희윤이 (7세)`;
+      document.getElementById('tab-1').innerText = `👶 희겸이 (3세)`;
 
       document.getElementById('companion-days').innerHTML = `🏠 함께한 지 <strong>${p.companionDays || 1}일째</strong> (🔥${p.streak || 1}일)`;
       document.getElementById('berry-count').innerText = p.berries || 0;
@@ -1415,16 +1833,24 @@
       const isHungryOrSleepy = (!stage.isEgg && completedCount === 0);
 
       if (stage.isEgg) {
-        const hasCrack = (p.exp >= 20);
+        const hasCrack = (p.exp >= (stage.maxExp * 0.4));
         container.innerHTML = renderEggSvg(fam.eggColor || '#FF7B54', hasCrack);
         document.getElementById('pokemon-name').innerText = `${fam.species[0].name}의 알`;
         document.getElementById('pokemon-stage').innerText = stage.stageName;
         document.getElementById('pokemon-sub-title').innerText = hasCrack ? "어라?! 알에 금이 가고 있어요!" : stage.sub;
       } else {
         const sleepClass = isHungryOrSleepy ? 'pokemon-sleeping' : '';
-        container.innerHTML = `
-          <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img ${sleepClass}" style="transform: scale(${stage.scale});">
-        `;
+        if (currentSpecies.isCustomSvg) {
+          container.innerHTML = `
+            <div class="${sleepClass}" style="display:flex; justify-content:center; align-items:center;">
+              ${renderCustomSvg(currentSpecies.isCustomSvg, stage.scale)}
+            </div>
+          `;
+        } else {
+          container.innerHTML = `
+            <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img ${sleepClass}" style="transform: scale(${stage.scale});">
+          `;
+        }
         document.getElementById('pokemon-name').innerText = currentSpecies.name;
         document.getElementById('pokemon-stage').innerText = `${stage.stageName} (Lv.${stage.level})`;
         document.getElementById('pokemon-sub-title').innerText = isHungryOrSleepy ? "😴 기운이 없어요.. 미션을 하고 밥을 주세요!" : stage.sub;
@@ -1510,7 +1936,7 @@
       const p = getCurrentProfile();
       const fam = getFamily(p.partnerId);
       const newStage = getStageSpec(newLevel);
-      const currentSpecies = fam.species[newStage.speciesIdx];
+      const currentSpecies = fam.species[newStage.speciesIdx] || fam.species[0];
 
       playFanfare();
       fireConfetti();
@@ -1520,40 +1946,26 @@
       const descEl = document.getElementById('evo-desc');
 
       if (newLevel === 1) {
-        modalTitle.innerText = "알에서 아기 포켓몬 부화! 🐣";
-        imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img">`;
-        descEl.innerHTML = `
-          축하합니다! 신비한 알에서<br>
-          <strong>${currentSpecies.name}</strong>(이)가 태어났습니다! 🎉
-        `;
+        modalTitle.innerText = "알에서 멋지게 탄생! 🐣";
+        descEl.innerHTML = `축하합니다! 신비한 알에서<br><strong>${currentSpecies.name}</strong>(이)가 힘차게 깨어났습니다! 🎉`;
       } else if (newLevel === 4) {
         modalTitle.innerText = "1차 진화 대성공! ⚡️";
-        imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img">`;
-        descEl.innerHTML = `
-          할 일을 성실하게 해낸 덕분에<br>
-          <strong>${fam.species[0].name}</strong>이(가) <strong>${currentSpecies.name}</strong>(으)로 진화했습니다! 💥
-        `;
+        descEl.innerHTML = `성실한 노력의 결실!<br><strong>${fam.species[0].name}</strong>이(가) <strong>${currentSpecies.name}</strong>(으)로 1차 진화 변신했습니다! 💥`;
       } else if (newLevel === 6) {
         modalTitle.innerText = "최종 진화 달성! 🐉";
-        imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img">`;
-        descEl.innerHTML = `
-          노력의 결실! 최강의 수호신<br>
-          <strong>${currentSpecies.name}</strong>(으)로 각성했습니다! 🌟
-        `;
+        descEl.innerHTML = `한 달 동안 스스로 해낸 결실!<br>최강의 수호신 <strong>${currentSpecies.name}</strong>(으)로 각성했습니다! 🌟`;
       } else if (newLevel >= 7) {
         modalTitle.innerText = "황금 왕관 챔피언 등극! 👑";
-        imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img">`;
-        descEl.innerHTML = `
-          매일 스스로 해낸 멋진 어린이!<br>
-          <strong>${currentSpecies.name}</strong>에게 황금 왕관이 수여되었습니다! 🏆
-        `;
+        descEl.innerHTML = `모든 미션을 완수한 멋진 어린이!<br><strong>${currentSpecies.name}</strong>에게 황금 왕관이 수여되었습니다! 🏆`;
       } else {
-        modalTitle.innerText = "포켓몬 레벨 업 & 파워 업! 🚀";
-        imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img" style="transform: scale(${newStage.scale});">`;
-        descEl.innerHTML = `
-          <strong>${currentSpecies.name}</strong>의 몸집이 쑥 자라고<br>
-          <strong>${newStage.stageName}</strong> 단계로 도약했습니다! ✨
-        `;
+        modalTitle.innerText = "레벨 업 & 파워 업! 🚀";
+        descEl.innerHTML = `<strong>${currentSpecies.name}</strong>의 몸집이 자라고<br><strong>${newStage.stageName}</strong> 단계로 도약했습니다! ✨`;
+      }
+
+      if (currentSpecies.isCustomSvg) {
+        imgContainer.innerHTML = renderCustomSvg(currentSpecies.isCustomSvg, 1.2);
+      } else {
+        imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img">`;
       }
 
       document.getElementById('evo-modal').classList.add('active');
@@ -1577,21 +1989,15 @@
       const speech = document.getElementById('pokemon-speech');
       speech.innerText = text;
       speech.style.display = 'block';
-      setTimeout(() => { speech.style.display = 'none'; }, 2200);
+      setTimeout(() => { speech.style.display = 'none'; }, 2600);
     }
 
+    // 무한 다양 쓰담 상호작용
     function petPokemon() {
       playTone(587.33, 'sine', 0.15);
       const p = getCurrentProfile();
-      const fam = getFamily(p.partnerId);
-      const stage = getStageSpec(p.growthLevel || 0);
-
-      if (stage.isEgg) {
-        speak("알이 따뜻해지고 있어요! 토닥토닥~ 🥚");
-      } else {
-        const name = fam.species[stage.speciesIdx].name;
-        speak(`${name}: 쓰다듬어줘서 기분 최고야! ❤️`);
-      }
+      const dialogue = getRandomDialogue(p.name, p);
+      speak(dialogue);
     }
 
     function feedPokemon() {
@@ -1602,8 +2008,8 @@
       }
       p.berries--;
       playNom();
-      addExp(15);
-      speak("냠냠! 맛있다! (+15 EXP 쑥쑥!) ❤️");
+      addExp(20);
+      speak("냠냠! 맛있다! 힘이 불끈불끈! (+20 EXP 쑥쑥!) ❤️");
       saveData();
       renderUI();
     }
@@ -1623,25 +2029,45 @@
       document.getElementById('coupon-modal').classList.remove('active');
     }
 
+    let currentSelectedCategory = 'all';
+
     function openPartnerSelect() {
+      filterPartnerCat('all');
+      document.getElementById('select-modal').classList.add('active');
+    }
+
+    function filterPartnerCat(cat) {
+      currentSelectedCategory = cat;
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      const activeTab = Array.from(document.querySelectorAll('.cat-tab')).find(b => b.getAttribute('onclick').includes(cat));
+      if (activeTab) activeTab.classList.add('active');
+
       const grid = document.getElementById('select-grid');
       grid.innerHTML = '';
       const p = getCurrentProfile();
 
-      POKEMON_FAMILIES.forEach(fam => {
+      const filtered = (cat === 'all') ? POKEMON_FAMILIES : POKEMON_FAMILIES.filter(f => f.category === cat);
+
+      filtered.forEach(fam => {
         const first = fam.species[0];
         const card = document.createElement('div');
         card.className = `select-card ${p.partnerId === fam.id ? 'active' : ''}`;
         card.onclick = () => selectPartner(fam.id);
+
+        let imgHtml = '';
+        if (first.isCustomSvg) {
+          imgHtml = renderCustomSvg(first.isCustomSvg, 0.7);
+        } else {
+          imgHtml = `<img src="${first.img}" alt="${first.name}">`;
+        }
+
         card.innerHTML = `
-          <img src="${first.img}" alt="${first.name}">
+          ${imgHtml}
           <div class="select-card-name">${first.name}</div>
           <div class="select-card-type">${fam.typeName}</div>
         `;
         grid.appendChild(card);
       });
-
-      document.getElementById('select-modal').classList.add('active');
     }
 
     function selectPartner(familyId) {
@@ -1652,7 +2078,7 @@
       saveData();
       renderUI();
       closeSelectModal();
-      speak("새로운 알이 도착했어! 정성껏 품어줘! 🥚");
+      speak("새로운 파트너가 도착했어! 정성껏 함께하자! 🥚");
     }
 
     function closeSelectModal() {
@@ -1733,6 +2159,7 @@
       document.getElementById('coupon-enable-toggle').checked = isEnabled;
       document.getElementById('coupon-setting-container').style.display = isEnabled ? 'block' : 'none';
       document.getElementById('coupon-setting-input').value = p.couponTitle || '주말 아빠와 보드게임 30분권!';
+      document.getElementById('growth-speed-select').value = p.growthSpeed || 'monthly';
       renderManageList();
       document.getElementById('manage-modal').classList.add('active');
     }
@@ -1790,6 +2217,7 @@
       if (couponVal) {
         p.couponTitle = couponVal;
       }
+      p.growthSpeed = document.getElementById('growth-speed-select').value;
       saveData();
       renderUI();
       closeManageModal();
@@ -1800,7 +2228,7 @@
     }
 
     function resetQuestsPrompt() {
-      if (confirm('오늘 미션 체크를 모두 초기화할까요? (함께한 일수와 포켓몬 성장은 그대로 유지됩니다)')) {
+      if (confirm('오늘 미션 체크를 모두 초기화할까요? (함께한 일수와 성장은 그대로 유지됩니다)')) {
         const p = getCurrentProfile();
         p.quests.forEach(q => q.completed = false);
         saveData();
