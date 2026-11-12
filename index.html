@@ -1707,22 +1707,22 @@
       { level: 7, baseExp: 1000, stageName: '황금 마스터 👑', sub: '한 달 습관을 정복한 평생 반려몬 등극!', scale: 1.2, aura: 'champion', crown: true, speciesIdx: 2, isEgg: false }
     ];
 
-    // 7세 희윤이 기본 미션
+    // 7세 희윤이 실제 맞춤 미션 (6가지)
     const HEE_YOON_QUESTS = [
-      { id: 'q1', text: '🪥 아침/저녁 스스로 치카치카', exp: 20, berry: 1, completed: false },
-      { id: 'q2', text: '👟 현관 신발 가지런히 정리', exp: 20, berry: 1, completed: false },
-      { id: 'q3', text: '📖 재미있는 책 1권 끝까지 읽기', exp: 25, berry: 1, completed: false },
-      { id: 'q4', text: '🧸 가지고 논 방 깨끗이 정리', exp: 20, berry: 1, completed: false },
-      { id: 'q5', text: '📝 스토리톡 / 오늘의 과제 하기', exp: 25, berry: 1, completed: false }
+      { id: 'hy_q1', text: '📐 재미있는 수학 공부 척척 풀기!', exp: 20, berry: 1, completed: false },
+      { id: 'hy_q2', text: '🔤 신나는 영어 챌린지 씩씩하게 하기!', exp: 20, berry: 1, completed: false },
+      { id: 'hy_q3', text: '📖 스스로 재미있는 책 1권 끝까지 읽기!', exp: 25, berry: 1, completed: false },
+      { id: 'hy_q4', text: '🍚 저녁 먹을 때 자리 지키고 냠냠 먹기!', exp: 25, berry: 1, completed: false },
+      { id: 'hy_q5', text: '🥢 밥 먹기 전 가족 수저 예쁘게 놓기!', exp: 15, berry: 1, completed: false },
+      { id: 'hy_q6', text: '🧸 가지고 논 장난감 상자에 쏙쏙 정리!', exp: 20, berry: 1, completed: false }
     ];
 
-    // 3세 희겸이 기본 미션
+    // 3세 희겸이 실제 맞춤 미션 (4가지)
     const HEE_GYEOM_QUESTS = [
-      { id: 'q1', text: '🪥 아빠랑 치카치카 양치하기', exp: 20, berry: 1, completed: false },
-      { id: 'q2', text: '👟 예쁜 신발 바르게 벗어두기', exp: 20, berry: 1, completed: false },
-      { id: 'q3', text: '🍚 밥 남기지 않고 냠냠 먹기', exp: 25, berry: 1, completed: false },
-      { id: 'q4', text: '🧸 장난감 상자에 쏙 정리하기', exp: 20, berry: 1, completed: false },
-      { id: 'q5', text: '🛏️ 밤에 일찍 누워서 코코 자기', exp: 25, berry: 1, completed: false }
+      { id: 'hg_q1', text: '🪥 치카치카 양치 깨끗하게 하기!', exp: 25, berry: 1, completed: false },
+      { id: 'hg_q2', text: '🧸 장난감 친구들 제자리에 쏙 정리하기!', exp: 25, berry: 1, completed: false },
+      { id: 'hg_q3', text: '📚 재미있는 그림책 한 권 쏙 읽기!', exp: 25, berry: 1, completed: false },
+      { id: 'hg_q4', text: '😊 떼쓰지 않고 씩씩하게 예쁘게 말하기!', exp: 30, berry: 1, completed: false }
     ];
 
     // 무한 다양 쓰담 멘트 엔진
@@ -1872,6 +1872,18 @@
       pool.push(`우리 ${childName}이는 스스로 정리도 잘하는 멋쟁이! ✨`);
       pool.push(`${childName}이가 최고야! 내가 항상 응원해! 🚀`);
 
+      if (childName.includes('희윤')) {
+        pool.push("수학도 영어도 스스로 척척 해내는 희윤이, 진짜 대단해! 📐🔤");
+        pool.push("스스로 책 한 권 다 읽었어? 희윤이는 멋진 독서왕! 📖✨");
+        pool.push("식사 시간에 자리 딱 지키고 밥 먹는 모습 정말 멋져! 🍚");
+        pool.push("가족들 수저도 착착 놓고 장난감도 싹 치우는 듬직한 형아! 🥢❤️");
+      } else if (childName.includes('희겸')) {
+        pool.push("치카치카 양치 깨끗이 해서 충치균 싹 도망갔다! 🪥✨");
+        pool.push("장난감 쏙 정리하니까 방이 공사장 차고지처럼 깔끔해! 🚜🧸");
+        pool.push("그림책 재미있게 읽어서 포켓몬도 귀 쫑긋! 📚");
+        pool.push("울거나 떼쓰지 않고 예쁘게 말하는 희겸이가 최고야! 😊👍");
+      }
+
       return pool[Math.floor(Math.random() * pool.length)];
     }
 
@@ -1943,7 +1955,7 @@
 
     function loadData() {
       try {
-        const raw = localStorage.getItem('pokemon_routine_v8');
+        const raw = localStorage.getItem('pokemon_routine_v9') || localStorage.getItem('pokemon_routine_v8');
         if (raw) {
           appData = JSON.parse(raw);
         } else {
@@ -1957,6 +1969,17 @@
         }
       } catch (e) {
         console.warn("Storage load fallback:", e);
+      }
+
+      // 사용자가 요청한 최신 맞춤 미션으로 갱신 (레벨, 성장, 경험치, 도감은 100% 안전 보존!)
+      if (!appData.questVersion || appData.questVersion !== '20261112_custom_v1') {
+        if (appData.profiles && appData.profiles[0]) {
+          appData.profiles[0].quests = JSON.parse(JSON.stringify(HEE_YOON_QUESTS));
+        }
+        if (appData.profiles && appData.profiles[1]) {
+          appData.profiles[1].quests = JSON.parse(JSON.stringify(HEE_GYEOM_QUESTS));
+        }
+        appData.questVersion = '20261112_custom_v1';
       }
 
       const today = getTodayStr();
@@ -1990,7 +2013,7 @@
 
     function saveData() {
       try {
-        localStorage.setItem('pokemon_routine_v8', JSON.stringify(appData));
+        localStorage.setItem('pokemon_routine_v9', JSON.stringify(appData));
       } catch (e) {
         console.warn("Storage save fallback:", e);
       }
