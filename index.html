@@ -679,8 +679,8 @@
         min-height: 0 !important;
         height: 100% !important;
         flex-direction: row !important;
-        gap: 6px;
-        padding: 4px 6px 6px;
+        gap: 8px;
+        padding: 6px 8px 8px;
         background: #E2E8F0;
         overflow: hidden !important;
       }
@@ -691,12 +691,31 @@
         flex-direction: column !important;
         flex: 1 1 0% !important;
         min-height: 0 !important;
-        border-radius: 12px;
+        border-radius: 14px;
         box-shadow: 0 3px 12px rgba(0,0,0,0.06);
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         touch-action: pan-y !important;
         overscroll-behavior-y: contain !important;
+      }
+
+      .quest-section {
+        flex: none !important;
+        overflow: visible !important;
+      }
+    }
+
+    /* ============================================================
+       📱 1. 스마트폰 가로 모드 (화면 높이가 낮은 폰: max-height: 500px)
+       ============================================================ */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .dashboard-body {
+        gap: 6px;
+        padding: 4px 6px 6px;
+      }
+
+      .profile-col {
+        border-radius: 12px;
       }
 
       .stage {
@@ -759,8 +778,6 @@
       }
 
       .quest-section {
-        flex: none !important;
-        overflow: visible !important;
         padding: 6px 8px 16px;
       }
 
@@ -779,6 +796,169 @@
 
       .quest-title {
         font-size: 12px;
+      }
+    }
+
+    /* ============================================================
+       🍎 2. 아이패드 & 태블릿 대화면 가로 모드 (min-height: 501px)
+       캐릭터와 상단 버튼을 큼직하고 시원시원하게 대확대!
+       ============================================================ */
+    @media (orientation: landscape) and (min-height: 501px), (min-width: 900px) and (min-height: 501px) {
+      .header-bar {
+        padding: 8px 18px;
+      }
+
+      .app-title-badge {
+        font-size: 14px;
+        padding: 4px 10px;
+      }
+
+      .col-header {
+        padding: 10px 18px;
+      }
+
+      .col-profile-title {
+        font-size: 16.5px;
+        font-weight: 900;
+        gap: 8px;
+      }
+
+      .child-avatar-img {
+        width: 30px;
+        height: 30px;
+      }
+
+      .col-stats-row {
+        gap: 8px;
+      }
+
+      .col-days-pill {
+        font-size: 12.5px;
+        padding: 3px 10px;
+      }
+
+      .col-trophy-btn, .col-berry-btn {
+        font-size: 12.5px;
+        padding: 4px 11px;
+      }
+
+      /* 🔥 캐릭터 스테이지 시원하게 대확대! */
+      .stage {
+        padding: 12px 18px;
+      }
+
+      .pokemon-speech {
+        margin-bottom: 6px;
+        font-size: 13px;
+        padding: 5px 14px;
+        border-radius: 14px;
+      }
+
+      .pokemon-wrapper {
+        width: 140px;
+        height: 140px;
+        margin-bottom: 6px;
+      }
+
+      .pokemon-img, .pokemon-wrapper svg {
+        max-width: 128px;
+        max-height: 128px;
+      }
+
+      .name-title-row {
+        gap: 6px;
+      }
+
+      .name-title {
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .crown-icon {
+        font-size: 18px;
+      }
+
+      .stage-pill {
+        font-size: 11.5px;
+        padding: 2px 8px;
+        border-radius: 8px;
+      }
+
+      .sub-title {
+        font-size: 12px;
+        margin: 2px 0 4px;
+      }
+
+      .companion-stat-pill {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 8px;
+      }
+
+      .exp-container {
+        margin-bottom: 8px;
+        max-width: 320px;
+      }
+
+      .exp-labels {
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .exp-bar-bg {
+        height: 9px;
+      }
+
+      /* 🔥 체크리스트 윗쪽 버튼 (밥주기, 쓰담, 탐험, 파트너) 큼직하게 대확대! */
+      .stage-actions {
+        max-width: 380px;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .action-btn {
+        padding: 8px 12px;
+        font-size: 13.5px;
+        font-weight: 800;
+        border-radius: 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      }
+
+      /* 체크리스트 영역 */
+      .quest-section {
+        padding: 10px 14px 20px;
+      }
+
+      .section-header {
+        margin-bottom: 8px;
+      }
+
+      .section-title {
+        font-size: 15px;
+      }
+
+      .btn-manage {
+        font-size: 11.5px;
+        padding: 4px 9px;
+      }
+
+      .quest-card {
+        min-height: 50px;
+        padding: 6px 12px;
+        margin-bottom: 7px;
+        border-radius: 14px;
+      }
+
+      .quest-checkbox-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 17px;
+        margin-right: 9px;
+      }
+
+      .quest-title {
+        font-size: 13.5px;
+        font-weight: 800;
       }
     }
 
