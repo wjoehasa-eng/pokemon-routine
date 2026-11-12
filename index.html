@@ -1222,6 +1222,204 @@
       margin-bottom: 4px;
     }
 
+  
+    /* ============================================================
+       🔥 매일매일 눈에 띄게 달라지는 다이내믹 파츠 & 외형 진화 레이어
+       ============================================================ */
+    .accessory-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* ⛑️ 황금 안전모 (Lv.2+) */
+    .part-helmet {
+      position: absolute;
+      top: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 26px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      animation: floatHat 2.4s ease-in-out infinite;
+      z-index: 6;
+    }
+    @keyframes floatHat {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-3px); }
+    }
+
+    /* 🚨 삐뽀삐뽀 출동 사이렌 (Lv.3+) */
+    .part-siren {
+      position: absolute;
+      top: -6px;
+      right: 18px;
+      font-size: 20px;
+      animation: sirenBlink 0.5s infinite alternate;
+      z-index: 7;
+    }
+    @keyframes sirenBlink {
+      0% { transform: scale(0.9) rotate(-12deg); filter: drop-shadow(0 0 6px #E53E3E); }
+      100% { transform: scale(1.15) rotate(12deg); filter: drop-shadow(0 0 10px #3182CE); }
+    }
+
+    /* 💨 파워 부스터 머플러 연기 (Lv.4+) */
+    .part-booster {
+      position: absolute;
+      bottom: 12px;
+      left: 4px;
+      font-size: 19px;
+      animation: puffSmoke 1.3s infinite;
+      z-index: 2;
+    }
+    @keyframes puffSmoke {
+      0% { transform: translate(0, 0) scale(0.6); opacity: 0.9; }
+      50% { transform: translate(-6px, -6px) scale(1.0); opacity: 0.6; }
+      100% { transform: translate(-12px, -12px) scale(1.3); opacity: 0; }
+    }
+
+    /* 🏅 1주일 완주 황금 훈장 (Lv.7+) */
+    .part-medal {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 24px;
+      filter: drop-shadow(0 2px 5px rgba(236, 201, 75, 0.7));
+      animation: medalShine 1.8s infinite alternate;
+      z-index: 8;
+    }
+    @keyframes medalShine {
+      0% { transform: scale(0.95); filter: drop-shadow(0 0 4px #ECC94B); }
+      100% { transform: scale(1.15); filter: drop-shadow(0 0 10px #F6E05E); }
+    }
+
+    /* 💡 LED 광선 서치라이트 (Lv.8+) */
+    .part-headlight {
+      position: absolute;
+      bottom: 26px;
+      right: -6px;
+      width: 40px;
+      height: 20px;
+      background: linear-gradient(90deg, rgba(254, 240, 138, 0.85), rgba(254, 240, 138, 0));
+      border-radius: 0 10px 10px 0;
+      transform: rotate(5deg);
+      pointer-events: none;
+      filter: blur(1.5px);
+      z-index: 7;
+    }
+
+    /* 🛡️ 사이버 에너지 쉴드 (Lv.10+) */
+    .part-shield {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 106px;
+      height: 106px;
+      margin-top: -53px;
+      margin-left: -53px;
+      border: 2px dashed #4FD1C5;
+      border-radius: 50%;
+      box-shadow: 0 0 14px rgba(79, 209, 197, 0.5);
+      animation: shieldRotate 7s linear infinite;
+      z-index: 1;
+    }
+    @keyframes shieldRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 🪽 터보 윙 날개 (Lv.12+) */
+    .part-wings {
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 108px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 24px;
+      animation: wingFlap 1.5s ease-in-out infinite alternate;
+      z-index: 1;
+    }
+    @keyframes wingFlap {
+      0% { transform: translateX(-50%) scaleY(0.85) scaleX(0.95); }
+      100% { transform: translateX(-50%) scaleY(1.15) scaleX(1.05); }
+    }
+
+    /* ⚔️ 레이저 블레이드 (Lv.21+) */
+    .part-blade {
+      position: absolute;
+      top: 22px;
+      right: -10px;
+      font-size: 26px;
+      filter: drop-shadow(0 0 8px #63B3ED);
+      animation: bladeGlow 1.5s infinite alternate;
+      z-index: 8;
+    }
+    @keyframes bladeGlow {
+      0% { transform: rotate(15deg) scale(0.95); }
+      100% { transform: rotate(25deg) scale(1.1); }
+    }
+
+    /* 🌌 우주 은하수 오라 (Lv.24+) */
+    .part-galaxy {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 114px;
+      height: 114px;
+      margin-top: -57px;
+      margin-left: -57px;
+      border-radius: 50%;
+      border: 1.5px dotted #B794F4;
+      animation: galaxySpin 10s linear infinite;
+      z-index: 1;
+    }
+    @keyframes galaxySpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 👑 황금 왕관 & 챔피언 망토 (Lv.28+) */
+    .part-crown-cape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      filter: drop-shadow(0 0 10px #ECC94B);
+      animation: crownBounce 1.5s ease-in-out infinite alternate;
+      z-index: 9;
+    }
+    @keyframes crownBounce {
+      0% { transform: translateX(-50%) translateY(0); }
+      100% { transform: translateX(-50%) translateY(-4px); }
+    }
+
+    /* 파츠 칭호 뱃지 (매일매일 달라지는 장착 파츠!) */
+    .part-badge-tag {
+      font-size: 10px;
+      font-weight: 800;
+      color: #744210;
+      background: #FEFCBF;
+      border: 1px solid #ECC94B;
+      padding: 1.5px 7px;
+      border-radius: 8px;
+      margin-top: 1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      animation: badgePop 0.3s ease;
+    }
+    @keyframes badgePop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
   </style>
 </head>
 <body>
@@ -1275,6 +1473,7 @@
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-0"></div>
             <div id="disp-0"></div>
+            <div class="accessory-layer" id="acc-0"></div>
           </div>
 
           <div class="pokemon-name-tag">
@@ -1283,6 +1482,7 @@
               <span class="name-title" id="name-0">파이리</span>
               <span class="stage-pill" id="stage-pill-0">기본형 (Lv.<span id="lv-0">1</span>)</span>
             </div>
+            <div id="part-tag-0" class="part-badge-tag" style="display:none;"></div>
             <span class="sub-title" id="sub-0">꼬리의 불꽃이 활활!</span>
             <span class="companion-stat-pill" id="stat-pill-0">❤️ 행복도 100% · 습관 0개 완료</span>
           </div>
@@ -1338,6 +1538,7 @@
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-1"></div>
             <div id="disp-1"></div>
+            <div class="accessory-layer" id="acc-1"></div>
           </div>
 
           <div class="pokemon-name-tag">
@@ -1346,6 +1547,7 @@
               <span class="name-title" id="name-1">꼬마 포크레인</span>
               <span class="stage-pill" id="stage-pill-1">기본형 (Lv.<span id="lv-1">1</span>)</span>
             </div>
+            <div id="part-tag-1" class="part-badge-tag" style="display:none;"></div>
             <span class="sub-title" id="sub-1">흙을 번쩍 들어 올리는 씩씩한 굴착기!</span>
             <span class="companion-stat-pill" id="stat-pill-1">❤️ 행복도 100% · 습관 0개 완료</span>
           </div>
@@ -3043,6 +3245,84 @@
       return txt || q.text;
     }
 
+    
+    function renderAutoAccessories(pIdx, level, isEgg) {
+      const accEl = document.getElementById(`acc-${pIdx}`);
+      const partTagEl = document.getElementById(`part-tag-${pIdx}`);
+      if (!accEl) return;
+
+      if (isEgg || level <= 0) {
+        accEl.innerHTML = '';
+        if (partTagEl) partTagEl.style.display = 'none';
+        return;
+      }
+
+      let accHtml = '';
+      let tagText = '';
+
+      // Lv.2+: ⛑️ 황금 헬멧 (안전모)
+      if (level >= 2) {
+        accHtml += '<div class="part-helmet">⛑️</div>';
+        tagText = '⛑️ 황금 헬멧 착용!';
+      }
+      // Lv.3+: 🚨 출동 사이렌 (깜빡임 점멸!)
+      if (level >= 3) {
+        accHtml += '<div class="part-siren">🚨</div>';
+        tagText = '🚨 삐뽀삐뽀 사이렌 출동!';
+      }
+      // Lv.4+: 💨 듀얼 머플러 부스터 연기
+      if (level >= 4) {
+        accHtml += '<div class="part-booster">💨</div>';
+        tagText = '💨 파워 부스터 장착!';
+      }
+      // Lv.7+: 🏅 1주일 달성 골드 훈장
+      if (level >= 7) {
+        accHtml += '<div class="part-medal">🏅</div>';
+        tagText = '🏅 1주일 완주 황금 훈장!';
+      }
+      // Lv.8+: 💡 LED 광선 서치라이트
+      if (level >= 8) {
+        accHtml += '<div class="part-headlight"></div>';
+        tagText = '💡 LED 서치라이트 점등!';
+      }
+      // Lv.10+: 🛡️ 사이버 에너지 쉴드
+      if (level >= 10) {
+        accHtml += '<div class="part-shield"></div>';
+        tagText = '🛡️ 메가 에너지 쉴드 가동!';
+      }
+      // Lv.12+: 🪽 터보 윙 날개
+      if (level >= 12) {
+        accHtml += '<div class="part-wings"><span>🪽</span><span>🪽</span></div>';
+        tagText = '🪽 터보 윙 날개 장착!';
+      }
+      // Lv.21+: ⚔️ 레이저 블레이드
+      if (level >= 21) {
+        accHtml += '<div class="part-blade">⚔️</div>';
+        tagText = '⚔️ 타이탄 레이저 블레이드!';
+      }
+      // Lv.24+: 🌌 우주 은하수 오라
+      if (level >= 24) {
+        accHtml += '<div class="part-galaxy"></div>';
+        tagText = '🌌 우주 은하수 가디언!';
+      }
+      // Lv.28+: 👑 황금 왕관 & 챔피언 망토
+      if (level >= 28) {
+        accHtml += '<div class="part-crown-cape">👑</div>';
+        tagText = '👑 평생 반려몬 황금 마스터!';
+      }
+
+      accEl.innerHTML = accHtml;
+
+      if (partTagEl) {
+        if (tagText) {
+          partTagEl.innerText = tagText;
+          partTagEl.style.display = 'inline-flex';
+        } else {
+          partTagEl.style.display = 'none';
+        }
+      }
+    }
+
     function renderProfile(pIdx) {
       const p = appData.profiles[pIdx];
       if (!p) return;
@@ -3129,6 +3409,9 @@
         document.getElementById(`stage-pill-${pIdx}`).innerText = `${stage.stageName} (Lv.${stage.level})`;
         document.getElementById(`sub-${pIdx}`).innerText = isHungryOrSleepy ? "😴 배가 고파요.. 미션을 하고 밥을 주세요!" : stage.sub;
       }
+
+      // 🔥 매일매일 자동으로 장착되는 다이내믹 파츠 렌더링!
+      renderAutoAccessories(pIdx, stage.level, stage.isEgg);
 
       const happiness = isHungryOrSleepy ? 40 : Math.min(100, 50 + (completedCount * 10));
       document.getElementById(`stat-pill-${pIdx}`).innerText = `❤️ 행복도 ${happiness}% · 습관 ${p.totalHabitsDone || 0}개 완료`;
@@ -3255,18 +3538,45 @@
       if (newLevel === 1) {
         modalTitle.innerText = `${p.name}의 파트너 탄생! 🐣`;
         descEl.innerHTML = `축하합니다! 신비한 알에서<br><strong>${currentSpecies.name}</strong>(이)가 힘차게 깨어났습니다! 🎉`;
+      } else if (newLevel === 2) {
+        modalTitle.innerText = `${p.name}의 황금 헬멧 획득! ⛑️`;
+        descEl.innerHTML = `멋진 공사장 안전모를 착용했습니다!<br><strong>${currentSpecies.name}</strong>(이)가 더욱 씩씩해졌어요! ⛑️✨`;
+      } else if (newLevel === 3) {
+        modalTitle.innerText = `${p.name}의 출동 사이렌 장착! 🚨`;
+        descEl.innerHTML = `삐뽀삐뽀! 깜빡이는 출동 사이렌을 달았습니다!<br>오늘도 씩씩하게 출동 준비 완료! 🚨💨`;
       } else if (newLevel === 4) {
-        modalTitle.innerText = `${p.name}의 1차 진화 성공! ⚡️`;
-        descEl.innerHTML = `성실한 노력의 결실!<br><strong>${fam.species[0].name}</strong>이(가) <strong>${currentSpecies.name}</strong>(으)로 멋지게 진화했습니다! 💥`;
+        modalTitle.innerText = `${p.name}의 듀얼 부스터 장착! 💨`;
+        descEl.innerHTML = `머플러에서 파워 연기가 퐁퐁!<br><strong>${currentSpecies.name}</strong>의 마력이 2배로 폭발합니다! 🚀`;
       } else if (newLevel === 6) {
-        modalTitle.innerText = `${p.name}의 최종 진화 달성! 🐉`;
-        descEl.innerHTML = `한 달 동안 스스로 해낸 결실!<br>최강의 수호신 <strong>${currentSpecies.name}</strong>(으)로 각성했습니다! 🌟`;
-      } else if (newLevel >= 7) {
+        modalTitle.innerText = `${p.name}의 1차 메가 진화! ⚡️`;
+        descEl.innerHTML = `성실한 노력의 결실!<br>새로운 모습 <strong>${currentSpecies.name}</strong>(으)로 대변신했습니다! 💥`;
+      } else if (newLevel === 7) {
+        modalTitle.innerText = `${p.name}의 1주일 완주 훈장! 🏅`;
+        descEl.innerHTML = `일주일 연속 습관 성공!<br>영광의 황금 메달을 목에 걸었습니다! 🏅✨`;
+      } else if (newLevel === 8) {
+        modalTitle.innerText = `${p.name}의 LED 서치라이트 점등! 💡`;
+        descEl.innerHTML = `앞을 환하게 비추는 강력한 탐조등 장착!<br>어두운 밤에도 씩씩하게 출동! 💡🌟`;
+      } else if (newLevel === 10) {
+        modalTitle.innerText = `${p.name}의 사이버 에너지 쉴드! 🛡️`;
+        descEl.innerHTML = `신비한 청록빛 에너지 방어막이 가동되었습니다!<br>어떤 나쁜 습관도 튕겨내요! 🛡️✨`;
+      } else if (newLevel === 12) {
+        modalTitle.innerText = `${p.name}의 터보 윙 날개 장착! 🪽`;
+        descEl.innerHTML = `등 뒤에 사이버 날개가 솟아났습니다!<br>하늘을 날아오를 듯 신나게 점프! 🪽🚀`;
+      } else if (newLevel === 14) {
+        modalTitle.innerText = `${p.name}의 2주 완주 챔피언! 🏆`;
+        descEl.innerHTML = `2주 연속 완벽한 습관 달성!<br>챔피언 벨트를 허리에 찼습니다! 🏆💪`;
+      } else if (newLevel === 20) {
+        modalTitle.innerText = `${p.name}의 최종 합체 진화! 🤖`;
+        descEl.innerHTML = `3주간의 대기록 달성!<br>전설의 수호신 <strong>${currentSpecies.name}</strong>(으)로 최종 각성했습니다! 🔥`;
+      } else if (newLevel === 21) {
+        modalTitle.innerText = `${p.name}의 레이저 블레이드 장착! ⚔️`;
+        descEl.innerHTML = `타이탄의 광선검을 손에 쥐었습니다!<br>무적의 수호 로봇 파워 업! ⚔️⚡️`;
+      } else if (newLevel >= 28) {
         modalTitle.innerText = `${p.name}의 황금 마스터 등극! 👑`;
-        descEl.innerHTML = `모든 습관을 완주한 멋진 어린이!<br><strong>${currentSpecies.name}</strong>에게 황금 왕관이 수여되었습니다! 🏆<br><br>명예의 전당에 최고 등급 수호신으로 영구 등재되었습니다!`;
+        descEl.innerHTML = `한 달 완주! 모든 습관을 정복한 최고의 어린이!<br><strong>${currentSpecies.name}</strong>에게 황금 왕관이 수여되었습니다! 🏆<br><br>명예의 전당에 평생 반려몬으로 영구 보존됩니다!`;
       } else {
-        modalTitle.innerText = `${p.name}의 레벨 업 & 파워 업! 🚀`;
-        descEl.innerHTML = `<strong>${currentSpecies.name}</strong>의 몸집이 자라고<br><strong>${newStage.stageName}</strong> 단계로 도약했습니다! ✨`;
+        modalTitle.innerText = `${p.name}의 레벨 업! (Lv.${newLevel}) 🚀`;
+        descEl.innerHTML = `<strong>${currentSpecies.name}</strong>이(가)<br><strong>${newStage.stageName}</strong> 단계로 쑥쑥 자라났습니다! ✨`;
       }
 
       ensurePartnerHistory(p);
