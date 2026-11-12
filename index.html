@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>우리 집 루틴 다마고치</title>
+  <title>우리 집 루틴 다마고치 (형제 대시보드)</title>
   <style>
     :root {
       --primary: #FF5350;
@@ -35,6 +35,7 @@
       padding: 0;
     }
 
+    /* 전체 앱 컨테이너 */
     .app-container {
       width: 100%;
       max-width: 480px;
@@ -46,19 +47,10 @@
       position: relative;
     }
 
-    @media (min-width: 481px) {
-      body { padding: 12px; }
-      .app-container {
-        min-height: auto;
-        border-radius: 28px;
-        overflow: hidden;
-      }
-    }
-
-    /* 상단 슬림 헤더 */
+    /* 최상단 글로벌 헤더 */
     .header-bar {
       background: linear-gradient(135deg, #FF5350, #FF7B54);
-      padding: 10px 14px 8px;
+      padding: 8px 12px 6px;
       color: white;
       flex-shrink: 0;
     }
@@ -67,11 +59,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .app-title-badge {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 900;
       background: rgba(0,0,0,0.22);
       padding: 3px 8px;
@@ -102,15 +94,16 @@
       white-space: nowrap;
     }
 
-    .profile-tabs {
+    /* 세로 모드 전용 탭 스위처 */
+    .portrait-tabs {
       display: flex;
       gap: 6px;
-      margin-bottom: 6px;
+      margin-top: 4px;
     }
 
-    .profile-tab {
+    .portrait-tab {
       flex: 1;
-      padding: 6px 8px;
+      padding: 7px 8px;
       border-radius: 12px;
       background: rgba(255,255,255,0.22);
       border: none;
@@ -123,63 +116,123 @@
       white-space: nowrap;
     }
 
-    .profile-tab.active {
+    .portrait-tab.active {
       background: white;
       color: var(--primary);
       box-shadow: 0 3px 10px rgba(0,0,0,0.12);
     }
 
-    .header-info {
+    /* 형제 대시보드 바디 컨테이너 */
+    .dashboard-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #EDF2F7;
+    }
+
+    /* 각 형제 프로필 컬럼 */
+    .profile-col {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background: #FFFFFF;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* 세로 모드에서는 활성화된 탭만 100% 폭으로 표시 */
+    .profile-col:not(.active-col) {
+      display: none;
+    }
+
+    /* 컬럼 헤더 (형제별 색상) */
+    .col-header {
+      padding: 7px 12px;
+      color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 6px;
+      flex-shrink: 0;
     }
 
-    .companion-days {
-      font-size: 12px;
+    .col-header-boy {
+      background: linear-gradient(135deg, #3182CE, #4299E1);
+    }
+
+    .col-header-toddler {
+      background: linear-gradient(135deg, #DD6B20, #ED8936);
+    }
+
+    .col-profile-title {
+      font-size: 13px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .col-stats-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .col-days-pill {
+      font-size: 11px;
       font-weight: 800;
       background: rgba(0,0,0,0.22);
-      padding: 4px 10px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 10px;
       white-space: nowrap;
-      flex-shrink: 0;
     }
 
-    .berry-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #FFF;
-      color: #E53E3E;
-      padding: 4px 12px;
-      border-radius: 14px;
-      font-size: 12px;
-      font-weight: 900;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      cursor: pointer;
+    .col-trophy-btn {
+      background: #FEFCBF;
+      color: #975A16;
       border: none;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
       white-space: nowrap;
-      flex-shrink: 0;
     }
 
-    /* 다마고치 무대 - 콤팩트화 */
+    .col-berry-btn {
+      background: #FFFFFF;
+      color: #C53030;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      white-space: nowrap;
+    }
+
+    /* 다마고치 무대 */
     .stage {
       background: linear-gradient(180deg, #EBF4FF 0%, #D8ECFF 100%);
-      padding: 10px 14px 10px;
+      padding: 8px 10px 8px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
       border-bottom: 2px dashed #CBD5E0;
       flex-shrink: 0;
-      transition: background 0.5s ease;
+      transition: background 0.4s ease;
     }
 
-    /* 시간대별 무대 배경 테마 */
     .stage-morning { background: linear-gradient(180deg, #EBF8FF 0%, #BEE3F8 100%); }
     .stage-day { background: linear-gradient(180deg, #EBF4FF 0%, #D8ECFF 100%); }
     .stage-evening { background: linear-gradient(180deg, #FED7AA 0%, #FDBA74 100%); }
@@ -190,8 +243,8 @@
 
     .pokemon-wrapper {
       position: relative;
-      width: 130px;
-      height: 130px;
+      width: 105px;
+      height: 105px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -201,37 +254,37 @@
 
     .pokemon-shadow {
       position: absolute;
-      bottom: 4px;
-      width: 100px;
-      height: 14px;
-      background: rgba(42, 117, 187, 0.25);
+      bottom: 2px;
+      width: 80px;
+      height: 10px;
+      background: rgba(42, 117, 187, 0.22);
       border-radius: 50%;
       filter: blur(2px);
     }
 
     .aura-ring {
       position: absolute;
-      width: 125px;
-      height: 125px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       pointer-events: none;
       display: none;
     }
 
     .aura-sparkle {
-      box-shadow: 0 0 20px 6px rgba(255, 203, 5, 0.65);
+      box-shadow: 0 0 16px 5px rgba(255, 203, 5, 0.65);
       animation: auraPulse 2s ease-in-out infinite alternate;
       display: block;
     }
 
     .aura-fire {
-      box-shadow: 0 0 26px 8px rgba(255, 83, 80, 0.75);
+      box-shadow: 0 0 20px 6px rgba(255, 83, 80, 0.75);
       animation: auraPulse 1.5s ease-in-out infinite alternate;
       display: block;
     }
 
     .aura-champion {
-      box-shadow: 0 0 32px 12px rgba(255, 215, 0, 0.9);
+      box-shadow: 0 0 24px 10px rgba(255, 215, 0, 0.9);
       animation: auraPulse 1.2s ease-in-out infinite alternate;
       display: block;
     }
@@ -242,8 +295,8 @@
     }
 
     .pokemon-img {
-      max-width: 120px;
-      max-height: 120px;
+      max-width: 95px;
+      max-height: 95px;
       z-index: 2;
       animation: float 2.4s ease-in-out infinite;
       user-select: none;
@@ -273,7 +326,7 @@
 
     @keyframes float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+      50% { transform: translateY(-5px); }
     }
 
     /* 말풍선 */
@@ -282,17 +335,17 @@
       top: 4px;
       right: 4px;
       background: white;
-      padding: 6px 12px;
-      border-radius: 14px;
-      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 11px;
       font-weight: 800;
       color: #2B6CB0;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
       display: none;
       z-index: 10;
-      max-width: 220px;
+      max-width: 190px;
       white-space: normal;
-      line-height: 1.35;
+      line-height: 1.3;
       animation: speechPop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -304,121 +357,120 @@
     .pokemon-speech::after {
       content: '';
       position: absolute;
-      bottom: -6px;
-      left: 16px;
-      border-width: 6px 6px 0;
+      bottom: -5px;
+      left: 14px;
+      border-width: 5px 5px 0;
       border-style: solid;
       border-color: white transparent;
     }
 
-    /* 포켓몬 칭호 */
+    /* 파트너 이름 및 칭호 */
     .pokemon-name-tag {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
-      margin-bottom: 6px;
+      gap: 1px;
+      margin-bottom: 5px;
     }
 
     .name-title-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .name-title {
-      font-size: 19px;
+      font-size: 16px;
       font-weight: 900;
       color: #1A365D;
       white-space: nowrap;
     }
 
     .crown-icon {
-      font-size: 18px;
+      font-size: 15px;
       display: none;
     }
 
     .stage-pill {
       background: #3182CE;
       color: white;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 10px;
-      box-shadow: 0 1px 4px rgba(49, 130, 206, 0.25);
+      padding: 2px 7px;
+      border-radius: 8px;
       white-space: nowrap;
     }
 
     .sub-title {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       color: #4A5568;
       white-space: nowrap;
     }
 
     .companion-stat-pill {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
       color: #2B6CB0;
       background: #EBF8FF;
       border: 1px solid #BEE3F8;
-      padding: 1px 6px;
-      border-radius: 8px;
+      padding: 1px 5px;
+      border-radius: 6px;
       white-space: nowrap;
     }
 
-    /* 슬림 경험치 바 */
+    /* 경험치 바 */
     .exp-container {
       width: 100%;
-      max-width: 320px;
-      margin-bottom: 8px;
+      max-width: 270px;
+      margin-bottom: 6px;
     }
 
     .exp-labels {
       display: flex;
       justify-content: space-between;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
       color: #4A5568;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
       white-space: nowrap;
     }
 
     .exp-bar-bg {
       width: 100%;
-      height: 12px;
+      height: 10px;
       background: #CBD5E0;
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
     }
 
     .exp-bar-fill {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #48BB78, #38A169);
-      border-radius: 8px;
+      border-radius: 6px;
       transition: width 0.35s ease;
     }
 
-    /* 가로 버튼 나란히 */
+    /* 액션 버튼 나란히 */
     .stage-actions {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       width: 100%;
-      max-width: 380px;
+      max-width: 320px;
       justify-content: space-between;
     }
 
     .action-btn {
       flex: 1;
-      padding: 7px 4px;
-      border-radius: 12px;
+      padding: 6px 3px;
+      border-radius: 10px;
       border: none;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
       transition: transform 0.1s;
       white-space: nowrap;
       text-align: center;
@@ -433,10 +485,10 @@
     .btn-coupon { background: #E9D8FD; color: #6B46C1; display: none; }
     .btn-change { background: #E2E8F0; color: #4A5568; }
 
-    /* 미션 섹션 - 콤팩트 카드 */
+    /* 미션 퀘스트 섹션 */
     .quest-section {
       flex: 1;
-      padding: 10px 14px 14px;
+      padding: 8px 10px 12px;
       background: #FFFFFF;
       overflow-y: auto;
     }
@@ -445,25 +497,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .section-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 900;
       color: #2D3748;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       white-space: nowrap;
+    }
+
+    .quest-progress {
+      font-size: 12px;
+      font-weight: 800;
+      color: #718096;
     }
 
     .btn-manage {
       background: #EDF2F7;
       border: none;
-      padding: 4px 8px;
-      border-radius: 8px;
-      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 10.5px;
       font-weight: 700;
       color: #4A5568;
       cursor: pointer;
@@ -473,18 +531,18 @@
     .quest-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
     }
 
     .quest-card {
       width: 100%;
-      min-height: 56px;
+      min-height: 48px;
       display: flex;
       align-items: center;
-      padding: 8px 12px;
+      padding: 6px 10px;
       background: #F8FAFC;
       border: 2px solid #EDF2F7;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
       text-align: left;
       transition: all 0.15s ease;
@@ -502,15 +560,15 @@
     }
 
     .quest-checkbox-icon {
-      width: 34px;
-      height: 34px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: 2px solid #CBD5E0;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 12px;
-      font-size: 20px;
+      margin-right: 10px;
+      font-size: 18px;
       font-weight: 900;
       background: white;
       color: transparent;
@@ -531,11 +589,11 @@
     }
 
     .quest-title {
-      font-size: 15px;
+      font-size: 13.5px;
       font-weight: 800;
       color: #2D3748;
       line-height: 1.25;
-      margin-bottom: 2px;
+      margin-bottom: 1px;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -547,10 +605,113 @@
     }
 
     .quest-badge {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       color: #E53E3E;
       white-space: nowrap;
+    }
+
+    /* ============================================================
+       🔥 핵심! 가로 모드 (Landscape Mode) 반반 양분 대시보드
+       ============================================================ */
+    @media (orientation: landscape) and (min-width: 540px), (min-width: 800px) {
+      body {
+        padding: 8px 12px;
+        align-items: center;
+        background-color: #CBD5E0;
+      }
+
+      .app-container {
+        max-width: 1060px;
+        height: min(96vh, 640px);
+        min-height: auto;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      }
+
+      /* 가로 모드에서는 상단 탭 숨김 (둘 다 한 화면에 동시에 보임!) */
+      .portrait-tabs {
+        display: none !important;
+      }
+
+      .header-bar {
+        padding: 6px 14px;
+      }
+
+      .top-action-row {
+        margin-bottom: 0;
+      }
+
+      .app-title-badge::after {
+        content: " · 형제 나란히 대시보드 👦👶";
+        font-weight: 700;
+      }
+
+      /* 대시보드 바디: 좌우 50% 50% 반반 양분 */
+      .dashboard-body {
+        flex-direction: row !important;
+        gap: 6px;
+        padding: 6px;
+        background: #E2E8F0;
+      }
+
+      /* 두 컬럼 모두 상시 표시! */
+      .profile-col {
+        display: flex !important;
+        flex: 1 !important;
+        border-radius: 16px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        overflow-y: auto;
+      }
+
+      .stage {
+        padding: 6px 8px;
+      }
+
+      .pokemon-wrapper {
+        width: 90px;
+        height: 90px;
+      }
+
+      .pokemon-img, .pokemon-wrapper svg {
+        max-width: 82px;
+        max-height: 82px;
+      }
+
+      .name-title {
+        font-size: 15px;
+      }
+
+      .exp-container {
+        margin-bottom: 4px;
+        max-width: 240px;
+      }
+
+      .stage-actions {
+        max-width: 290px;
+      }
+
+      .action-btn {
+        padding: 5px 2px;
+        font-size: 10.5px;
+      }
+
+      .quest-card {
+        min-height: 44px;
+        padding: 5px 8px;
+      }
+
+      .quest-checkbox-icon {
+        width: 26px;
+        height: 26px;
+        font-size: 15px;
+        margin-right: 8px;
+      }
+
+      .quest-title {
+        font-size: 12.5px;
+      }
     }
 
     /* 토글 스위치 */
@@ -609,19 +770,16 @@
       transform: translateX(20px);
     }
 
-    /* 모달 */
+    /* 모달 기본 스타일 */
     .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.65);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 16px;
+      padding: 14px;
     }
 
     .modal-overlay.active {
@@ -630,13 +788,13 @@
 
     .modal-box {
       background: white;
-      border-radius: 24px;
+      border-radius: 22px;
       width: 100%;
-      max-width: 400px;
-      padding: 20px 16px;
+      max-width: 440px;
+      padding: 18px 14px;
       text-align: center;
       animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
     }
 
@@ -646,24 +804,24 @@
     }
 
     .evo-img {
-      width: 140px;
-      height: 140px;
+      width: 130px;
+      height: 130px;
       margin: 10px auto;
       animation: float 2s ease-in-out infinite;
     }
 
     .btn-confirm {
       width: 100%;
-      padding: 12px;
-      border-radius: 14px;
+      padding: 11px;
+      border-radius: 12px;
       background: linear-gradient(135deg, #FF5350, #FF7B54);
       color: white;
       border: none;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 900;
       cursor: pointer;
       margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(255, 83, 80, 0.3);
+      box-shadow: 0 3px 10px rgba(255, 83, 80, 0.3);
     }
 
     /* 파트너 카테고리 탭 */
@@ -678,8 +836,8 @@
     .cat-tab {
       background: #EDF2F7;
       border: none;
-      padding: 5px 10px;
-      border-radius: 10px;
+      padding: 5px 9px;
+      border-radius: 9px;
       font-size: 11px;
       font-weight: 800;
       color: #4A5568;
@@ -695,9 +853,9 @@
     .select-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 7px;
       margin: 8px 0;
-      max-height: 340px;
+      max-height: 320px;
       overflow-y: auto;
       padding: 2px;
     }
@@ -705,8 +863,8 @@
     .select-card {
       background: #F8FAFC;
       border: 2px solid #EDF2F7;
-      border-radius: 14px;
-      padding: 8px 4px;
+      border-radius: 12px;
+      padding: 7px 3px;
       cursor: pointer;
       text-align: center;
       transition: all 0.15s;
@@ -719,71 +877,192 @@
     }
 
     .select-card img, .select-card svg {
-      width: 55px;
-      height: 55px;
+      width: 52px;
+      height: 52px;
       display: block;
       margin: 0 auto 3px;
     }
 
     .select-card-name {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 800;
       color: #2D3748;
     }
 
     .select-card-type {
-      font-size: 10px;
+      font-size: 9.5px;
       color: #718096;
       font-weight: 600;
+    }
+
+    /* ============================================================
+       🏆 도감 2개 층위 탭 (성장 중 vs 명예의 전당)
+       ============================================================ */
+    .hof-tier-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .hof-tab {
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 12px;
+      background: #EDF2F7;
+      border: none;
+      font-size: 12px;
+      font-weight: 800;
+      color: #4A5568;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .hof-tab.active {
+      background: #D69E2E;
+      color: white;
+      box-shadow: 0 2px 6px rgba(214, 158, 46, 0.35);
+    }
+
+    .hof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin: 8px 0;
+      max-height: 330px;
+      overflow-y: auto;
+      padding: 2px;
+    }
+
+    .hof-card {
+      background: linear-gradient(135deg, #FFFAF0, #FFF5F5);
+      border: 2px solid #ECC94B;
+      border-radius: 14px;
+      padding: 9px 5px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .hof-card-growing {
+      border-color: #68D391;
+      background: linear-gradient(135deg, #F0FFF4, #F7FAFC);
+    }
+
+    .hof-card-crown {
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      font-size: 16px;
+    }
+
+    .hof-img-wrapper {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hof-card-name {
+      font-size: 12px;
+      font-weight: 900;
+      color: #2D3748;
+      margin-bottom: 1px;
+    }
+
+    .hof-card-badge {
+      font-size: 10px;
+      font-weight: 800;
+      color: #B7791F;
+      background: #FEFCBF;
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+
+    .hof-card-badge-growing {
+      color: #276749;
+      background: #C6F6D5;
+    }
+
+    .btn-hof-summon {
+      margin-top: 5px;
+      background: #3182CE;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 10.5px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-hof-summon:active {
+      transform: scale(0.96);
+    }
+
+    .btn-hof-active-indicator {
+      margin-top: 5px;
+      background: #EDF2F7;
+      color: #718096;
+      border: 1px solid #CBD5E0;
+      padding: 3px 6px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      display: block;
     }
 
     /* 동기화 섹션 */
     .sync-section {
       text-align: left;
-      margin-bottom: 12px;
-      padding: 10px;
+      margin-bottom: 10px;
+      padding: 9px;
       background: #F7FAFC;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid #E2E8F0;
     }
 
     .sync-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       color: #2D3748;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .sync-desc {
-      font-size: 11px;
+      font-size: 10.5px;
       color: #718096;
-      line-height: 1.4;
-      margin-bottom: 8px;
+      line-height: 1.35;
+      margin-bottom: 6px;
     }
 
     .code-textarea {
       width: 100%;
-      height: 60px;
+      height: 55px;
       padding: 6px;
       border-radius: 8px;
       border: 1px solid #CBD5E0;
-      font-size: 10px;
+      font-size: 9.5px;
       font-family: monospace;
       resize: none;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .btn-row {
       display: flex;
-      gap: 6px;
+      gap: 5px;
     }
 
     .btn-sm {
       flex: 1;
-      padding: 8px;
-      border-radius: 10px;
+      padding: 7px;
+      border-radius: 9px;
       border: none;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 800;
       cursor: pointer;
       white-space: nowrap;
@@ -795,35 +1074,35 @@
 
     .input-text {
       width: 100%;
-      padding: 9px 10px;
-      border-radius: 10px;
+      padding: 8px 10px;
+      border-radius: 9px;
       border: 1px solid #CBD5E0;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     /* 소원 상자 */
     .coupon-box {
       background: linear-gradient(135deg, #FAF5FF, #EBF8FF);
       border: 2px dashed #9F7AEA;
-      border-radius: 16px;
-      padding: 14px;
-      margin: 10px 0;
+      border-radius: 14px;
+      padding: 12px;
+      margin: 9px 0;
     }
 
-    .coupon-icon { font-size: 30px; margin-bottom: 4px; }
-    .coupon-title { font-size: 16px; font-weight: 900; color: #553C9A; margin-bottom: 3px; }
-    .coupon-text { font-size: 13px; font-weight: 700; color: #4A5568; }
+    .coupon-icon { font-size: 28px; margin-bottom: 3px; }
+    .coupon-title { font-size: 15px; font-weight: 900; color: #553C9A; margin-bottom: 2px; }
+    .coupon-text { font-size: 12px; font-weight: 700; color: #4A5568; }
 
     /* 관리 모달 */
     .input-row {
       display: flex;
-      gap: 6px;
-      margin-bottom: 10px;
+      gap: 5px;
+      margin-bottom: 8px;
     }
 
     .btn-add {
-      padding: 9px 14px;
-      border-radius: 10px;
+      padding: 8px 12px;
+      border-radius: 9px;
       background: #3182CE;
       color: white;
       border: none;
@@ -833,27 +1112,25 @@
     }
 
     .manage-list {
-      max-height: 180px;
+      max-height: 160px;
       overflow-y: auto;
       text-align: left;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .manage-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 7px 8px;
+      padding: 6px 7px;
       border-bottom: 1px solid #EDF2F7;
-      font-size: 13px;
+      font-size: 12.5px;
     }
 
     #confetti-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       pointer-events: none;
       z-index: 2000;
     }
@@ -864,7 +1141,7 @@
   <canvas id="confetti-canvas"></canvas>
 
   <div class="app-container">
-    <!-- 상단 바 (슬림 & 노랩) -->
+    <!-- 상단 글로벌 바 -->
     <div class="header-bar">
       <div class="top-action-row">
         <div class="app-title-badge">🐾 우리 집 루틴 다마고치</div>
@@ -873,84 +1150,150 @@
         </div>
       </div>
 
-      <div class="profile-tabs">
-        <button class="profile-tab active" id="tab-0" onclick="switchProfile(0)">👦 희윤이 (7세)</button>
-        <button class="profile-tab" id="tab-1" onclick="switchProfile(1)">👶 희겸이 (3세)</button>
-      </div>
-
-      <div class="header-info">
-        <div class="companion-days" id="companion-days">
-          🏠 함께한 지 <strong>1일째</strong> (🔥1일)
-        </div>
-        <button class="berry-badge" onclick="feedPokemon()">
-          🍎 열매 <span id="berry-count">3</span>개 (먹이기)
-        </button>
+      <!-- 세로 모드 전용 탭 전환 버튼 -->
+      <div class="portrait-tabs">
+        <button class="portrait-tab active" id="tab-0" onclick="switchPortraitTab(0)">👦 희윤이 (7세)</button>
+        <button class="portrait-tab" id="tab-1" onclick="switchPortraitTab(1)">👶 희겸이 (3세)</button>
       </div>
     </div>
 
-    <!-- 다마고치 무대 (아담하고 슬림하게) -->
-    <div class="stage" id="main-stage">
-      <div class="pokemon-speech" id="pokemon-speech">안녕! 오늘도 힘차게 출동! ✨</div>
-      <div class="pokemon-wrapper" onclick="petPokemon()">
-        <div class="pokemon-shadow"></div>
-        <div class="aura-ring" id="aura-ring"></div>
-        <div id="pokemon-display-container"></div>
-      </div>
+    <!-- 형제 대시보드 바디 (가로 모드에서는 좌우 반반 양분!) -->
+    <div class="dashboard-body">
 
-      <div class="pokemon-name-tag">
-        <div class="name-title-row">
-          <span class="crown-icon" id="crown-icon">👑</span>
-          <span class="name-title" id="pokemon-name">꼬마 포크레인</span>
-          <span class="stage-pill" id="pokemon-stage">기본형 (Lv.<span id="pokemon-lv">1</span>)</span>
+      <!-- ================= 👦 왼쪽 컬럼: 첫째 희윤이 (7세) ================= -->
+      <div class="profile-col active-col" id="col-0">
+        <div class="col-header col-header-boy">
+          <div class="col-profile-title">👦 희윤이 (7세)</div>
+          <div class="col-stats-row">
+            <span class="col-days-pill" id="days-0">🏠 1일째</span>
+            <button class="col-trophy-btn" onclick="openHallOfFame(0)">🏆 도감 (<span id="hof-count-0">0</span>)</button>
+            <button class="col-berry-btn" onclick="feedPokemon(0)">🍎 <span id="berry-0">3</span>개</button>
+          </div>
         </div>
-        <span class="sub-title" id="pokemon-sub-title">흙을 번쩍 들어 올리는 씩씩한 굴착기!</span>
-        <span class="companion-stat-pill" id="companion-stat-pill">❤️ 행복도 100% · 함께 지킨 습관 0개</span>
-      </div>
 
-      <div class="exp-container">
-        <div class="exp-labels">
-          <span id="exp-hint-text">다음 성장까지</span>
-          <span><span id="current-exp">0</span> / <span id="max-exp">160</span> EXP</span>
+        <div class="stage" id="stage-0">
+          <div class="pokemon-speech" id="speech-0">안녕! 오늘도 힘차게 출동! ✨</div>
+          <div class="pokemon-wrapper" onclick="petPokemon(0)">
+            <div class="pokemon-shadow"></div>
+            <div class="aura-ring" id="aura-0"></div>
+            <div id="disp-0"></div>
+          </div>
+
+          <div class="pokemon-name-tag">
+            <div class="name-title-row">
+              <span class="crown-icon" id="crown-0">👑</span>
+              <span class="name-title" id="name-0">파이리</span>
+              <span class="stage-pill" id="stage-pill-0">기본형 (Lv.<span id="lv-0">1</span>)</span>
+            </div>
+            <span class="sub-title" id="sub-0">꼬리의 불꽃이 활활!</span>
+            <span class="companion-stat-pill" id="stat-pill-0">❤️ 행복도 100% · 습관 0개 완료</span>
+          </div>
+
+          <div class="exp-container">
+            <div class="exp-labels">
+              <span id="exp-hint-0">다음 성장까지</span>
+              <span><span id="exp-cur-0">0</span> / <span id="exp-max-0">160</span> EXP</span>
+            </div>
+            <div class="exp-bar-bg">
+              <div class="exp-bar-fill" id="exp-bar-0"></div>
+            </div>
+          </div>
+
+          <div class="stage-actions">
+            <button class="action-btn btn-feed" onclick="feedPokemon(0)">🍎 밥주기</button>
+            <button class="action-btn btn-pet" onclick="petPokemon(0)">✨ 쓰담</button>
+            <button class="action-btn btn-coupon" id="btn-coupon-0" onclick="openCouponModal(0)">🎁 소원상자</button>
+            <button class="action-btn btn-change" onclick="openPartnerSelect(0)">🐾 파트너</button>
+          </div>
         </div>
-        <div class="exp-bar-bg">
-          <div class="exp-bar-fill" id="exp-bar"></div>
+
+        <div class="quest-section">
+          <div class="section-header">
+            <div class="section-title">
+              <span>🎯 오늘의 미션</span>
+              <span class="quest-progress" id="progress-0">(0/5)</span>
+            </div>
+            <button class="btn-manage" onclick="openManageModal(0)">⚙️ 미션 관리</button>
+          </div>
+          <div class="quest-list" id="quest-list-0"></div>
+          <div style="text-align: center; margin-top: 8px;">
+            <button style="background: none; border: none; color: #A0AEC0; font-size: 10px; cursor: pointer; text-decoration: underline;" onclick="resetQuestsPrompt(0)">🔄 오늘 미션 새로고침</button>
+          </div>
         </div>
       </div>
 
-      <!-- 가로 버튼 나란히 -->
-      <div class="stage-actions">
-        <button class="action-btn btn-feed" onclick="feedPokemon()">🍎 밥주기</button>
-        <button class="action-btn btn-pet" onclick="petPokemon()">✨ 쓰담</button>
-        <button class="action-btn btn-coupon" id="btn-stage-coupon" onclick="openCouponModal()">🎁 소원상자</button>
-        <button class="action-btn btn-change" onclick="openPartnerSelect()">🐾 파트너</button>
-      </div>
-    </div>
-
-    <!-- 오늘의 할 일 퀘스트 목록 -->
-    <div class="quest-section">
-      <div class="section-header">
-        <div class="section-title">
-          <span>🎯 오늘의 미션</span>
-          <span style="font-size: 13px; font-weight: 800; color: #718096;" id="quest-progress">(0/5)</span>
+      <!-- ================= 👶 오른쪽 컬럼: 둘째 희겸이 (3세) ================= -->
+      <div class="profile-col" id="col-1">
+        <div class="col-header col-header-toddler">
+          <div class="col-profile-title">👶 희겸이 (3세)</div>
+          <div class="col-stats-row">
+            <span class="col-days-pill" id="days-1">🏠 1일째</span>
+            <button class="col-trophy-btn" onclick="openHallOfFame(1)">🏆 도감 (<span id="hof-count-1">0</span>)</button>
+            <button class="col-berry-btn" onclick="feedPokemon(1)">🍎 <span id="berry-1">3</span>개</button>
+          </div>
         </div>
-        <button class="btn-manage" onclick="openManageModal()">⚙️ 미션 관리</button>
+
+        <div class="stage" id="stage-1">
+          <div class="pokemon-speech" id="speech-1">부릉부릉! 출동 준비 완료! 🚜</div>
+          <div class="pokemon-wrapper" onclick="petPokemon(1)">
+            <div class="pokemon-shadow"></div>
+            <div class="aura-ring" id="aura-1"></div>
+            <div id="disp-1"></div>
+          </div>
+
+          <div class="pokemon-name-tag">
+            <div class="name-title-row">
+              <span class="crown-icon" id="crown-1">👑</span>
+              <span class="name-title" id="name-1">꼬마 포크레인</span>
+              <span class="stage-pill" id="stage-pill-1">기본형 (Lv.<span id="lv-1">1</span>)</span>
+            </div>
+            <span class="sub-title" id="sub-1">흙을 번쩍 들어 올리는 씩씩한 굴착기!</span>
+            <span class="companion-stat-pill" id="stat-pill-1">❤️ 행복도 100% · 습관 0개 완료</span>
+          </div>
+
+          <div class="exp-container">
+            <div class="exp-labels">
+              <span id="exp-hint-1">다음 성장까지</span>
+              <span><span id="exp-cur-1">0</span> / <span id="exp-max-1">160</span> EXP</span>
+            </div>
+            <div class="exp-bar-bg">
+              <div class="exp-bar-fill" id="exp-bar-1"></div>
+            </div>
+          </div>
+
+          <div class="stage-actions">
+            <button class="action-btn btn-feed" onclick="feedPokemon(1)">🍎 밥주기</button>
+            <button class="action-btn btn-pet" onclick="petPokemon(1)">✨ 쓰담</button>
+            <button class="action-btn btn-coupon" id="btn-coupon-1" onclick="openCouponModal(1)">🎁 소원상자</button>
+            <button class="action-btn btn-change" onclick="openPartnerSelect(1)">🐾 파트너</button>
+          </div>
+        </div>
+
+        <div class="quest-section">
+          <div class="section-header">
+            <div class="section-title">
+              <span>🎯 오늘의 미션</span>
+              <span class="quest-progress" id="progress-1">(0/5)</span>
+            </div>
+            <button class="btn-manage" onclick="openManageModal(1)">⚙️ 미션 관리</button>
+          </div>
+          <div class="quest-list" id="quest-list-1"></div>
+          <div style="text-align: center; margin-top: 8px;">
+            <button style="background: none; border: none; color: #A0AEC0; font-size: 10px; cursor: pointer; text-decoration: underline;" onclick="resetQuestsPrompt(1)">🔄 오늘 미션 새로고침</button>
+          </div>
+        </div>
       </div>
 
-      <div class="quest-list" id="quest-list"></div>
-      
-      <div style="text-align: center; margin-top: 12px;">
-        <button style="background: none; border: none; color: #A0AEC0; font-size: 11px; cursor: pointer; text-decoration: underline;" onclick="resetQuestsPrompt()">🔄 오늘 미션 수동 새로고침</button>
-      </div>
     </div>
   </div>
 
   <!-- 진화 / 성장 축하 모달 -->
   <div class="modal-overlay" id="evo-modal">
     <div class="modal-box">
-      <div style="font-size: 30px;">✨🌟✨</div>
-      <div style="font-size: 21px; font-weight: 900; color: #D69E2E; margin: 6px 0;" id="evo-modal-title">성장 대성공!</div>
+      <div style="font-size: 28px;">✨🌟✨</div>
+      <div style="font-size: 20px; font-weight: 900; color: #D69E2E; margin: 5px 0;" id="evo-modal-title">성장 대성공!</div>
       <div id="evo-modal-img-container"></div>
-      <div style="font-size: 14px; color: #4A5568; line-height: 1.5; margin-bottom: 14px;" id="evo-desc"></div>
+      <div style="font-size: 13.5px; color: #4A5568; line-height: 1.45; margin-bottom: 12px;" id="evo-desc"></div>
       <button class="btn-confirm" onclick="closeEvoModal()">멋져요! 계속 키우기 🚀</button>
     </div>
   </div>
@@ -958,12 +1301,12 @@
   <!-- 파트너 선택 모달 -->
   <div class="modal-overlay" id="select-modal">
     <div class="modal-box">
-      <div style="font-size: 18px; font-weight: 900; margin-bottom: 3px;">함께할 파트너 선택</div>
-      <div style="font-size: 12px; color: #718096; margin-bottom: 8px;">원하는 캐릭터를 톡 골라보세요! 🥚</div>
+      <div style="font-size: 17px; font-weight: 900; margin-bottom: 2px;" id="select-modal-title">함께할 파트너 선택</div>
+      <div style="font-size: 11.5px; color: #718096; margin-bottom: 8px;">원하는 캐릭터를 톡 골라보세요! (키워둔 레벨은 도감에 그대로 저장돼요) 🥚</div>
       
       <div class="partner-cat-tabs" id="partner-cat-tabs">
         <button class="cat-tab active" onclick="filterPartnerCat('all')">전체</button>
-        <button class="cat-tab" onclick="filterPartnerCat('heavy')">🚜 중장비·차</button>
+        <button class="cat-tab" onclick="filterPartnerCat('heavy')">🚜 중장비·차 (12종)</button>
         <button class="cat-tab" onclick="filterPartnerCat('beast')">🦁 동물·공룡</button>
         <button class="cat-tab" onclick="filterPartnerCat('cute')">💖 큐트·펫</button>
         <button class="cat-tab" onclick="filterPartnerCat('pokemon')">⚡️ 포켓몬</button>
@@ -974,11 +1317,32 @@
     </div>
   </div>
 
+  <!-- 🏆 우리 집 명예의 전당 / 반려몬 도감 모달 (성장 중 / 명예의 전당 2개 층위!) -->
+  <div class="modal-overlay" id="hof-modal">
+    <div class="modal-box">
+      <div style="font-size: 26px;">🏆🏛️👑</div>
+      <div style="font-size: 18px; font-weight: 900; color: #B7791F; margin: 4px 0;" id="hof-modal-title">반려몬 도감 & 명예의 전당</div>
+      <div style="font-size: 11.5px; color: #718096; margin-bottom: 8px;">언제든 파트너를 바꿔도 키워둔 레벨 그대로 이어갈 수 있어요!</div>
+
+      <!-- 2개 층위 탭 -->
+      <div class="hof-tier-tabs">
+        <button class="hof-tab active" id="hof-tab-growing" onclick="switchHofTier('growing')">🌱 성장 중 (<span id="hof-count-growing">0</span>)</button>
+        <button class="hof-tab" id="hof-tab-champion" onclick="switchHofTier('champion')">👑 명예의 전당 (<span id="hof-count-champion">0</span>)</button>
+      </div>
+
+      <div class="hof-grid" id="hof-grid"></div>
+
+      <div id="hof-empty-msg" style="display: none; padding: 24px 10px; color: #A0AEC0; font-size: 13px; line-height: 1.5;"></div>
+
+      <button class="btn-confirm" onclick="closeHallOfFame()" style="background: #718096;">닫기</button>
+    </div>
+  </div>
+
   <!-- 동기화 모달 -->
   <div class="modal-overlay" id="sync-modal">
     <div class="modal-box">
-      <div style="font-size: 18px; font-weight: 900; margin-bottom: 4px;">☁️ 기기 간 동기화 & 백업</div>
-      <div style="font-size: 12px; color: #718096; margin-bottom: 12px;">기기가 바뀌어도 소중한 기록을 이어가세요!</div>
+      <div style="font-size: 17px; font-weight: 900; margin-bottom: 3px;">☁️ 기기 간 동기화 & 백업</div>
+      <div style="font-size: 11.5px; color: #718096; margin-bottom: 10px;">기기가 바뀌어도 소중한 기록을 이어가세요!</div>
 
       <div class="sync-section">
         <div class="sync-title">1. 백업 코드 복사 / 불러오기</div>
@@ -1005,8 +1369,8 @@
   <div class="modal-overlay" id="coupon-modal">
     <div class="modal-box">
       <div style="font-size: 26px;">🎁💌✨</div>
-      <div style="font-size: 20px; font-weight: 900; color: #6B46C1; margin: 4px 0;">반려몬이 물어온 소원 상자</div>
-      <div style="font-size: 13px; color: #718096; margin-bottom: 12px;">열심히 미션을 해낸 아이에게 주는 현실의 선물!</div>
+      <div style="font-size: 19px; font-weight: 900; color: #6B46C1; margin: 4px 0;">반려몬이 물어온 소원 상자</div>
+      <div style="font-size: 12px; color: #718096; margin-bottom: 10px;">열심히 미션을 해낸 아이에게 주는 현실의 선물!</div>
       
       <div class="coupon-box" id="coupon-box-content">
         <div class="coupon-icon">🎮</div>
@@ -1018,23 +1382,32 @@
     </div>
   </div>
 
-  <!-- 관리자 모달 -->
+  <!-- 관리 모달 (미션 수정 및 설정) -->
   <div class="modal-overlay" id="manage-modal">
     <div class="modal-box">
-      <div style="font-size: 18px; font-weight: 900; margin-bottom: 10px;">🎯 미션 & 캐릭터 관리 (부모 모드)</div>
-      
-      <div style="text-align: left; font-size: 12px; font-weight: 800; color: #4A5568; margin-bottom: 4px;">➕ 새 미션 추가</div>
-      <div class="input-row">
-        <input type="text" class="input-text" id="new-quest-input" placeholder="새 미션 (예: 9시에 잠자리 들기)">
-        <button class="btn-add" onclick="addNewQuest()">추가</button>
-      </div>
+      <div style="font-size: 17px; font-weight: 900; margin-bottom: 3px;" id="manage-modal-title">⚙️ 미션 관리</div>
+      <div style="font-size: 11.5px; color: #718096; margin-bottom: 10px;">아이와 함께 상의해서 미션을 바꿔보세요!</div>
+
       <div class="manage-list" id="manage-list"></div>
 
-      <!-- 소원 상자 ON/OFF 토글 -->
+      <div class="input-row">
+        <input type="text" class="input-text" id="new-quest-input" placeholder="새 미션 입력 (예: 🏃‍♂️ 줄넘기 50번)">
+        <button class="btn-add" onclick="addNewQuest()">추가</button>
+      </div>
+
+      <div style="text-align: left; margin: 10px 0 6px;">
+        <label style="font-size: 12px; font-weight: 800; color: #4A5568; display: block; margin-bottom: 4px;">🚀 성장 속도 코스</label>
+        <select id="growth-speed-select" class="input-text" style="background: white;">
+          <option value="monthly">한 달 클래식 (약 3~4주 완주, 권장)</option>
+          <option value="fast">빠른 코스 (약 1~2주)</option>
+          <option value="marathon">100일 대장정 (약 3개월)</option>
+        </select>
+      </div>
+
       <div class="switch-row">
-        <div>
-          <div style="font-size: 13px; font-weight: 800; color: #2D3748;">🎁 선물 상자 기능 켜기</div>
-          <div style="font-size: 11px; color: #718096;">끄면 메인 화면에서 버튼이 완전히 숨겨집니다.</div>
+        <div style="text-align: left;">
+          <div style="font-size: 13px; font-weight: 800; color: #2D3748;">🎁 현실 선물 상자 기능</div>
+          <div style="font-size: 11px; color: #718096;">원할 때만 활성화하여 아이에게 쿠폰 선물</div>
         </div>
         <label class="switch">
           <input type="checkbox" id="coupon-enable-toggle" onchange="toggleCouponSetting(this.checked)">
@@ -1042,52 +1415,167 @@
         </label>
       </div>
 
-      <div id="coupon-setting-container" style="display: none; margin-bottom: 12px;">
-        <div style="text-align: left; font-size: 12px; font-weight: 800; color: #4A5568; margin: 6px 0 4px;">🎁 소원 쿠폰 내용</div>
-        <input type="text" class="input-text" id="coupon-setting-input" placeholder="예: 주말에 만화영화 1편 보기권">
+      <div id="coupon-setting-container" style="display: none; text-align: left; margin-bottom: 10px;">
+        <label style="font-size: 11.5px; font-weight: 800; color: #4A5568; display: block; margin-bottom: 4px;">🎁 소원 내용 입력</label>
+        <input type="text" class="input-text" id="coupon-setting-input" placeholder="예: 주말 아빠와 보드게임 30분권!">
       </div>
-
-      <!-- 성장 속도 조절 -->
-      <div style="text-align: left; font-size: 12px; font-weight: 800; color: #4A5568; margin: 10px 0 4px;">⏳ 성장 코스 기간 (속도 조절)</div>
-      <select id="growth-speed-select" class="input-text" style="margin-bottom: 12px; background: white;">
-        <option value="monthly">🐢 한 달 클래식 (약 3~4주, 습관 정착 추천!)</option>
-        <option value="fast">🐇 빠른 코스 (약 1~2주 완주)</option>
-        <option value="marathon">🌳 100일 대장정 (약 3개월 장기 완주)</option>
-      </select>
 
       <button class="btn-confirm" onclick="saveManageSettings()">설정 완료</button>
     </div>
   </div>
 
   <script>
-    // 풍성한 캐릭터 라인업 (중장비, 동물, 공룡, 큐트펫, 포켓몬)
+    // =========================================================================
+    // 🚜 대확장 캐릭터 라인업 (중장비 12종 + 동물/공룡 + 큐트펫 + 포켓몬)
+    // =========================================================================
     const POKEMON_FAMILIES = [
-      // 1. 중장비 & 탈것 로봇 (희겸이 1순위!)
+      // 1. 중장비 & 특수차량 12종 (희겸이 1순위 최애 라인업!)
       {
         id: 'excavator',
         category: 'heavy',
-        typeName: '🚜 중장비',
+        typeName: '🚜 굴착기/포크레인',
         eggColor: '#F6AD55',
-        dialogueType: 'heavy',
+        dialogueType: 'excavator',
         species: [
-          { name: '꼬마 포크레인', img: 'https://images.unsplash.com/photo-1579829366248-204fe8413f31?w=300&auto=format&fit=crop&q=60', isCustomSvg: 'excavator_baby' },
-          { name: '메가 파워 덤프', img: '', isCustomSvg: 'dump_mega' },
-          { name: '중장비 타이탄 로봇', img: '', isCustomSvg: 'titan_robot' }
+          { name: '꼬마 포크레인', isCustomSvg: 'excavator_baby' },
+          { name: '드릴 파워 굴착기', isCustomSvg: 'excavator_mid' },
+          { name: '포크레인 킹 로봇', isCustomSvg: 'titan_robot' }
+        ]
+      },
+      {
+        id: 'mixer',
+        category: 'heavy',
+        typeName: '🌀 레미콘(믹서트럭)',
+        eggColor: '#63B3ED',
+        dialogueType: 'mixer',
+        species: [
+          { name: '꼬마 레미콘', isCustomSvg: 'mixer_baby' },
+          { name: '빙글빙글 메가 레미콘', isCustomSvg: 'mixer_mid' },
+          { name: '레미콘 스피너 로봇', isCustomSvg: 'mixer_robot' }
+        ]
+      },
+      {
+        id: 'crane',
+        category: 'heavy',
+        typeName: '🏗️ 크레인(기중기)',
+        eggColor: '#ECC94B',
+        dialogueType: 'crane',
+        species: [
+          { name: '꼬마 크레인', isCustomSvg: 'crane_baby' },
+          { name: '롱 암 메가 크레인', isCustomSvg: 'crane_mid' },
+          { name: '스카이 크레인 가디언', isCustomSvg: 'crane_robot' }
+        ]
+      },
+      {
+        id: 'tractor',
+        category: 'heavy',
+        typeName: '🚜 트랙터',
+        eggColor: '#68D391',
+        dialogueType: 'tractor',
+        species: [
+          { name: '꼬마 트랙터', isCustomSvg: 'tractor_baby' },
+          { name: '몬스터 바퀴 트랙터', isCustomSvg: 'tractor_mid' },
+          { name: '하이퍼 트랙터 킹', isCustomSvg: 'tractor_robot' }
+        ]
+      },
+      {
+        id: 'dumptruck',
+        category: 'heavy',
+        typeName: '🚚 덤프트럭',
+        eggColor: '#FEB2B2',
+        dialogueType: 'dump',
+        species: [
+          { name: '꼬마 덤프', isCustomSvg: 'dump_baby' },
+          { name: '슈퍼 메가 덤프', isCustomSvg: 'dump_mid' },
+          { name: '덤프 타이탄 로봇', isCustomSvg: 'dump_robot' }
+        ]
+      },
+      {
+        id: 'bulldozer',
+        category: 'heavy',
+        typeName: '🚧 불도저',
+        eggColor: '#F6E05E',
+        dialogueType: 'bulldozer',
+        species: [
+          { name: '꼬마 불도저', isCustomSvg: 'bulldozer_baby' },
+          { name: '강철 블레이드 불도저', isCustomSvg: 'bulldozer_mid' },
+          { name: '불도저 블래스터 로봇', isCustomSvg: 'bulldozer_robot' }
+        ]
+      },
+      {
+        id: 'roller',
+        category: 'heavy',
+        typeName: '🛞 로드롤러',
+        eggColor: '#CBD5E0',
+        dialogueType: 'roller',
+        species: [
+          { name: '꼬마 로드롤러', isCustomSvg: 'roller_baby' },
+          { name: '쿵쾅 진동 메가 롤러', isCustomSvg: 'roller_mid' },
+          { name: '그라운드 롤러 마스터', isCustomSvg: 'roller_robot' }
+        ]
+      },
+      {
+        id: 'forklift',
+        category: 'heavy',
+        typeName: '📦 지게차(리프트)',
+        eggColor: '#ED8936',
+        dialogueType: 'forklift',
+        species: [
+          { name: '꼬마 지게차', isCustomSvg: 'forklift_baby' },
+          { name: '번쩍 파워 리프트', isCustomSvg: 'forklift_mid' },
+          { name: '하이퍼 포크리프트 로봇', isCustomSvg: 'forklift_robot' }
+        ]
+      },
+      {
+        id: 'loader',
+        category: 'heavy',
+        typeName: '🪨 휠로더(페이로더)',
+        eggColor: '#D69E2E',
+        dialogueType: 'loader',
+        species: [
+          { name: '꼬마 휠로더', isCustomSvg: 'loader_baby' },
+          { name: '거대 버킷 휠로더', isCustomSvg: 'loader_mid' },
+          { name: '어스 로더 워리어', isCustomSvg: 'loader_robot' }
         ]
       },
       {
         id: 'firetruck',
         category: 'heavy',
-        typeName: '🚒 긴급구조',
-        eggColor: '#FEB2B2',
-        dialogueType: 'heavy',
+        typeName: '🚒 소방 사다리차',
+        eggColor: '#FC8181',
+        dialogueType: 'firetruck',
         species: [
-          { name: '꼬마 순찰차', img: '', isCustomSvg: 'police_baby' },
-          { name: '메가 소방 사다리차', img: '', isCustomSvg: 'fire_mega' },
-          { name: '하이퍼 레스큐 로봇', img: '', isCustomSvg: 'rescue_robot' }
+          { name: '꼬마 소방차', isCustomSvg: 'fire_baby' },
+          { name: '메가 사다리 소방차', isCustomSvg: 'fire_mid' },
+          { name: '하이퍼 레스큐 소방로봇', isCustomSvg: 'rescue_robot' }
         ]
       },
-      // 2. 동물 & 공룡 (희겸이 최애!)
+      {
+        id: 'police',
+        category: 'heavy',
+        typeName: '🚓 경찰 순찰차',
+        eggColor: '#90CDF4',
+        dialogueType: 'police',
+        species: [
+          { name: '꼬마 순찰차', isCustomSvg: 'police_baby' },
+          { name: '고속 추격 패트롤카', isCustomSvg: 'police_mid' },
+          { name: '저스티스 경찰로봇', isCustomSvg: 'police_robot' }
+        ]
+      },
+      {
+        id: 'ambulance',
+        category: 'heavy',
+        typeName: '🚑 구급차',
+        eggColor: '#FED7D7',
+        dialogueType: 'ambulance',
+        species: [
+          { name: '꼬마 구급차', isCustomSvg: 'ambulance_baby' },
+          { name: '슈퍼 앰뷸런스', isCustomSvg: 'ambulance_mid' },
+          { name: '메디컬 레스큐 가디언', isCustomSvg: 'ambulance_robot' }
+        ]
+      },
+
+      // 2. 동물 & 공룡
       {
         id: 'tyranno',
         category: 'beast',
@@ -1095,9 +1583,9 @@
         eggColor: '#68D391',
         dialogueType: 'beast',
         species: [
-          { name: '꼬마 티라노', img: '', isCustomSvg: 'dino_baby' },
-          { name: '가시뿔 파이터 티라노', img: '', isCustomSvg: 'dino_mid' },
-          { name: '절대군주 티라노사우루스 킹', img: '', isCustomSvg: 'dino_king' }
+          { name: '꼬마 티라노', isCustomSvg: 'dino_baby' },
+          { name: '가시뿔 파이터 티라노', isCustomSvg: 'dino_mid' },
+          { name: '절대군주 티라노 킹', isCustomSvg: 'dino_king' }
         ]
       },
       {
@@ -1107,12 +1595,13 @@
         eggColor: '#ECC94B',
         dialogueType: 'beast',
         species: [
-          { name: '아기 심바 사자', img: '', isCustomSvg: 'lion_baby' },
-          { name: '용맹한 청년 사자', img: '', isCustomSvg: 'lion_mid' },
-          { name: '황금 갈기 사자왕', img: '', isCustomSvg: 'lion_king' }
+          { name: '아기 심바 사자', isCustomSvg: 'lion_baby' },
+          { name: '용맹한 청년 사자', isCustomSvg: 'lion_mid' },
+          { name: '황금 갈기 사자왕', isCustomSvg: 'lion_king' }
         ]
       },
-      // 3. 큐트 펫 & 요정 (희윤이 최애!)
+
+      // 3. 큐트 펫 & 요정
       {
         id: 'cat_fairy',
         category: 'cute',
@@ -1120,9 +1609,9 @@
         eggColor: '#FBB6CE',
         dialogueType: 'cute',
         species: [
-          { name: '아기 방울 냥이', img: '', isCustomSvg: 'cat_baby' },
-          { name: '딸기 모자 고양이', img: '', isCustomSvg: 'cat_mid' },
-          { name: '천사 날개 마법냥이', img: '', isCustomSvg: 'cat_fairy' }
+          { name: '아기 방울 냥이', isCustomSvg: 'cat_baby' },
+          { name: '딸기 모자 고양이', isCustomSvg: 'cat_baby' },
+          { name: '천사 날개 마법냥이', isCustomSvg: 'cat_fairy' }
         ]
       },
       {
@@ -1132,11 +1621,12 @@
         eggColor: '#FED7AA',
         dialogueType: 'cute',
         species: [
-          { name: '아기 솜토끼', img: '', isCustomSvg: 'bunny_baby' },
-          { name: '당근 든 리본토끼', img: '', isCustomSvg: 'bunny_mid' },
-          { name: '무지개 달토끼 공주', img: '', isCustomSvg: 'bunny_angel' }
+          { name: '아기 솜토끼', isCustomSvg: 'bunny_baby' },
+          { name: '당근 든 리본토끼', isCustomSvg: 'bunny_baby' },
+          { name: '무지개 달토끼 공주', isCustomSvg: 'bunny_angel' }
         ]
       },
+
       // 4. 인기 포켓몬
       {
         id: 'charmander',
@@ -1200,14 +1690,12 @@
       }
     ];
 
-    // 성장 모드별 경험치 테이블 (한 달 클래식 / 빠른 코스 / 100일 대장정)
     const SPEED_PROFILES = {
       monthly: { name: '한 달 클래식 (약 3~4주, 추천!)', expMultiplier: 1.0 },
       fast: { name: '빠른 코스 (약 1~2주)', expMultiplier: 0.35 },
       marathon: { name: '100일 대장정 (약 3개월)', expMultiplier: 3.0 }
     };
 
-    // 8단계 성장 스펙 (한 달 클래식 기준: 총 30일 완주)
     const GROWTH_STAGES = [
       { level: 0, baseExp: 160, stageName: '신비한 알 🥚', sub: '미션을 완료하면 알이 서서히 깨어나요!', scale: 0.95, aura: 'none', crown: false, speciesIdx: 0, isEgg: true },
       { level: 1, baseExp: 260, stageName: '아기 파트너 🌱', sub: '첫 주의 노력으로 태어난 귀여운 아기 단계!', scale: 0.8, aura: 'none', crown: false, speciesIdx: 0, isEgg: false },
@@ -1219,16 +1707,16 @@
       { level: 7, baseExp: 1000, stageName: '황금 마스터 👑', sub: '한 달 습관을 정복한 평생 반려몬 등극!', scale: 1.2, aura: 'champion', crown: true, speciesIdx: 2, isEgg: false }
     ];
 
-    // 7세 형아 희윤이 기본 미션 (학교 준비 & 스토리톡)
+    // 7세 희윤이 기본 미션
     const HEE_YOON_QUESTS = [
       { id: 'q1', text: '🪥 아침/저녁 스스로 치카치카', exp: 20, berry: 1, completed: false },
       { id: 'q2', text: '👟 현관 신발 가지런히 정리', exp: 20, berry: 1, completed: false },
       { id: 'q3', text: '📖 재미있는 책 1권 끝까지 읽기', exp: 25, berry: 1, completed: false },
-      { id: 'q4', text: '🧸 가지고 논 방 정리하기', exp: 20, berry: 1, completed: false },
+      { id: 'q4', text: '🧸 가지고 논 방 깨끗이 정리', exp: 20, berry: 1, completed: false },
       { id: 'q5', text: '📝 스토리톡 / 오늘의 과제 하기', exp: 25, berry: 1, completed: false }
     ];
 
-    // 3세 꼬꼬마 동생 희겸이 기본 미션 (눈높이 유아 습관)
+    // 3세 희겸이 기본 미션
     const HEE_GYEOM_QUESTS = [
       { id: 'q1', text: '🪥 아빠랑 치카치카 양치하기', exp: 20, berry: 1, completed: false },
       { id: 'q2', text: '👟 예쁜 신발 바르게 벗어두기', exp: 20, berry: 1, completed: false },
@@ -1237,7 +1725,7 @@
       { id: 'q5', text: '🛏️ 밤에 일찍 누워서 코코 자기', exp: 25, berry: 1, completed: false }
     ];
 
-    // 무한 다양 쓰담 멘트 엔진 (상황별·캐릭터별·시간대별 50종+ 조합)
+    // 무한 다양 쓰담 멘트 엔진
     const DIALOGUES = {
       egg: [
         "알이 토닥토닥 손길을 느끼고 있어요! 🥚",
@@ -1246,41 +1734,98 @@
         "쓰다듬어주니까 알이 기분 좋게 흔들려요! ✨",
         "엄마 아빠 손길처럼 포근해~ 🐣"
       ],
-      heavy: [
-        "부릉부릉! 엔진 시동 완료! 쌩쌩 달려보자! 🚜",
+      excavator: [
+        "부릉부릉! 포크레인 시동 완료! 🚜",
         "흙 100톤도 번쩍 퍼 올릴 수 있어! 힘이 불끈! 🏗️",
-        "삐용삐용~ 멋진 미션 완수 대원 출동 준비 완료! 🚨",
-        "바퀴에 기름칠 완료! 희겸이랑 달릴 준비 끝! 🏎️💨",
-        "엔진 소리 들려? 쿠구구궁~ 파워 만땅이야! 🔥",
-        "최강 합체 로봇으로 변신할 날이 얼마 안 남았어! 🤖",
-        "신발을 가지런히 두니까 주차장 차고지 같아서 멋지다! 👟",
-        "크락션 빵빵! 오늘 하루도 씩씩하게 전진! 🚜✨"
+        "신발을 가지런히 두니까 공사장 차고지처럼 멋지다! 👟",
+        "크락션 빵빵! 오늘 하루도 씩씩하게 출동! 🚜✨"
+      ],
+      mixer: [
+        "레미콘 드럼통이 빙글빙글~ 시멘트 섞는 중! 🌀",
+        "슈우웅~ 빙글빙글 돌면서 맛있는 밥심 충전 완료! 🍚",
+        "골고루 섞어 섞어! 튼튼한 우리 집 짓자! 🏗️",
+        "빙글빙글 댄스 타임! 희겸이 손길 최고야! ✨"
+      ],
+      crane: [
+        "크레인 붐대를 하늘 높이 쑤욱~ 뻗었어요! 🏗️",
+        "100층 높이까지 닿겠는걸? 높은 곳도 문제없어! ☁️",
+        "갈고리로 장난감을 쏙쏙 집어서 상자에 넣자! 🧸",
+        "하늘 위에서 희겸이 응원 중! 파이팅! 🚀"
+      ],
+      tractor: [
+        "트랙터 커다란 바퀴가 덜컹덜컹! 힘차게 달려요! 🚜",
+        "밭도 번쩍 갈아엎는 슈퍼 파워 트랙터! 🌾",
+        "부릉부릉~ 흙먼지 날리며 오늘도 전진! 💨",
+        "바퀴에 기름칠 완료! 씩씩하게 출발! 🌟"
+      ],
+      dump: [
+        "덤프트럭 적재함 번쩍! 짐을 쏟아낼 준비 완료! 🚚",
+        "무거운 흙더미도 거뜬하게 싣고 달려요! 🪨",
+        "바퀴 10개로 쌩쌩! 덤프 파워 만땅! 🔥",
+        "타이탄 로봇으로 합체할 날이 얼마 안 남았어! 🤖"
+      ],
+      bulldozer: [
+        "불도저 강철 삽날로 길을 쓱쓱 밀어버려요! 🚧",
+        "어질러진 장난감도 쓱싹 모아서 정리 쏙! 🧸",
+        "앞길을 가로막는 건 다 밀어내는 슈퍼 불도저! 💥",
+        "쿠구구궁~ 강철 엔진 파워 가동! 🚜"
+      ],
+      roller: [
+        "쿵쾅쿵쾅 로드롤러! 울퉁불퉁 길을 반듯하게! 🛞",
+        "무거운 쇠바퀴로 쿵쿵! 땅을 단단하게 다져요! 🛣️",
+        "신발도 로드롤러처럼 반듯하게 놓았네! 멋져! 👟",
+        "진동 모터 가동! 온몸이 찌릿찌릿 신나! ✨"
+      ],
+      forklift: [
+        "지게차 포크발로 상자를 번쩍 들어올려요! 📦",
+        "위아래로 윙윙~ 짐 싣기 달인 출동! 🏗️",
+        "높은 선반도 척척! 정리대장 희겸이 파트너! 🌟",
+        "포크발 파워 업! 100점짜리 손길이야! ❤️"
+      ],
+      loader: [
+        "휠로더 커다란 버킷에 흙을 한가득 실었어요! 🪨",
+        "거대한 바퀴로 쌩쌩! 어디든 달려갈 수 있어! 🚜",
+        "와르르 쏟아내기 준비 끝! 밥도 냠냠 잘 먹자! 🍚",
+        "어스 로더의 괴력! 힘이 불끈불끈 솟아나요! 💥"
+      ],
+      firetruck: [
+        "삐용삐용~ 소방차 출동! 물대포 발사 준비! 🚒💦",
+        "긴 사다리 쭉 펴고 높은 곳도 척척 구조해요! 🪜",
+        "불조심! 멋진 소방관 대원 희겸이 출동! 🚨",
+        "하이퍼 레스큐 로봇 합체 준비 완료! 🤖"
+      ],
+      police: [
+        "삐뽀삐뽀~ 정의의 경찰 순찰차 출동! 🚓✨",
+        "우리 집 평화는 내가 지킨다! 충성! 🚨",
+        "사이렌 울리며 쌩쌩~ 착한 어린이 지킴이! 👮‍♂️",
+        "신발도 착착 정리하고 멋진 어린이 대원 인정! 🏆"
+      ],
+      ambulance: [
+        "삐뽀삐뽀~ 꼬마 구급차 출동! 아픈 곳 싹 낫자! 🚑",
+        "마음이 따뜻해지는 반창고를 붙여줄게요! 🩹",
+        "양치 깨끗이 해서 충치균 싹 물리쳤네! 최고! 🪥",
+        "응급 출동 완료! 희겸이 사랑 듬뿍 충전! ❤️"
       ],
       beast: [
         "크앙! 용맹한 기운이 솟아난다! 🦁",
         "어흥~ 갈기 쓰다듬어줘서 기분 최고야! 👑",
         "공룡 꼬리 파워 스윙! 슉슉! 🦖",
-        "희겸이 손길이 제일 따뜻해! 으르렁~ ❤️",
-        "발톱 쑥 넣고 얌전히 안겨 있을게! 순둥순둥~",
-        "사자왕의 포효! 쩌렁쩌렁! 힘이 넘쳐요! 🌟",
+        "발톱 쑥 넣고 얌전히 안겨 있을게! 순둥순둥~ ❤️",
         "티라노 발자국 쿵쿵! 미션도 쿵쿵 격파하자! 🐾"
       ],
       cute: [
         "골골골~ 가르릉~ 쓰다듬어줘서 너무 좋아! 🐱❤️",
         "토닥토닥 해주니까 행복 지수 100% 돌파! ✨",
         "헤헤 간지러워~ 까르르! 볼에 부비부비~ 🐰",
-        "희윤이 품이 세상에서 제일 포근해! 🌸",
-        "천사 날개가 파닥파닥~ 기분 날아갈 것 같아! 🧚‍♀️",
-        "귀 쫑긋! 오늘 희윤이 칭찬 들으려고 기다렸어! 🎀",
-        "앙증맞은 발바닥 젤리 꾹꾹이 선물할게! 🐾"
+        "세상에서 제일 포근해! 사랑해~ 🌸",
+        "천사 날개가 파닥파닥~ 기분 날아갈 것 같아! 🧚‍♀️"
       ],
       pokemon: [
         "피카피카! 찌릿찌릿 사랑의 전기 방출! ⚡️",
         "파이리 꼬리 불꽃이 활활 타오르고 있어! 🔥",
         "꼬부기 물대포 슝슝~ 시원하고 상쾌해! 💦",
         "이브이 귀가 쫑긋! 단짝 친구가 되어줘서 고마워! ❤️",
-        "쓰다듬기 공격 대성공! 경험치도 쑥쑥 자라나! 🌟",
-        "우린 영원한 최고의 파트너야! 헤헤~ ✨"
+        "쓰다듬기 공격 대성공! 경험치도 쑥쑥 자라나! 🌟"
       ],
       morning: [
         "좋은 아침! 오늘 하루도 씩씩하게 출동! ☀️",
@@ -1301,18 +1846,16 @@
 
     function getRandomDialogue(childName, partner) {
       const fam = getFamily(partner.partnerId);
-      const stage = getStageSpec(partner.growthLevel || 0);
+      const stage = getStageSpec(partner.growthLevel || 0, partner);
 
       let pool = [];
-
       if (stage.isEgg) {
         pool = [...DIALOGUES.egg];
       } else {
         const dType = fam.dialogueType || 'pokemon';
-        pool = [...(DIALOGUES[dType] || DIALOGUES.pokemon)];
+        pool = [...(DIALOGUES[dType] || DIALOGUES.heavy || DIALOGUES.pokemon)];
       }
 
-      // 시간대
       const hour = new Date().getHours();
       if (hour >= 6 && hour < 11) {
         pool.push(...DIALOGUES.morning);
@@ -1320,43 +1863,21 @@
         pool.push(...DIALOGUES.night);
       }
 
-      // 미션 전부 달성 시
       const allDone = partner.quests && partner.quests.every(q => q.completed);
       if (allDone) {
         pool.push(...DIALOGUES.allDone);
       }
 
-      // 이름 맞춤 멘트 보충
       pool.push(`${childName}아~ 쓰다듬어줘서 너무 행복해! ❤️`);
       pool.push(`우리 ${childName}이는 스스로 정리도 잘하는 멋쟁이! ✨`);
       pool.push(`${childName}이가 최고야! 내가 항상 응원해! 🚀`);
 
-      const randIdx = Math.floor(Math.random() * pool.length);
-      return pool[randIdx];
+      return pool[Math.floor(Math.random() * pool.length)];
     }
 
     function getTodayStr() {
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    }
-
-    function createInitialProfile(name, partnerId) {
-      return {
-        name: name,
-        partnerId: partnerId,
-        growthLevel: 0,
-        exp: 0,
-        berries: 3,
-        streak: 1,
-        totalHabitsDone: 0,
-        companionDays: 1,
-        firstDate: getTodayStr(),
-        lastDate: getTodayStr(),
-        growthSpeed: 'monthly',
-        couponEnabled: false,
-        couponTitle: '주말 아빠와 보드게임 30분권!',
-        quests: JSON.parse(JSON.stringify(DEFAULT_QUESTS))
-      };
     }
 
     let appData = {
@@ -1378,6 +1899,7 @@
           growthSpeed: 'monthly',
           couponEnabled: false,
           couponTitle: '주말 아빠와 보드게임 30분권!',
+          partnerHistory: {}, // { [partnerId]: { level, exp, habitsDone, date, isChampion } }
           quests: JSON.parse(JSON.stringify(HEE_YOON_QUESTS))
         },
         {
@@ -1395,16 +1917,43 @@
           growthSpeed: 'monthly',
           couponEnabled: false,
           couponTitle: '주말 뽀로로/타요 놀이터 가기!',
+          partnerHistory: {}, // { [partnerId]: { level, exp, habitsDone, date, isChampion } }
           quests: JSON.parse(JSON.stringify(HEE_GYEOM_QUESTS))
         }
       ]
     };
 
+    function ensurePartnerHistory(p) {
+      if (!p.partnerHistory) p.partnerHistory = {};
+      if (!p.partnerHistory[p.partnerId]) {
+        p.partnerHistory[p.partnerId] = {
+          partnerId: p.partnerId,
+          level: p.growthLevel || 0,
+          exp: p.exp || 0,
+          habitsDone: p.totalHabitsDone || 0,
+          date: getTodayStr(),
+          isChampion: (p.growthLevel >= 7)
+        };
+      } else {
+        p.partnerHistory[p.partnerId].level = Math.max(p.partnerHistory[p.partnerId].level || 0, p.growthLevel || 0);
+        p.partnerHistory[p.partnerId].exp = p.exp || 0;
+        if (p.growthLevel >= 7) p.partnerHistory[p.partnerId].isChampion = true;
+      }
+    }
+
     function loadData() {
       try {
-        const raw = localStorage.getItem('pokemon_routine_v6');
+        const raw = localStorage.getItem('pokemon_routine_v8');
         if (raw) {
           appData = JSON.parse(raw);
+        } else {
+          const old = localStorage.getItem('pokemon_routine_v7') || localStorage.getItem('pokemon_routine_v6');
+          if (old) {
+            const parsed = JSON.parse(old);
+            if (parsed && parsed.profiles) {
+              appData = parsed;
+            }
+          }
         }
       } catch (e) {
         console.warn("Storage load fallback:", e);
@@ -1414,6 +1963,7 @@
       appData.profiles.forEach(p => {
         if (!p.lastDate) p.lastDate = today;
         if (!p.firstDate) p.firstDate = today;
+        ensurePartnerHistory(p);
 
         const d1 = new Date(p.firstDate);
         const d2 = new Date(today);
@@ -1440,7 +1990,7 @@
 
     function saveData() {
       try {
-        localStorage.setItem('pokemon_routine_v6', JSON.stringify(appData));
+        localStorage.setItem('pokemon_routine_v8', JSON.stringify(appData));
       } catch (e) {
         console.warn("Storage save fallback:", e);
       }
@@ -1471,7 +2021,7 @@
             if (data && data.profiles) {
               appData = data;
               saveData();
-              renderUI();
+              renderBothProfiles();
             }
           })
           .catch(err => console.warn("Sheets sync fetch error:", err));
@@ -1533,12 +2083,16 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    function fireConfetti() {
+    function fireConfetti(pIdx = null) {
       const colors = ['#FF5350', '#FFCB05', '#2A75BB', '#48BB78', '#9F7AEA', '#ECC94B'];
+      let targetX = canvas.width / 2;
+      if (pIdx === 0 && window.innerWidth >= 540) targetX = canvas.width * 0.28;
+      if (pIdx === 1 && window.innerWidth >= 540) targetX = canvas.width * 0.72;
+
       for (let i = 0; i < 45; i++) {
         confettiParticles.push({
-          x: canvas.width / 2,
-          y: canvas.height * 0.4,
+          x: targetX,
+          y: canvas.height * 0.38,
           vx: (Math.random() - 0.5) * 10,
           vy: (Math.random() - 0.8) * 12,
           size: Math.random() * 7 + 4,
@@ -1573,19 +2127,14 @@
     }
     renderConfetti();
 
-    function getCurrentProfile() {
-      return appData.profiles[appData.activeProfile];
-    }
-
     function getFamily(partnerId) {
       return POKEMON_FAMILIES.find(f => f.id === partnerId) || POKEMON_FAMILIES[0];
     }
 
-    function getStageSpec(level) {
+    function getStageSpec(level, profile) {
       const clamped = Math.min(level, GROWTH_STAGES.length - 1);
       const stage = GROWTH_STAGES[clamped];
-      const p = getCurrentProfile ? getCurrentProfile() : null;
-      const speed = p && p.growthSpeed ? p.growthSpeed : 'monthly';
+      const speed = profile && profile.growthSpeed ? profile.growthSpeed : 'monthly';
       const mult = (SPEED_PROFILES[speed] || SPEED_PROFILES.monthly).expMultiplier;
       return {
         ...stage,
@@ -1593,79 +2142,382 @@
       };
     }
 
-    // 커스텀 귀여운 벡터 그래픽 생성기 (중장비, 동물, 큐트펫)
+    // =========================================================================
+    // 🎨 정교하고 깜찍한 커스텀 벡터 그래픽 렌더러 (중장비 12종 전원 구현!)
+    // =========================================================================
     function renderCustomSvg(type, scale = 1.0) {
       switch (type) {
+        // --- 1. 포크레인 / 굴착기 ---
         case 'excavator_baby':
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
-              <rect x="25" y="65" width="60" height="28" rx="8" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
-              <rect x="35" y="45" width="30" height="22" rx="4" fill="#63B3ED" stroke="#2B6CB0" stroke-width="2"/>
-              <ellipse cx="40" cy="95" rx="14" ry="10" fill="#4A5568"/>
-              <ellipse cx="70" cy="95" rx="14" ry="10" fill="#4A5568"/>
-              <line x1="26" y1="95" x2="84" y2="95" stroke="#2D3748" stroke-width="5" stroke-linecap="round"/>
-              <path d="M 75 55 L 100 40 L 110 55" stroke="#DD6B20" stroke-width="6" stroke-linecap="round" fill="none"/>
-              <path d="M 105 52 L 115 65 L 100 68 Z" fill="#E2E8F0" stroke="#718096" stroke-width="2"/>
-              <circle cx="48" cy="54" r="3" fill="#2D3748"/>
-              <circle cx="58" cy="54" r="3" fill="#2D3748"/>
-              <path d="M 50 60 Q 53 63 56 60" stroke="#2D3748" stroke-width="2" fill="none"/>
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="25" y="62" width="58" height="26" rx="8" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
+              <rect x="35" y="44" width="28" height="20" rx="4" fill="#63B3ED" stroke="#2B6CB0" stroke-width="2"/>
+              <ellipse cx="40" cy="92" rx="14" ry="10" fill="#4A5568"/>
+              <ellipse cx="68" cy="92" rx="14" ry="10" fill="#4A5568"/>
+              <line x1="26" y1="92" x2="82" y2="92" stroke="#2D3748" stroke-width="5" stroke-linecap="round"/>
+              <path d="M 72 55 L 98 40 L 108 55" stroke="#DD6B20" stroke-width="6" stroke-linecap="round" fill="none"/>
+              <path d="M 103 52 L 114 65 L 99 68 Z" fill="#E2E8F0" stroke="#718096" stroke-width="2"/>
+              <circle cx="47" cy="53" r="3" fill="#2D3748"/>
+              <circle cx="56" cy="53" r="3" fill="#2D3748"/>
+              <path d="M 49 59 Q 52 62 55 59" stroke="#2D3748" stroke-width="2" fill="none"/>
             </svg>
           `;
-        case 'dump_mega':
+        case 'excavator_mid':
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
-              <path d="M 15 50 L 65 40 L 70 75 L 15 75 Z" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
-              <rect x="70" y="52" width="35" height="25" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
-              <rect x="85" y="55" width="16" height="12" rx="3" fill="#63B3ED"/>
-              <circle cx="30" cy="85" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
-              <circle cx="55" cy="85" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
-              <circle cx="90" cy="85" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
-              <circle cx="92" cy="60" r="2.5" fill="#1A202C"/>
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="20" y="58" width="62" height="30" rx="8" fill="#ED8936" stroke="#C05621" stroke-width="3"/>
+              <rect x="30" y="38" width="32" height="22" rx="5" fill="#3182CE"/>
+              <rect x="16" y="86" width="70" height="16" rx="8" fill="#2D3748"/>
+              <circle cx="28" cy="94" r="5" fill="#718096"/>
+              <circle cx="51" cy="94" r="5" fill="#718096"/>
+              <circle cx="74" cy="94" r="5" fill="#718096"/>
+              <path d="M 75 50 L 102 32 L 110 50" stroke="#C05621" stroke-width="7" stroke-linecap="round" fill="none"/>
+              <polygon points="106,46 118,60 100,64" fill="#A0AEC0" stroke="#4A5568" stroke-width="2"/>
+              <line x1="112" y1="56" x2="120" y2="70" stroke="#E53E3E" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="42" cy="48" r="3" fill="#FFF"/>
             </svg>
           `;
         case 'titan_robot':
           return `
-            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
-              <rect x="42" y="15" width="36" height="28" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
-              <rect x="48" y="24" width="24" height="8" rx="2" fill="#3182CE"/>
-              <circle cx="55" cy="28" r="2.5" fill="#FFF"/>
-              <circle cx="65" cy="28" r="2.5" fill="#FFF"/>
-              <rect x="35" y="44" width="50" height="40" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
-              <polygon points="60,48 50,68 70,68" fill="#F6E05E"/>
-              <rect x="16" y="46" width="18" height="35" rx="6" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
-              <rect x="86" y="46" width="18" height="35" rx="6" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
-              <rect x="38" y="85" width="18" height="30" rx="4" fill="#4A5568"/>
-              <rect x="64" y="85" width="18" height="30" rx="4" fill="#4A5568"/>
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="26" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <rect x="50" y="24" width="20" height="7" rx="2" fill="#3182CE"/>
+              <circle cx="56" cy="27" r="2" fill="#FFF"/>
+              <circle cx="64" cy="27" r="2" fill="#FFF"/>
+              <rect x="36" y="44" width="48" height="38" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <polygon points="60,48 52,65 68,65" fill="#F6E05E"/>
+              <rect x="18" y="46" width="16" height="34" rx="5" fill="#F6AD55" stroke="#DD6B20" stroke-width="2"/>
+              <rect x="86" y="46" width="16" height="34" rx="5" fill="#F6AD55" stroke="#DD6B20" stroke-width="2"/>
+              <path d="M 100 70 L 114 82 L 106 88 Z" fill="#E2E8F0"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#4A5568"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#4A5568"/>
             </svg>
           `;
-        case 'police_baby':
+
+        // --- 2. 레미콘 (콘크리트 믹서트럭) ---
+        case 'mixer_baby':
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
-              <rect x="25" y="60" width="70" height="28" rx="10" fill="#FFF" stroke="#2B6CB0" stroke-width="3"/>
-              <rect x="40" y="44" width="38" height="18" rx="6" fill="#63B3ED" stroke="#2B6CB0" stroke-width="2"/>
-              <circle cx="59" cy="40" r="5" fill="#E53E3E"/>
-              <circle cx="42" cy="88" r="11" fill="#2D3748"/>
-              <circle cx="78" cy="88" r="11" fill="#2D3748"/>
-              <circle cx="50" cy="52" r="3" fill="#2D3748"/>
-              <circle cx="65" cy="52" r="3" fill="#2D3748"/>
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="65" y="56" width="38" height="26" rx="6" fill="#4299E1" stroke="#2B6CB0" stroke-width="3"/>
+              <rect x="76" y="42" width="22" height="18" rx="4" fill="#EBF8FF"/>
+              <ellipse cx="44" cy="62" rx="28" ry="18" fill="#ECC94B" stroke="#B7791F" stroke-width="3" transform="rotate(-15 44 62)"/>
+              <path d="M 30 52 Q 44 64 58 72" stroke="#DD6B20" stroke-width="4" fill="none"/>
+              <circle cx="34" cy="90" r="11" fill="#2D3748"/>
+              <circle cx="85" cy="90" r="11" fill="#2D3748"/>
+              <circle cx="85" cy="50" r="2.5" fill="#2D3748"/>
+              <path d="M 16 68 L 22 75 L 20 80" stroke="#718096" stroke-width="4" stroke-linecap="round" fill="none"/>
             </svg>
           `;
-        case 'fire_mega':
+        case 'mixer_mid':
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
-              <rect x="20" y="55" width="80" height="32" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
-              <line x1="25" y1="46" x2="85" y2="38" stroke="#CBD5E0" stroke-width="7" stroke-linecap="round"/>
-              <line x1="30" y1="44" x2="33" y2="48" stroke="#4A5568" stroke-width="2"/>
-              <line x1="45" y1="42" x2="48" y2="46" stroke="#4A5568" stroke-width="2"/>
-              <line x1="60" y1="40" x2="63" y2="44" stroke="#4A5568" stroke-width="2"/>
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="68" y="54" width="40" height="28" rx="6" fill="#319795" stroke="#234E52" stroke-width="3"/>
+              <rect x="80" y="40" width="24" height="18" rx="4" fill="#E6FFFA"/>
+              <ellipse cx="42" cy="58" rx="32" ry="20" fill="#ED8936" stroke="#C05621" stroke-width="3" transform="rotate(-18 42 58)"/>
+              <path d="M 24 46 L 56 72" stroke="#FFF" stroke-width="5" stroke-dasharray="6,4"/>
+              <circle cx="26" cy="90" r="10" fill="#2D3748"/>
+              <circle cx="48" cy="90" r="10" fill="#2D3748"/>
+              <circle cx="88" cy="90" r="10" fill="#2D3748"/>
+              <path d="M 12 64 L 18 78 L 14 84" stroke="#4A5568" stroke-width="5" stroke-linecap="round" fill="none"/>
+            </svg>
+          `;
+        case 'mixer_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="46" y="16" width="28" height="24" rx="5" fill="#319795" stroke="#234E52" stroke-width="3"/>
+              <rect x="52" y="24" width="16" height="6" rx="2" fill="#ECC94B"/>
+              <ellipse cx="60" cy="62" rx="22" ry="18" fill="#ED8936" stroke="#C05621" stroke-width="3"/>
+              <circle cx="60" cy="62" r="7" fill="#ECC94B"/>
+              <rect x="20" y="48" width="16" height="32" rx="5" fill="#319795"/>
+              <rect x="84" y="48" width="16" height="32" rx="5" fill="#319795"/>
+              <rect x="42" y="84" width="14" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="14" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 3. 크레인 (기중기) ---
+        case 'crane_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="22" y="64" width="60" height="24" rx="6" fill="#F6E05E" stroke="#D69E2E" stroke-width="3"/>
+              <rect x="60" y="48" width="20" height="18" rx="3" fill="#63B3ED"/>
+              <line x1="35" y1="64" x2="85" y2="22" stroke="#D69E2E" stroke-width="6" stroke-linecap="round"/>
+              <line x1="85" y1="22" x2="85" y2="45" stroke="#4A5568" stroke-width="2" stroke-dasharray="3,2"/>
+              <path d="M 85 45 Q 89 54 83 55 Q 79 50 85 45" stroke="#2D3748" stroke-width="3" fill="none"/>
+              <circle cx="36" cy="92" r="10" fill="#2D3748"/>
+              <circle cx="68" cy="92" r="10" fill="#2D3748"/>
+              <circle cx="72" cy="56" r="2.5" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'crane_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="16" y="68" width="80" height="22" rx="5" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <line x1="30" y1="68" x2="105" y2="15" stroke="#C53030" stroke-width="7" stroke-linecap="round"/>
+              <line x1="105" y1="15" x2="105" y2="48" stroke="#1A202C" stroke-width="2"/>
+              <path d="M 105 48 C 110 58 100 62 103 52" stroke="#1A202C" stroke-width="4" fill="none"/>
+              <circle cx="28" cy="94" r="9" fill="#2D3748"/>
+              <circle cx="48" cy="94" r="9" fill="#2D3748"/>
+              <circle cx="70" cy="94" r="9" fill="#2D3748"/>
+              <circle cx="88" cy="94" r="9" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'crane_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#F6E05E" stroke="#D69E2E" stroke-width="3"/>
+              <rect x="50" y="24" width="20" height="6" rx="2" fill="#E53E3E"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <line x1="84" y1="46" x2="114" y2="18" stroke="#C53030" stroke-width="5" stroke-linecap="round"/>
+              <path d="M 114 18 L 118 30 L 112 30" stroke="#2D3748" stroke-width="3" fill="none"/>
+              <rect x="20" y="46" width="16" height="34" rx="5" fill="#4A5568"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 4. 트랙터 ---
+        case 'tractor_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="35" y="52" width="52" height="26" rx="6" fill="#48BB78" stroke="#2F855A" stroke-width="3"/>
+              <rect x="40" y="36" width="24" height="18" rx="4" fill="#E6FFFA"/>
+              <rect x="80" y="32" width="6" height="22" rx="2" fill="#4A5568"/>
+              <circle cx="84" cy="90" r="10" fill="#2D3748"/>
+              <circle cx="42" cy="80" r="18" fill="#ECC94B" stroke="#D69E2E" stroke-width="4"/>
+              <circle cx="42" cy="80" r="9" fill="#2D3748"/>
+              <circle cx="50" cy="44" r="2.5" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'tractor_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="32" y="48" width="56" height="30" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <rect x="38" y="30" width="26" height="20" rx="4" fill="#FFF"/>
+              <line x1="82" y1="25" x2="82" y2="50" stroke="#1A202C" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="86" cy="88" r="14" fill="#1A202C" stroke="#718096" stroke-width="3"/>
+              <circle cx="38" cy="76" r="22" fill="#1A202C" stroke="#ECC94B" stroke-width="5"/>
+              <polygon points="18,75 28,68 28,82" fill="#4A5568"/>
+            </svg>
+          `;
+        case 'tractor_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#48BB78" stroke="#2F855A" stroke-width="3"/>
+              <rect x="50" y="24" width="20" height="6" rx="2" fill="#ECC94B"/>
+              <circle cx="26" cy="52" r="14" fill="#2D3748" stroke="#ECC94B" stroke-width="3"/>
+              <circle cx="94" cy="52" r="14" fill="#2D3748" stroke="#ECC94B" stroke-width="3"/>
+              <rect x="38" y="42" width="44" height="40" rx="8" fill="#48BB78" stroke="#2F855A" stroke-width="3"/>
+              <rect x="42" y="84" width="14" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="14" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 5. 덤프트럭 ---
+        case 'dump_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <path d="M 18 52 L 62 44 L 66 75 L 18 75 Z" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <rect x="66" y="52" width="34" height="25" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <rect x="80" y="55" width="15" height="11" rx="3" fill="#63B3ED"/>
+              <circle cx="32" cy="85" r="11" fill="#2D3748"/>
+              <circle cx="56" cy="85" r="11" fill="#2D3748"/>
+              <circle cx="88" cy="85" r="11" fill="#2D3748"/>
+              <circle cx="86" cy="60" r="2.5" fill="#1A202C"/>
+            </svg>
+          `;
+        case 'dump_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <path d="M 14 44 L 64 34 L 70 76 L 14 76 Z" fill="#DD6B20" stroke="#9C4221" stroke-width="3"/>
+              <rect x="70" y="48" width="38" height="30" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <line x1="72" y1="62" x2="108" y2="62" stroke="#1A202C" stroke-width="3"/>
+              <circle cx="28" cy="88" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+              <circle cx="54" cy="88" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+              <circle cx="92" cy="88" r="12" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+            </svg>
+          `;
+        case 'dump_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <rect x="50" y="24" width="20" height="6" rx="2" fill="#F6E05E"/>
+              <polygon points="20,40 38,50 38,76 16,68" fill="#DD6B20"/>
+              <polygon points="100,40 82,50 82,76 104,68" fill="#DD6B20"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 6. 불도저 ---
+        case 'bulldozer_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="32" y="50" width="50" height="28" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <rect x="42" y="34" width="24" height="18" rx="4" fill="#63B3ED"/>
+              <rect x="25" y="78" width="60" height="16" rx="8" fill="#4A5568"/>
+              <circle cx="36" cy="86" r="5" fill="#CBD5E0"/>
+              <circle cx="55" cy="86" r="5" fill="#CBD5E0"/>
+              <circle cx="74" cy="86" r="5" fill="#CBD5E0"/>
+              <path d="M 88 56 Q 104 68 88 84 L 96 84 Q 112 68 96 56 Z" fill="#718096" stroke="#2D3748" stroke-width="2"/>
+              <circle cx="52" cy="42" r="2.5" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'bulldozer_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="28" y="46" width="56" height="32" rx="8" fill="#DD6B20" stroke="#9C4221" stroke-width="3"/>
+              <rect x="38" y="28" width="28" height="20" rx="4" fill="#FFF"/>
+              <rect x="18" y="78" width="72" height="18" rx="9" fill="#1A202C"/>
+              <path d="M 90 50 Q 112 66 90 86 L 100 86 Q 120 66 100 50 Z" fill="#4A5568" stroke="#1A202C" stroke-width="2"/>
+              <polygon points="12,70 20,64 20,78" fill="#718096"/>
+            </svg>
+          `;
+        case 'bulldozer_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#DD6B20" stroke="#9C4221" stroke-width="3"/>
+              <path d="M 16 48 Q 10 65 16 82 L 24 82 Q 18 65 24 48 Z" fill="#718096"/>
+              <rect x="88" y="46" width="16" height="34" rx="5" fill="#4A5568"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 7. 로드롤러 ---
+        case 'roller_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="25" y="52" width="50" height="26" rx="6" fill="#F6E05E" stroke="#D69E2E" stroke-width="3"/>
+              <rect x="32" y="34" width="22" height="20" rx="4" fill="#63B3ED"/>
+              <circle cx="34" cy="85" r="12" fill="#2D3748"/>
+              <circle cx="85" cy="78" r="18" fill="#718096" stroke="#2D3748" stroke-width="4"/>
+              <circle cx="85" cy="78" r="6" fill="#CBD5E0"/>
+              <circle cx="42" cy="42" r="2.5" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'roller_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="32" y="48" width="56" height="28" rx="6" fill="#ED8936" stroke="#C05621" stroke-width="3"/>
+              <circle cx="28" cy="78" r="18" fill="#4A5568" stroke="#1A202C" stroke-width="4"/>
+              <circle cx="92" cy="78" r="18" fill="#4A5568" stroke="#1A202C" stroke-width="4"/>
+              <circle cx="60" cy="36" r="4" fill="#E53E3E"/>
+            </svg>
+          `;
+        case 'roller_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#ED8936"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#F6E05E"/>
+              <circle cx="20" cy="62" r="14" fill="#4A5568" stroke="#2D3748" stroke-width="3"/>
+              <circle cx="100" cy="62" r="14" fill="#4A5568" stroke="#2D3748" stroke-width="3"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 8. 지게차 (포크리프트) ---
+        case 'forklift_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="22" y="52" width="46" height="28" rx="6" fill="#ED8936" stroke="#C05621" stroke-width="3"/>
+              <line x1="32" y1="34" x2="52" y2="34" stroke="#2D3748" stroke-width="4"/>
+              <line x1="32" y1="34" x2="32" y2="52" stroke="#2D3748" stroke-width="3"/>
+              <line x1="52" y1="34" x2="52" y2="52" stroke="#2D3748" stroke-width="3"/>
+              <line x1="74" y1="28" x2="74" y2="84" stroke="#4A5568" stroke-width="5"/>
+              <line x1="74" y1="74" x2="98" y2="74" stroke="#4A5568" stroke-width="4"/>
+              <rect x="80" y="56" width="18" height="16" rx="2" fill="#D69E2E" stroke="#975A16" stroke-width="2"/>
+              <circle cx="32" cy="86" r="11" fill="#2D3748"/>
+              <circle cx="62" cy="86" r="11" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'forklift_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="18" y="50" width="52" height="30" rx="6" fill="#ECC94B" stroke="#B7791F" stroke-width="3"/>
+              <line x1="76" y1="20" x2="76" y2="88" stroke="#1A202C" stroke-width="6"/>
+              <line x1="76" y1="70" x2="108" y2="70" stroke="#1A202C" stroke-width="5"/>
+              <rect x="82" y="46" width="24" height="22" rx="3" fill="#DD6B20"/>
+              <circle cx="30" cy="88" r="12" fill="#2D3748"/>
+              <circle cx="66" cy="88" r="12" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'forklift_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#ED8936"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#ECC94B"/>
+              <line x1="16" y1="36" x2="16" y2="78" stroke="#2D3748" stroke-width="5"/>
+              <line x1="16" y1="78" x2="30" y2="78" stroke="#2D3748" stroke-width="4"/>
+              <line x1="104" y1="36" x2="104" y2="78" stroke="#2D3748" stroke-width="5"/>
+              <line x1="104" y1="78" x2="90" y2="78" stroke="#2D3748" stroke-width="4"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 9. 휠로더 (페이로더) ---
+        case 'loader_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="32" y="52" width="46" height="26" rx="6" fill="#F6AD55" stroke="#DD6B20" stroke-width="3"/>
+              <rect x="44" y="36" width="22" height="18" rx="4" fill="#63B3ED"/>
+              <path d="M 72 65 L 94 48 L 102 60 L 90 75 Z" fill="#A0AEC0" stroke="#4A5568" stroke-width="2"/>
+              <circle cx="36" cy="85" r="13" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+              <circle cx="76" cy="85" r="13" fill="#2D3748" stroke="#718096" stroke-width="3"/>
+              <circle cx="52" cy="44" r="2.5" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'loader_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="28" y="48" width="52" height="30" rx="8" fill="#D69E2E" stroke="#975A16" stroke-width="3"/>
+              <path d="M 76 60 L 104 38 L 114 54 L 98 75 Z" fill="#4A5568" stroke="#1A202C" stroke-width="3"/>
+              <circle cx="34" cy="86" r="15" fill="#1A202C" stroke="#ECC94B" stroke-width="4"/>
+              <circle cx="80" cy="86" r="15" fill="#1A202C" stroke="#ECC94B" stroke-width="4"/>
+            </svg>
+          `;
+        case 'loader_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#D69E2E"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#F6AD55"/>
+              <path d="M 88 54 L 110 40 L 116 55 Z" fill="#4A5568"/>
+              <rect x="18" y="46" width="16" height="34" rx="5" fill="#4A5568"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 10. 소방차 / 사다리차 ---
+        case 'fire_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="20" y="55" width="80" height="30" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <rect x="74" y="42" width="22" height="16" rx="4" fill="#63B3ED"/>
+              <circle cx="60" cy="40" r="5" fill="#3182CE"/>
+              <line x1="24" y1="46" x2="68" y2="46" stroke="#CBD5E0" stroke-width="6" stroke-linecap="round"/>
               <circle cx="36" cy="88" r="11" fill="#2D3748"/>
-              <circle cx="60" cy="88" r="11" fill="#2D3748"/>
-              <circle cx="84" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="82" cy="88" r="11" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'fire_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="18" y="56" width="84" height="30" rx="8" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
+              <line x1="22" y1="44" x2="88" y2="34" stroke="#CBD5E0" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="34" cy="88" r="10" fill="#2D3748"/>
+              <circle cx="58" cy="88" r="10" fill="#2D3748"/>
+              <circle cx="84" cy="88" r="10" fill="#2D3748"/>
             </svg>
           `;
         case 'rescue_robot':
           return `
-            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
               <rect x="44" y="16" width="32" height="26" rx="6" fill="#E53E3E" stroke="#9B2C2C" stroke-width="3"/>
               <rect x="50" y="24" width="20" height="8" rx="2" fill="#F6E05E"/>
               <rect x="32" y="42" width="56" height="42" rx="8" fill="#FFF" stroke="#2B6CB0" stroke-width="3"/>
@@ -1676,86 +2528,151 @@
               <rect x="64" y="85" width="18" height="30" rx="4" fill="#2B6CB0"/>
             </svg>
           `;
+
+        // --- 11. 경찰 순찰차 ---
+        case 'police_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="25" y="60" width="70" height="28" rx="10" fill="#FFF" stroke="#2B6CB0" stroke-width="3"/>
+              <rect x="40" y="44" width="38" height="18" rx="6" fill="#63B3ED" stroke="#2B6CB0" stroke-width="2"/>
+              <circle cx="59" cy="40" r="5" fill="#E53E3E"/>
+              <circle cx="42" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="78" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="50" cy="52" r="3" fill="#2D3748"/>
+              <circle cx="65" cy="52" r="3" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'police_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <path d="M 20 70 L 35 50 L 80 50 L 98 70 L 102 82 L 18 82 Z" fill="#2B6CB0" stroke="#1A365D" stroke-width="3"/>
+              <rect x="42" y="52" width="36" height="16" rx="3" fill="#EBF8FF"/>
+              <circle cx="60" cy="46" r="5" fill="#E53E3E"/>
+              <circle cx="36" cy="84" r="12" fill="#1A202C" stroke="#CBD5E0" stroke-width="3"/>
+              <circle cx="84" cy="84" r="12" fill="#1A202C" stroke="#CBD5E0" stroke-width="3"/>
+            </svg>
+          `;
+        case 'police_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#2B6CB0"/>
+              <circle cx="60" cy="14" r="4" fill="#E53E3E"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#FFF" stroke="#2B6CB0" stroke-width="3"/>
+              <polygon points="60,48 52,62 68,62" fill="#ECC94B"/>
+              <rect x="18" y="46" width="16" height="34" rx="5" fill="#2B6CB0"/>
+              <rect x="86" y="46" width="16" height="34" rx="5" fill="#2B6CB0"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#1A202C"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#1A202C"/>
+            </svg>
+          `;
+
+        // --- 12. 구급차 ---
+        case 'ambulance_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="22" y="54" width="76" height="32" rx="8" fill="#FFF" stroke="#E2E8F0" stroke-width="3"/>
+              <rect x="70" y="42" width="24" height="16" rx="4" fill="#63B3ED"/>
+              <circle cx="55" cy="40" r="5" fill="#E53E3E"/>
+              <path d="M 44 64 L 52 64 M 48 60 L 48 68" stroke="#E53E3E" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="38" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="82" cy="88" r="11" fill="#2D3748"/>
+              <circle cx="78" cy="50" r="2.5" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'ambulance_mid':
+          return `
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <rect x="18" y="48" width="84" height="36" rx="8" fill="#FFF" stroke="#CBD5E0" stroke-width="3"/>
+              <rect x="74" y="38" width="24" height="16" rx="4" fill="#63B3ED"/>
+              <rect x="50" y="36" width="16" height="6" rx="2" fill="#E53E3E"/>
+              <path d="M 46 64 L 58 64 M 52 58 L 52 70" stroke="#E53E3E" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="36" cy="86" r="12" fill="#2D3748"/>
+              <circle cx="82" cy="86" r="12" fill="#2D3748"/>
+            </svg>
+          `;
+        case 'ambulance_robot':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <rect x="44" y="16" width="32" height="24" rx="6" fill="#FFF" stroke="#E53E3E" stroke-width="3"/>
+              <circle cx="60" cy="14" r="4" fill="#3182CE"/>
+              <rect x="36" y="42" width="48" height="40" rx="8" fill="#FFF" stroke="#CBD5E0" stroke-width="3"/>
+              <path d="M 54 62 L 66 62 M 60 56 L 60 68" stroke="#E53E3E" stroke-width="4" stroke-linecap="round"/>
+              <rect x="18" y="46" width="16" height="34" rx="5" fill="#E53E3E"/>
+              <rect x="86" y="46" width="16" height="34" rx="5" fill="#E53E3E"/>
+              <rect x="40" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+              <rect x="64" y="84" width="16" height="28" rx="4" fill="#2D3748"/>
+            </svg>
+          `;
+
+        // --- 동물 / 공룡 ---
         case 'dino_baby':
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
               <path d="M 40 45 Q 65 30 80 45 Q 90 60 75 75 Q 65 85 45 80 Q 25 75 30 55 Z" fill="#68D391" stroke="#276749" stroke-width="3"/>
               <circle cx="68" cy="48" r="5" fill="#FFF"/>
               <circle cx="69" cy="48" r="3" fill="#2D3748"/>
               <ellipse cx="50" cy="90" rx="8" ry="12" fill="#48BB78"/>
               <ellipse cx="68" cy="90" rx="8" ry="12" fill="#48BB78"/>
-              <path d="M 28 65 Q 15 60 12 70" stroke="#276749" stroke-width="4" stroke-linecap="round" fill="none"/>
             </svg>
           `;
+        case 'dino_mid':
         case 'dino_king':
           return `
-            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
               <path d="M 35 40 Q 75 15 95 38 Q 105 55 85 70 Q 75 90 45 85 Q 18 80 25 50 Z" fill="#48BB78" stroke="#22543D" stroke-width="4"/>
               <polygon points="90,48 85,55 95,58" fill="#FFF"/>
               <polygon points="80,52 75,58 85,62" fill="#FFF"/>
               <circle cx="75" cy="35" r="7" fill="#F6E05E"/>
               <circle cx="76" cy="35" r="4" fill="#1A202C"/>
-              <rect x="36" y="85" width="16" height="28" rx="6" fill="#2F855A"/>
-              <rect x="62" y="85" width="16" height="28" rx="6" fill="#2F855A"/>
+              <rect x="36" y="85" width="16" height="26" rx="6" fill="#2F855A"/>
+              <rect x="62" y="85" width="16" height="26" rx="6" fill="#2F855A"/>
               <polygon points="40,25 45,35 35,35" fill="#DD6B20"/>
               <polygon points="30,35 35,45 25,45" fill="#DD6B20"/>
-              <polygon points="20,45 25,55 15,55" fill="#DD6B20"/>
             </svg>
           `;
         case 'lion_baby':
-          return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
-              <circle cx="60" cy="60" r="35" fill="#F6AD55" stroke="#C05621" stroke-width="3"/>
-              <circle cx="36" cy="36" r="12" fill="#ED8936"/>
-              <circle cx="84" cy="36" r="12" fill="#ED8936"/>
-              <circle cx="50" cy="55" r="4.5" fill="#2D3748"/>
-              <circle cx="70" cy="55" r="4.5" fill="#2D3748"/>
-              <polygon points="60,63 56,69 64,69" fill="#E53E3E"/>
-              <path d="M 54 74 Q 60 78 66 74" stroke="#2D3748" stroke-width="2.5" fill="none"/>
-            </svg>
-          `;
+        case 'lion_mid':
         case 'lion_king':
           return `
-            <svg viewBox="0 0 120 120" width="120" height="120" style="transform: scale(${scale});">
-              <circle cx="60" cy="62" r="44" fill="#C05621" stroke="#7B341E" stroke-width="4"/>
-              <circle cx="60" cy="62" r="30" fill="#F6AD55"/>
-              <circle cx="50" cy="58" r="5" fill="#1A202C"/>
-              <circle cx="70" cy="58" r="5" fill="#1A202C"/>
-              <polygon points="60,67 55,74 65,74" fill="#E53E3E"/>
-              <path d="M 52 80 Q 60 85 68 80" stroke="#1A202C" stroke-width="3" fill="none"/>
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
+              <circle cx="60" cy="62" r="40" fill="#C05621" stroke="#7B341E" stroke-width="3"/>
+              <circle cx="60" cy="62" r="28" fill="#F6AD55"/>
+              <circle cx="50" cy="58" r="4" fill="#1A202C"/>
+              <circle cx="70" cy="58" r="4" fill="#1A202C"/>
+              <polygon points="60,66 56,72 64,72" fill="#E53E3E"/>
+              <path d="M 54 78 Q 60 82 66 78" stroke="#1A202C" stroke-width="2.5" fill="none"/>
             </svg>
           `;
+
+        // --- 큐트 펫 ---
         case 'cat_baby':
         case 'cat_fairy':
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
               <polygon points="32,25 45,50 25,48" fill="#FBB6CE"/>
               <polygon points="88,25 95,48 75,50" fill="#FBB6CE"/>
               <ellipse cx="60" cy="65" rx="34" ry="28" fill="#FFF" stroke="#ED64A6" stroke-width="3"/>
               <circle cx="48" cy="62" r="4.5" fill="#2D3748"/>
               <circle cx="72" cy="62" r="4.5" fill="#2D3748"/>
               <polygon points="60,69 57,73 63,73" fill="#F687B3"/>
-              <line x1="30" y1="68" x2="42" y2="69" stroke="#CBD5E0" stroke-width="2"/>
-              <line x1="90" y1="68" x2="78" y2="69" stroke="#CBD5E0" stroke-width="2"/>
             </svg>
           `;
         case 'bunny_baby':
         case 'bunny_angel':
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115" style="transform: scale(${scale});">
+            <svg viewBox="0 0 120 120" width="105" height="105" style="transform: scale(${scale});">
               <ellipse cx="45" cy="30" rx="8" ry="24" fill="#FFF" stroke="#FEB2B2" stroke-width="3"/>
               <ellipse cx="75" cy="30" rx="8" ry="24" fill="#FFF" stroke="#FEB2B2" stroke-width="3"/>
-              <ellipse cx="45" cy="30" rx="4" ry="16" fill="#FED7D7"/>
-              <ellipse cx="75" cy="30" rx="4" ry="16" fill="#FED7D7"/>
               <circle cx="60" cy="70" r="30" fill="#FFF" stroke="#FEB2B2" stroke-width="3"/>
               <circle cx="50" cy="68" r="4" fill="#2D3748"/>
               <circle cx="70" cy="68" r="4" fill="#2D3748"/>
               <polygon points="60,75 57,78 63,78" fill="#F56565"/>
             </svg>
           `;
+
         default:
           return `
-            <svg viewBox="0 0 120 120" width="115" height="115">
+            <svg viewBox="0 0 120 120" width="105" height="105">
               <circle cx="60" cy="60" r="35" fill="#ECC94B"/>
               <circle cx="50" cy="55" r="4" fill="#2D3748"/>
               <circle cx="70" cy="55" r="4" fill="#2D3748"/>
@@ -1766,17 +2683,17 @@
 
     function renderEggSvg(color, hasCrack) {
       return `
-        <svg viewBox="0 0 120 140" width="110" height="128" class="egg-shake">
+        <svg viewBox="0 0 120 140" width="95" height="110" class="egg-shake">
           <defs>
-            <radialGradient id="eggGrad" cx="40%" cy="35%" r="60%">
+            <radialGradient id="eggGrad_${color.replace('#','')}" cx="40%" cy="35%" r="60%">
               <stop offset="0%" stop-color="#FFFFFF"/>
               <stop offset="70%" stop-color="${color}"/>
               <stop offset="100%" stop-color="#C53030"/>
             </radialGradient>
           </defs>
-          <ellipse cx="60" cy="75" rx="46" ry="58" fill="url(#eggGrad)" stroke="#ECC94B" stroke-width="4"/>
-          <circle cx="44" cy="55" r="11" fill="#FFFFFF" opacity="0.45"/>
-          <circle cx="76" cy="85" r="13" fill="#FFFFFF" opacity="0.45"/>
+          <ellipse cx="60" cy="75" rx="42" ry="52" fill="url(#eggGrad_${color.replace('#','')})" stroke="#ECC94B" stroke-width="4"/>
+          <circle cx="46" cy="58" r="9" fill="#FFFFFF" opacity="0.45"/>
+          <circle cx="74" cy="85" r="11" fill="#FFFFFF" opacity="0.45"/>
           ${hasCrack ? `
             <path d="M 55 45 L 62 60 L 52 75 L 68 90 L 58 105" stroke="#742A2A" stroke-width="4" fill="none" stroke-linecap="round"/>
           ` : ''}
@@ -1785,182 +2702,227 @@
     }
 
     function updateTimeTheme() {
-      const stageEl = document.getElementById('main-stage');
       const hour = new Date().getHours();
-      stageEl.className = 'stage';
-      if (hour >= 6 && hour < 11) {
-        stageEl.classList.add('stage-morning');
-      } else if (hour >= 11 && hour < 17) {
-        stageEl.classList.add('stage-day');
-      } else if (hour >= 17 && hour < 20) {
-        stageEl.classList.add('stage-evening');
-      } else {
-        stageEl.classList.add('stage-night');
-      }
+      let themeClass = 'stage-day';
+      if (hour >= 6 && hour < 11) themeClass = 'stage-morning';
+      else if (hour >= 11 && hour < 17) themeClass = 'stage-day';
+      else if (hour >= 17 && hour < 20) themeClass = 'stage-evening';
+      else themeClass = 'stage-night';
+
+      [0, 1].forEach(idx => {
+        const el = document.getElementById(`stage-${idx}`);
+        if (el) {
+          el.className = `stage ${themeClass}`;
+        }
+      });
     }
 
-    function renderUI() {
-      updateTimeTheme();
-      const p = getCurrentProfile();
+    // =========================================================================
+    // 🖥️ UI 렌더링 (형제 둘 다 각각 독립 렌더링!)
+    // =========================================================================
+    function renderProfile(pIdx) {
+      const p = appData.profiles[pIdx];
+      if (!p) return;
+      ensurePartnerHistory(p);
+
       const fam = getFamily(p.partnerId);
-      const stage = getStageSpec(p.growthLevel || 0);
+      const stage = getStageSpec(p.growthLevel || 0, p);
       const currentSpecies = fam.species[stage.speciesIdx] || fam.species[0];
 
-      // 탭 (형제 프로필)
-      document.getElementById('tab-0').classList.toggle('active', appData.activeProfile === 0);
-      document.getElementById('tab-1').classList.toggle('active', appData.activeProfile === 1);
-      document.getElementById('tab-0').innerText = `👦 희윤이 (7세)`;
-      document.getElementById('tab-1').innerText = `👶 희겸이 (3세)`;
+      // 상단 정보
+      const daysEl = document.getElementById(`days-${pIdx}`);
+      if (daysEl) daysEl.innerHTML = `🏠 <strong>${p.companionDays || 1}일째</strong>`;
+      const berryEl = document.getElementById(`berry-${pIdx}`);
+      if (berryEl) berryEl.innerText = p.berries || 0;
 
-      document.getElementById('companion-days').innerHTML = `🏠 함께한 지 <strong>${p.companionDays || 1}일째</strong> (🔥${p.streak || 1}일)`;
-      document.getElementById('berry-count').innerText = p.berries || 0;
+      // 도감 등록된 마리 수 계산 (레벨 1 이상)
+      let count = 0;
+      Object.keys(p.partnerHistory || {}).forEach(k => {
+        if (p.partnerHistory[k] && p.partnerHistory[k].level > 0) count++;
+      });
+      const hofCountEl = document.getElementById(`hof-count-${pIdx}`);
+      if (hofCountEl) hofCountEl.innerText = count;
 
-      // 무대 렌더링
-      const container = document.getElementById('pokemon-display-container');
-      const auraRing = document.getElementById('aura-ring');
-      const crownIcon = document.getElementById('crown-icon');
+      // 무대 및 캐릭터
+      const dispEl = document.getElementById(`disp-${pIdx}`);
+      const auraEl = document.getElementById(`aura-${pIdx}`);
+      const crownEl = document.getElementById(`crown-${pIdx}`);
 
-      crownIcon.style.display = stage.crown ? 'inline' : 'none';
+      if (crownEl) crownEl.style.display = stage.crown ? 'inline' : 'none';
 
-      auraRing.className = 'aura-ring';
-      if (stage.aura === 'sparkle') auraRing.classList.add('aura-sparkle');
-      if (stage.aura === 'fire') auraRing.classList.add('aura-fire');
-      if (stage.aura === 'champion') auraRing.classList.add('aura-champion');
+      if (auraEl) {
+        auraEl.className = 'aura-ring';
+        if (stage.aura === 'sparkle') auraEl.classList.add('aura-sparkle');
+        if (stage.aura === 'fire') auraEl.classList.add('aura-fire');
+        if (stage.aura === 'champion') auraEl.classList.add('aura-champion');
+      }
 
       let completedCount = 0;
-      p.quests.forEach(q => { if (q.completed) completedCount++; });
+      if (p.quests) {
+        p.quests.forEach(q => { if (q.completed) completedCount++; });
+      }
 
       const isHungryOrSleepy = (!stage.isEgg && completedCount === 0);
 
       if (stage.isEgg) {
         const hasCrack = (p.exp >= (stage.maxExp * 0.4));
-        container.innerHTML = renderEggSvg(fam.eggColor || '#FF7B54', hasCrack);
-        document.getElementById('pokemon-name').innerText = `${fam.species[0].name}의 알`;
-        document.getElementById('pokemon-stage').innerText = stage.stageName;
-        document.getElementById('pokemon-sub-title').innerText = hasCrack ? "어라?! 알에 금이 가고 있어요!" : stage.sub;
+        if (dispEl) dispEl.innerHTML = renderEggSvg(fam.eggColor || '#FF7B54', hasCrack);
+        document.getElementById(`name-${pIdx}`).innerText = `${fam.species[0].name}의 알`;
+        document.getElementById(`stage-pill-${pIdx}`).innerText = stage.stageName;
+        document.getElementById(`sub-${pIdx}`).innerText = hasCrack ? "어라?! 알에 금이 가고 있어요!" : stage.sub;
       } else {
         const sleepClass = isHungryOrSleepy ? 'pokemon-sleeping' : '';
-        if (currentSpecies.isCustomSvg) {
-          container.innerHTML = `
-            <div class="${sleepClass}" style="display:flex; justify-content:center; align-items:center;">
-              ${renderCustomSvg(currentSpecies.isCustomSvg, stage.scale)}
-            </div>
-          `;
-        } else {
-          container.innerHTML = `
-            <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img ${sleepClass}" style="transform: scale(${stage.scale});">
-          `;
+        if (dispEl) {
+          if (currentSpecies.isCustomSvg) {
+            dispEl.innerHTML = `
+              <div class="${sleepClass}" style="display:flex; justify-content:center; align-items:center;">
+                ${renderCustomSvg(currentSpecies.isCustomSvg, stage.scale)}
+              </div>
+            `;
+          } else {
+            dispEl.innerHTML = `
+              <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img ${sleepClass}" style="transform: scale(${stage.scale});">
+            `;
+          }
         }
-        document.getElementById('pokemon-name').innerText = currentSpecies.name;
-        document.getElementById('pokemon-stage').innerText = `${stage.stageName} (Lv.${stage.level})`;
-        document.getElementById('pokemon-sub-title').innerText = isHungryOrSleepy ? "😴 기운이 없어요.. 미션을 하고 밥을 주세요!" : stage.sub;
+        document.getElementById(`name-${pIdx}`).innerText = currentSpecies.name;
+        document.getElementById(`stage-pill-${pIdx}`).innerText = `${stage.stageName} (Lv.${stage.level})`;
+        document.getElementById(`sub-${pIdx}`).innerText = isHungryOrSleepy ? "😴 배가 고파요.. 미션을 하고 밥을 주세요!" : stage.sub;
       }
 
       const happiness = isHungryOrSleepy ? 40 : Math.min(100, 50 + (completedCount * 10));
-      document.getElementById('companion-stat-pill').innerText = `❤️ 행복도 ${happiness}% · 습관 ${p.totalHabitsDone || 0}개 완료`;
+      document.getElementById(`stat-pill-${pIdx}`).innerText = `❤️ 행복도 ${happiness}% · 습관 ${p.totalHabitsDone || 0}개 완료`;
 
-      document.getElementById('current-exp').innerText = p.exp;
-      document.getElementById('max-exp').innerText = stage.maxExp;
+      document.getElementById(`exp-cur-${pIdx}`).innerText = p.exp;
+      document.getElementById(`exp-max-${pIdx}`).innerText = stage.maxExp;
       const expPercent = Math.min(100, Math.round((p.exp / stage.maxExp) * 100));
-      document.getElementById('exp-bar').style.width = `${expPercent}%`;
+      document.getElementById(`exp-bar-${pIdx}`).style.width = `${expPercent}%`;
 
-      // 선물 상자 버튼 ON/OFF 제어
-      const couponBtn = document.getElementById('btn-stage-coupon');
+      // 소원 상자 버튼
+      const couponBtn = document.getElementById(`btn-coupon-${pIdx}`);
       if (couponBtn) {
         couponBtn.style.display = p.couponEnabled ? 'block' : 'none';
       }
 
-      // 퀘스트 카드 목록
-      const questListEl = document.getElementById('quest-list');
+      // 미션 퀘스트 목록
+      const questListEl = document.getElementById(`quest-list-${pIdx}`);
       questListEl.innerHTML = '';
 
-      p.quests.forEach(q => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `quest-card ${q.completed ? 'completed' : ''}`;
-        btn.onclick = function() {
-          handleQuestClick(q.id);
-        };
+      if (p.quests) {
+        p.quests.forEach(q => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `quest-card ${q.completed ? 'completed' : ''}`;
+          btn.onclick = function() {
+            handleQuestClick(pIdx, q.id);
+          };
 
-        btn.innerHTML = `
-          <div class="quest-checkbox-icon">${q.completed ? '✓' : ''}</div>
-          <div class="quest-body">
-            <div class="quest-title">${q.text}</div>
-            <div class="quest-badge">+${q.exp} EXP · 🍎 +${q.berry}개</div>
-          </div>
-        `;
-        questListEl.appendChild(btn);
-      });
+          btn.innerHTML = `
+            <div class="quest-checkbox-icon">${q.completed ? '✓' : ''}</div>
+            <div class="quest-body">
+              <div class="quest-title">${q.text}</div>
+              <div class="quest-badge">+${q.exp} EXP · 🍎 +${q.berry}개</div>
+            </div>
+          `;
+          questListEl.appendChild(btn);
+        });
+      }
 
-      document.getElementById('quest-progress').innerText = `(${completedCount}/${p.quests.length})`;
+      document.getElementById(`progress-${pIdx}`).innerText = `(${completedCount}/${p.quests ? p.quests.length : 0})`;
     }
 
-    function handleQuestClick(questId) {
-      const p = getCurrentProfile();
+    function renderBothProfiles() {
+      updateTimeTheme();
+      renderProfile(0);
+      renderProfile(1);
+
+      // 세로 모드 탭 활성화 상태
+      document.getElementById('tab-0').classList.toggle('active', appData.activeProfile === 0);
+      document.getElementById('tab-1').classList.toggle('active', appData.activeProfile === 1);
+      document.getElementById('col-0').classList.toggle('active-col', appData.activeProfile === 0);
+      document.getElementById('col-1').classList.toggle('active-col', appData.activeProfile === 1);
+    }
+
+    function switchPortraitTab(idx) {
+      appData.activeProfile = idx;
+      saveData();
+      renderBothProfiles();
+      speak(idx, "안녕! 오늘도 힘차게 해보자! 🌟");
+    }
+
+    function handleQuestClick(pIdx, questId) {
+      const p = appData.profiles[pIdx];
       const q = p.quests.find(item => item.id === questId);
       if (!q) return;
 
       if (!q.completed) {
         q.completed = true;
         playDing();
-        fireConfetti();
+        fireConfetti(pIdx);
         p.berries = (p.berries || 0) + (q.berry || 1);
         p.totalHabitsDone = (p.totalHabitsDone || 0) + 1;
-        speak(`미션 성공! (+${q.exp} EXP) 🎉`);
-        addExp(q.exp);
+        speak(pIdx, `미션 성공! (+${q.exp} EXP) 🎉`);
+        addExp(pIdx, q.exp);
       } else {
         q.completed = false;
         p.exp = Math.max(0, p.exp - q.exp);
         p.berries = Math.max(0, (p.berries || 0) - (q.berry || 1));
         p.totalHabitsDone = Math.max(0, (p.totalHabitsDone || 1) - 1);
-        speak("미션을 다시 도전 상태로 바꿨어!");
+        speak(pIdx, "미션을 다시 도전 상태로 바꿨어!");
       }
 
+      ensurePartnerHistory(p);
       saveData();
-      renderUI();
+      renderProfile(pIdx);
     }
 
-    function addExp(amount) {
-      const p = getCurrentProfile();
+    function addExp(pIdx, amount) {
+      const p = appData.profiles[pIdx];
       p.exp += amount;
-      const currentStage = getStageSpec(p.growthLevel || 0);
+      const currentStage = getStageSpec(p.growthLevel || 0, p);
 
       if (p.exp >= currentStage.maxExp) {
         p.exp -= currentStage.maxExp;
         p.growthLevel = (p.growthLevel || 0) + 1;
-        triggerStageUp(p.growthLevel);
+        triggerStageUp(pIdx, p.growthLevel);
       }
+      ensurePartnerHistory(p);
     }
 
-    function triggerStageUp(newLevel) {
-      const p = getCurrentProfile();
+    let activeModalPIdx = 0;
+
+    function triggerStageUp(pIdx, newLevel) {
+      activeModalPIdx = pIdx;
+      const p = appData.profiles[pIdx];
       const fam = getFamily(p.partnerId);
-      const newStage = getStageSpec(newLevel);
+      const newStage = getStageSpec(newLevel, p);
       const currentSpecies = fam.species[newStage.speciesIdx] || fam.species[0];
 
       playFanfare();
-      fireConfetti();
+      fireConfetti(pIdx);
 
       const modalTitle = document.getElementById('evo-modal-title');
       const imgContainer = document.getElementById('evo-modal-img-container');
       const descEl = document.getElementById('evo-desc');
 
       if (newLevel === 1) {
-        modalTitle.innerText = "알에서 멋지게 탄생! 🐣";
+        modalTitle.innerText = `${p.name}의 파트너 탄생! 🐣`;
         descEl.innerHTML = `축하합니다! 신비한 알에서<br><strong>${currentSpecies.name}</strong>(이)가 힘차게 깨어났습니다! 🎉`;
       } else if (newLevel === 4) {
-        modalTitle.innerText = "1차 진화 대성공! ⚡️";
-        descEl.innerHTML = `성실한 노력의 결실!<br><strong>${fam.species[0].name}</strong>이(가) <strong>${currentSpecies.name}</strong>(으)로 1차 진화 변신했습니다! 💥`;
+        modalTitle.innerText = `${p.name}의 1차 진화 성공! ⚡️`;
+        descEl.innerHTML = `성실한 노력의 결실!<br><strong>${fam.species[0].name}</strong>이(가) <strong>${currentSpecies.name}</strong>(으)로 멋지게 진화했습니다! 💥`;
       } else if (newLevel === 6) {
-        modalTitle.innerText = "최종 진화 달성! 🐉";
+        modalTitle.innerText = `${p.name}의 최종 진화 달성! 🐉`;
         descEl.innerHTML = `한 달 동안 스스로 해낸 결실!<br>최강의 수호신 <strong>${currentSpecies.name}</strong>(으)로 각성했습니다! 🌟`;
       } else if (newLevel >= 7) {
-        modalTitle.innerText = "황금 왕관 챔피언 등극! 👑";
-        descEl.innerHTML = `모든 미션을 완수한 멋진 어린이!<br><strong>${currentSpecies.name}</strong>에게 황금 왕관이 수여되었습니다! 🏆`;
+        modalTitle.innerText = `${p.name}의 황금 마스터 등극! 👑`;
+        descEl.innerHTML = `모든 습관을 완주한 멋진 어린이!<br><strong>${currentSpecies.name}</strong>에게 황금 왕관이 수여되었습니다! 🏆<br><br>명예의 전당에 최고 등급 수호신으로 영구 등재되었습니다!`;
       } else {
-        modalTitle.innerText = "레벨 업 & 파워 업! 🚀";
+        modalTitle.innerText = `${p.name}의 레벨 업 & 파워 업! 🚀`;
         descEl.innerHTML = `<strong>${currentSpecies.name}</strong>의 몸집이 자라고<br><strong>${newStage.stageName}</strong> 단계로 도약했습니다! ✨`;
       }
+
+      ensurePartnerHistory(p);
 
       if (currentSpecies.isCustomSvg) {
         imgContainer.innerHTML = renderCustomSvg(currentSpecies.isCustomSvg, 1.2);
@@ -1974,53 +2936,46 @@
     function closeEvoModal() {
       document.getElementById('evo-modal').classList.remove('active');
       saveData();
-      renderUI();
-      speak("새로운 힘이 솟아나! 더 열심히 할게! 🌟");
+      renderProfile(activeModalPIdx);
+      speak(activeModalPIdx, "새로운 힘이 솟아나! 더 열심히 할게! 🌟");
     }
 
-    function switchProfile(index) {
-      appData.activeProfile = index;
-      saveData();
-      renderUI();
-      speak("안녕! 오늘도 열심히 해보자! 🌟");
-    }
-
-    function speak(text) {
-      const speech = document.getElementById('pokemon-speech');
+    function speak(pIdx, text) {
+      const speech = document.getElementById(`speech-${pIdx}`);
+      if (!speech) return;
       speech.innerText = text;
       speech.style.display = 'block';
       setTimeout(() => { speech.style.display = 'none'; }, 2600);
     }
 
-    // 무한 다양 쓰담 상호작용
-    function petPokemon() {
+    function petPokemon(pIdx) {
       playTone(587.33, 'sine', 0.15);
-      const p = getCurrentProfile();
+      const p = appData.profiles[pIdx];
       const dialogue = getRandomDialogue(p.name, p);
-      speak(dialogue);
+      speak(pIdx, dialogue);
     }
 
-    function feedPokemon() {
-      const p = getCurrentProfile();
+    function feedPokemon(pIdx) {
+      const p = appData.profiles[pIdx];
       if ((p.berries || 0) <= 0) {
-        speak("열매가 부족해! 미션을 완료해줘! 🍎");
+        speak(pIdx, "열매가 부족해! 미션을 완료해줘! 🍎");
         return;
       }
       p.berries--;
       playNom();
-      addExp(20);
-      speak("냠냠! 맛있다! 힘이 불끈불끈! (+20 EXP 쑥쑥!) ❤️");
+      addExp(pIdx, 20);
+      speak(pIdx, "냠냠! 맛있다! 힘이 불끈불끈! (+20 EXP 쑥쑥!) ❤️");
       saveData();
-      renderUI();
+      renderProfile(pIdx);
     }
 
-    function openCouponModal() {
-      const p = getCurrentProfile();
+    function openCouponModal(pIdx) {
+      const p = appData.profiles[pIdx];
       const box = document.getElementById('coupon-box-content');
       box.innerHTML = `
         <div class="coupon-icon">🎁</div>
         <div class="coupon-title">${p.couponTitle || '주말 아빠와 보드게임 30분권!'}</div>
-        <div class="coupon-text">함께한 지 ${p.companionDays || 1}일 동안 열심히 노력해 준 멋진 어린이에게 수여합니다!</div>
+        <div class="coupon-text">함께한 지 ${p.companionDays || 1}일 동안 열심히 노력해 준 ${p.name}이에게 수여합니다!</div>
       `;
       document.getElementById('coupon-modal').classList.add('active');
     }
@@ -2029,9 +2984,161 @@
       document.getElementById('coupon-modal').classList.remove('active');
     }
 
+    // =========================================================================
+    // 🏆 명예의 전당 / 반려몬 도감 모달 로직 (성장 중 / 명예의 전당 2개 층위!)
+    // =========================================================================
+    let targetHofPIdx = 0;
+    let currentHofTier = 'growing'; // 'growing' | 'champion'
+
+    function openHallOfFame(pIdx) {
+      targetHofPIdx = pIdx;
+      const p = appData.profiles[pIdx];
+      ensurePartnerHistory(p);
+      document.getElementById('hof-modal-title').innerText = `🏆 ${p.name}이의 반려몬 도감`;
+      switchHofTier('growing');
+      document.getElementById('hof-modal').classList.add('active');
+    }
+
+    function switchHofTier(tier) {
+      currentHofTier = tier;
+      document.getElementById('hof-tab-growing').classList.toggle('active', tier === 'growing');
+      document.getElementById('hof-tab-champion').classList.toggle('active', tier === 'champion');
+      renderHofList();
+    }
+
+    function renderHofList() {
+      const p = appData.profiles[targetHofPIdx];
+      const grid = document.getElementById('hof-grid');
+      const emptyMsg = document.getElementById('hof-empty-msg');
+      grid.innerHTML = '';
+
+      ensurePartnerHistory(p);
+      const history = p.partnerHistory || {};
+
+      let growingList = [];
+      let championList = [];
+
+      Object.keys(history).forEach(fId => {
+        const item = history[fId];
+        if (!item || item.level === 0) return; // 아직 부화 안 한 알은 제외
+        const fam = getFamily(fId);
+        const stageSpec = getStageSpec(item.level, p);
+        const sp = fam.species[stageSpec.speciesIdx] || fam.species[0];
+
+        const cardData = {
+          partnerId: fId,
+          familyName: fam.typeName,
+          name: sp.name,
+          level: item.level,
+          stageName: stageSpec.stageName,
+          isCustomSvg: sp.isCustomSvg,
+          img: sp.img,
+          isChampion: (item.level >= 6 || item.isChampion),
+          isCurrentActive: (p.partnerId === fId)
+        };
+
+        if (cardData.isChampion) {
+          championList.push(cardData);
+        } else {
+          growingList.push(cardData);
+        }
+      });
+
+      document.getElementById('hof-count-growing').innerText = growingList.length;
+      document.getElementById('hof-count-champion').innerText = championList.length;
+
+      const currentList = (currentHofTier === 'growing') ? growingList : championList;
+
+      if (currentList.length === 0) {
+        grid.style.display = 'none';
+        emptyMsg.style.display = 'block';
+        if (currentHofTier === 'growing') {
+          emptyMsg.innerHTML = `아직 성장 중인 파트너가 없어요.<br>미션을 완수해 알을 부화시키면<br>이곳에 소중한 기록이 차곡차곡 쌓여요! 🌱`;
+        } else {
+          emptyMsg.innerHTML = `아직 명예의 전당에 완주한 반려몬이 없어요.<br>한 달 동안 꾸준히 습관을 지켜 최종 진화(Lv.6~)를 달성하면<br>황금 왕관과 함께 명예의 전당에 입당해요! 👑`;
+        }
+        return;
+      }
+
+      grid.style.display = 'grid';
+      emptyMsg.style.display = 'none';
+
+      currentList.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `hof-card ${item.isChampion ? '' : 'hof-card-growing'}`;
+
+        let imgHtml = '';
+        if (item.isCustomSvg) {
+          imgHtml = renderCustomSvg(item.isCustomSvg, 0.65);
+        } else if (item.img) {
+          imgHtml = `<img src="${item.img}" style="max-width: 50px; max-height: 50px;">`;
+        } else {
+          imgHtml = `<div style="font-size: 30px;">🌟</div>`;
+        }
+
+        let actionHtml = '';
+        if (item.isCurrentActive) {
+          actionHtml = `<span class="btn-hof-active-indicator">✅ 지금 함께하는 중</span>`;
+        } else {
+          const btnText = item.isChampion ? '수호신으로 다시 부르기 🐾' : '이어서 키우기 🚀';
+          actionHtml = `<button class="btn-hof-summon" onclick="resumePartner('${item.partnerId}')">${btnText}</button>`;
+        }
+
+        card.innerHTML = `
+          ${item.isChampion ? '<span class="hof-card-crown">👑</span>' : ''}
+          <div class="hof-img-wrapper">${imgHtml}</div>
+          <div class="hof-card-name">${item.name}</div>
+          <div class="hof-card-badge ${item.isChampion ? '' : 'hof-card-badge-growing'}">Lv.${item.level} ${item.stageName}</div>
+          ${actionHtml}
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function resumePartner(partnerId) {
+      const p = appData.profiles[targetHofPIdx];
+      ensurePartnerHistory(p);
+
+      // 현재 파트너 상태 저장
+      p.partnerHistory[p.partnerId] = {
+        partnerId: p.partnerId,
+        level: p.growthLevel || 0,
+        exp: p.exp || 0,
+        habitsDone: p.totalHabitsDone || 0,
+        date: getTodayStr(),
+        isChampion: (p.growthLevel >= 6)
+      };
+
+      // 대상 파트너 불러오기
+      const saved = p.partnerHistory[partnerId];
+      p.partnerId = partnerId;
+      p.growthLevel = saved ? saved.level : 1;
+      p.exp = saved ? saved.exp : 0;
+
+      saveData();
+      renderProfile(targetHofPIdx);
+      closeHallOfFame();
+
+      const fam = getFamily(partnerId);
+      const stage = getStageSpec(p.growthLevel, p);
+      const sp = fam.species[stage.speciesIdx] || fam.species[0];
+      speak(targetHofPIdx, `${sp.name}(으)로 다시 돌아왔어! 레벨 ${p.growthLevel}부터 이어서 가자! 🌟`);
+    }
+
+    function closeHallOfFame() {
+      document.getElementById('hof-modal').classList.remove('active');
+    }
+
+    // =========================================================================
+    // 🐾 파트너 선택 및 도감 자동 연동
+    // =========================================================================
+    let targetPartnerSelectPIdx = 0;
     let currentSelectedCategory = 'all';
 
-    function openPartnerSelect() {
+    function openPartnerSelect(pIdx) {
+      targetPartnerSelectPIdx = pIdx;
+      const p = appData.profiles[pIdx];
+      document.getElementById('select-modal-title').innerText = `${p.name}이의 함께할 파트너 선택`;
       filterPartnerCat('all');
       document.getElementById('select-modal').classList.add('active');
     }
@@ -2039,12 +3146,12 @@
     function filterPartnerCat(cat) {
       currentSelectedCategory = cat;
       document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-      const activeTab = Array.from(document.querySelectorAll('.cat-tab')).find(b => b.getAttribute('onclick').includes(cat));
+      const activeTab = Array.from(document.querySelectorAll('.cat-tab')).find(b => b.getAttribute('onclick').includes(`'${cat}'`));
       if (activeTab) activeTab.classList.add('active');
 
       const grid = document.getElementById('select-grid');
       grid.innerHTML = '';
-      const p = getCurrentProfile();
+      const p = appData.profiles[targetPartnerSelectPIdx];
 
       const filtered = (cat === 'all') ? POKEMON_FAMILIES : POKEMON_FAMILIES.filter(f => f.category === cat);
 
@@ -2061,9 +3168,12 @@
           imgHtml = `<img src="${first.img}" alt="${first.name}">`;
         }
 
+        const savedHistory = p.partnerHistory && p.partnerHistory[fam.id];
+        const levelBadge = (savedHistory && savedHistory.level > 0) ? ` · Lv.${savedHistory.level}` : '';
+
         card.innerHTML = `
           ${imgHtml}
-          <div class="select-card-name">${first.name}</div>
+          <div class="select-card-name">${first.name}${levelBadge}</div>
           <div class="select-card-type">${fam.typeName}</div>
         `;
         grid.appendChild(card);
@@ -2071,20 +3181,51 @@
     }
 
     function selectPartner(familyId) {
-      const p = getCurrentProfile();
+      const p = appData.profiles[targetPartnerSelectPIdx];
+      ensurePartnerHistory(p);
+
+      // 현재 파트너 상태 저장 (레벨, 경험치 보존!)
+      p.partnerHistory[p.partnerId] = {
+        partnerId: p.partnerId,
+        level: p.growthLevel || 0,
+        exp: p.exp || 0,
+        habitsDone: p.totalHabitsDone || 0,
+        date: getTodayStr(),
+        isChampion: (p.growthLevel >= 6)
+      };
+
+      // 선택한 파트너의 기존 기록 확인!
+      const prev = p.partnerHistory[familyId];
       p.partnerId = familyId;
-      p.growthLevel = 0;
-      p.exp = 0;
+
+      if (prev && prev.level > 0) {
+        // 이전에 키우던 기록이 있으면 그대로 이어감!
+        p.growthLevel = prev.level;
+        p.exp = prev.exp || 0;
+        const fam = getFamily(familyId);
+        const stage = getStageSpec(p.growthLevel, p);
+        const sp = fam.species[stage.speciesIdx] || fam.species[0];
+        speak(targetPartnerSelectPIdx, `예전에 키우던 ${sp.name}(Lv.${p.growthLevel})을 이어서 키우기 시작했어! 🌟`);
+      } else {
+        // 새 파트너면 알부터 시작
+        p.growthLevel = 0;
+        p.exp = 0;
+        speak(targetPartnerSelectPIdx, "새로운 알이 도착했어! 정성껏 함께하자! 🥚");
+      }
+
+      ensurePartnerHistory(p);
       saveData();
-      renderUI();
+      renderProfile(targetPartnerSelectPIdx);
       closeSelectModal();
-      speak("새로운 파트너가 도착했어! 정성껏 함께하자! 🥚");
     }
 
     function closeSelectModal() {
       document.getElementById('select-modal').classList.remove('active');
     }
 
+    // =========================================================================
+    // ☁️ 동기화 및 백업
+    // =========================================================================
     function openSyncModal() {
       document.getElementById('sheets-url-input').value = appData.sheetsSyncUrl || '';
       document.getElementById('backup-code-text').value = '';
@@ -2120,7 +3261,7 @@
         if (parsed && parsed.profiles) {
           appData = parsed;
           saveData();
-          renderUI();
+          renderBothProfiles();
           alert('데이터 복원이 완료되었습니다! 🎉');
           closeSyncModal();
         } else {
@@ -2153,12 +3294,19 @@
       closeSyncModal();
     }
 
-    function openManageModal() {
-      const p = getCurrentProfile();
+    // =========================================================================
+    // ⚙️ 미션 관리
+    // =========================================================================
+    let targetManagePIdx = 0;
+
+    function openManageModal(pIdx) {
+      targetManagePIdx = pIdx;
+      const p = appData.profiles[pIdx];
+      document.getElementById('manage-modal-title').innerText = `⚙️ ${p.name}이 미션 관리`;
       const isEnabled = !!p.couponEnabled;
       document.getElementById('coupon-enable-toggle').checked = isEnabled;
       document.getElementById('coupon-setting-container').style.display = isEnabled ? 'block' : 'none';
-      document.getElementById('coupon-setting-input').value = p.couponTitle || '주말 아빠와 보드게임 30분권!';
+      document.getElementById('coupon-setting-input').value = p.couponTitle || (pIdx === 0 ? '주말 아빠와 보드게임 30분권!' : '주말 뽀로로/타요 놀이터 가기!');
       document.getElementById('growth-speed-select').value = p.growthSpeed || 'monthly';
       renderManageList();
       document.getElementById('manage-modal').classList.add('active');
@@ -2169,25 +3317,28 @@
     }
 
     function renderManageList() {
-      const p = getCurrentProfile();
+      const p = appData.profiles[targetManagePIdx];
       const listEl = document.getElementById('manage-list');
       listEl.innerHTML = '';
-      p.quests.forEach((q, idx) => {
-        const item = document.createElement('div');
-        item.className = 'manage-item';
-        item.innerHTML = `
-          <span>${q.text}</span>
-          <button style="color: #E53E3E; background: none; border: none; font-size: 16px; cursor: pointer; padding: 2px;" onclick="deleteQuest(${idx})">✕</button>
-        `;
-        listEl.appendChild(item);
-      });
+      if (p.quests) {
+        p.quests.forEach((q, idx) => {
+          const item = document.createElement('div');
+          item.className = 'manage-item';
+          item.innerHTML = `
+            <span>${q.text}</span>
+            <button style="color: #E53E3E; background: none; border: none; font-size: 16px; cursor: pointer; padding: 2px;" onclick="deleteQuest(${idx})">✕</button>
+          `;
+          listEl.appendChild(item);
+        });
+      }
     }
 
     function addNewQuest() {
       const input = document.getElementById('new-quest-input');
       const text = input.value.trim();
       if (!text) return;
-      const p = getCurrentProfile();
+      const p = appData.profiles[targetManagePIdx];
+      if (!p.quests) p.quests = [];
       p.quests.push({
         id: 'q_' + Date.now(),
         text: text,
@@ -2198,19 +3349,19 @@
       input.value = '';
       saveData();
       renderManageList();
-      renderUI();
+      renderProfile(targetManagePIdx);
     }
 
     function deleteQuest(idx) {
-      const p = getCurrentProfile();
+      const p = appData.profiles[targetManagePIdx];
       p.quests.splice(idx, 1);
       saveData();
       renderManageList();
-      renderUI();
+      renderProfile(targetManagePIdx);
     }
 
     function saveManageSettings() {
-      const p = getCurrentProfile();
+      const p = appData.profiles[targetManagePIdx];
       const isEnabled = document.getElementById('coupon-enable-toggle').checked;
       p.couponEnabled = isEnabled;
       const couponVal = document.getElementById('coupon-setting-input').value.trim();
@@ -2219,7 +3370,7 @@
       }
       p.growthSpeed = document.getElementById('growth-speed-select').value;
       saveData();
-      renderUI();
+      renderProfile(targetManagePIdx);
       closeManageModal();
     }
 
@@ -2227,17 +3378,19 @@
       document.getElementById('manage-modal').classList.remove('active');
     }
 
-    function resetQuestsPrompt() {
-      if (confirm('오늘 미션 체크를 모두 초기화할까요? (함께한 일수와 성장은 그대로 유지됩니다)')) {
-        const p = getCurrentProfile();
-        p.quests.forEach(q => q.completed = false);
+    function resetQuestsPrompt(pIdx) {
+      const p = appData.profiles[pIdx];
+      if (confirm(`${p.name}이의 오늘 미션 체크를 모두 초기화할까요? (함께한 일수와 성장은 그대로 유지됩니다)`)) {
+        if (p.quests) {
+          p.quests.forEach(q => q.completed = false);
+        }
         saveData();
-        renderUI();
+        renderProfile(pIdx);
       }
     }
 
     loadData();
-    renderUI();
+    renderBothProfiles();
   </script>
 </body>
 </html>
