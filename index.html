@@ -3420,18 +3420,12 @@
         if (appData.profiles) {
           if (appData.profiles[0]) {
             appData.profiles[0].partnerId = 'tyranno';
-            appData.profiles[0].growthLevel = 1; // 꼬마 티라노 부화!
-            appData.profiles[0].exp = 25;
-            appData.profiles[0].berries = Math.max(appData.profiles[0].berries || 0, 5);
-            appData.profiles[0].totalHabitsDone = Math.max(appData.profiles[0].totalHabitsDone || 0, 2);
+            appData.profiles[0].growthLevel = Math.max(1, appData.profiles[0].growthLevel || 1);
             ensurePartnerHistory(appData.profiles[0]);
           }
           if (appData.profiles[1]) {
             appData.profiles[1].partnerId = 'excavator';
-            appData.profiles[1].growthLevel = 1; // 꼬마 포크레인 부화!
-            appData.profiles[1].exp = 25;
-            appData.profiles[1].berries = Math.max(appData.profiles[1].berries || 0, 5);
-            appData.profiles[1].totalHabitsDone = Math.max(appData.profiles[1].totalHabitsDone || 0, 2);
+            appData.profiles[1].growthLevel = Math.max(1, appData.profiles[1].growthLevel || 1);
             ensurePartnerHistory(appData.profiles[1]);
           }
           localStorage.setItem(emergencyRestoredKey, 'true');
@@ -3514,8 +3508,11 @@
           localP.growthLevel = localLvl;
         }
 
-        // 2. 사과, 스트릭, 미션 총 달성 수
-        localP.berries = Math.max(localP.berries || 0, remoteP.berries || 0, 3);
+        // 2. 사과: 미션 실천 보상 원칙을 위해 로컬에서 획득·소비한 실제 수량을 엄격히 보존! (강제 리필 절대 금지)
+        // 사과는 오직 미션을 성공했을 때만 늘어나고, 밥을 먹였을 때만 줄어듭니다.
+        if (typeof localP.berries !== 'number' || isNaN(localP.berries)) {
+          localP.berries = (typeof remoteP.berries === 'number') ? remoteP.berries : 0;
+        }
         localP.streak = Math.max(localP.streak || 1, remoteP.streak || 1);
         localP.totalHabitsDone = Math.max(localP.totalHabitsDone || 0, remoteP.totalHabitsDone || 0);
 
@@ -6130,7 +6127,6 @@
       if (forcePartnerId) p.partnerId = forcePartnerId;
       p.growthLevel = lvl;
       p.exp = (lvl === 0) ? 0 : 25;
-      p.berries = Math.max(p.berries || 0, 5);
       ensurePartnerHistory(p);
       saveData();
       renderProfile(pIdx);
@@ -6142,14 +6138,12 @@
         appData.profiles[0].partnerId = 'tyranno';
         appData.profiles[0].growthLevel = 1;
         appData.profiles[0].exp = 25;
-        appData.profiles[0].berries = Math.max(appData.profiles[0].berries || 0, 5);
         ensurePartnerHistory(appData.profiles[0]);
       }
       if (appData.profiles[1]) {
         appData.profiles[1].partnerId = 'excavator';
         appData.profiles[1].growthLevel = 1;
         appData.profiles[1].exp = 25;
-        appData.profiles[1].berries = Math.max(appData.profiles[1].berries || 0, 5);
         ensurePartnerHistory(appData.profiles[1]);
       }
       saveData();
