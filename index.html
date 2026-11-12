@@ -536,10 +536,10 @@
 
     .quest-card {
       width: 100%;
-      min-height: 58px;
+      min-height: 62px;
       display: flex;
       align-items: center;
-      padding: 8px 12px;
+      padding: 9px 14px;
       background: #FFFFFF;
       border: 2.5px solid #E2E8F0;
       border-radius: 18px;
@@ -547,7 +547,7 @@
       text-align: left;
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       touch-action: manipulation;
-      gap: 12px;
+      gap: 13px;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
@@ -565,14 +565,14 @@
     }
 
     .quest-icon-tile {
-      width: 44px;
-      height: 44px;
-      border-radius: 13px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       background: #EDF2F7;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 30px;
       flex-shrink: 0;
       box-shadow: 0 1px 3px rgba(0,0,0,0.06);
       transition: all 0.2s ease;
@@ -591,7 +591,7 @@
     }
 
     .quest-title {
-      font-size: 14.5px;
+      font-size: 15px;
       font-weight: 800;
       color: #2D3748;
       line-height: 1.35;
@@ -2974,20 +2974,25 @@
     function getQuestIcon(q) {
       if (q.icon) return q.icon;
       const text = q.text || '';
-      if (text.includes('수학') || text.includes('숫자')) return '📐';
-      if (text.includes('영어') || text.includes('알파벳')) return '🔤';
-      if (text.includes('스스로 책') || text.includes('독서')) return '📖';
-      if (text.includes('그림책')) return '📚';
-      if (text.includes('자리') || text.includes('밥') || text.includes('식사') || text.includes('저녁')) return '🍚';
-      if (text.includes('수저') || text.includes('숟가락')) return '🥢';
-      if (text.includes('장난감') || text.includes('정리')) return '🧸';
+
+      // 1. 텍스트 맨 앞에 이모지가 있으면 그 이모지를 최우선 사용!
+      const match = text.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u);
+      if (match) return match[0];
+
+      // 2. 키워드 정밀 우선순위 매칭
+      if (text.includes('수저') || text.includes('숟가락') || text.includes('젓가락')) return '🥢';
+      if (text.includes('장난감') || text.includes('인형')) return '🧸';
       if (text.includes('치카') || text.includes('양치') || text.includes('이빨')) return '🪥';
+      if (text.includes('수학') || text.includes('숫자') || text.includes('연산')) return '📐';
+      if (text.includes('영어') || text.includes('알파벳')) return '🔤';
+      if (text.includes('그림책')) return '📚';
+      if (text.includes('스스로 책') || text.includes('독서') || text.includes('책')) return '📖';
       if (text.includes('떼쓰지') || text.includes('울지') || text.includes('예쁘게 말')) return '😊';
+      if (text.includes('자리 뜨지') || text.includes('밥 먹') || text.includes('저녁') || text.includes('식사') || text.includes('냠냠')) return '🍚';
+      if (text.includes('정리')) return '🧸';
       if (text.includes('신발')) return '👟';
       if (text.includes('잠') || text.includes('자러') || text.includes('코코')) return '🛏️';
 
-      const match = text.match(/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})/u);
-      if (match) return match[0];
       return '⭐';
     }
 
