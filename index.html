@@ -3308,6 +3308,16 @@
         p.companionDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
 
         if (p.lastDate !== today) {
+          if (!p.dailyHistory) p.dailyHistory = {};
+          if (!p.dailyHistory[p.lastDate] && p.quests) {
+            p.dailyHistory[p.lastDate] = {
+              date: p.lastDate,
+              completedCount: p.quests.filter(q => q.completed).length,
+              totalCount: p.quests.length,
+              rate: p.quests.length > 0 ? Math.round((p.quests.filter(q => q.completed).length / p.quests.length) * 100) : 0,
+              quests: p.quests.map(q => ({ id: q.id, title: q.text || q.title || '', completed: !!q.completed }))
+            };
+          }
           const allDone = p.quests && p.quests.every(q => q.completed);
           if (allDone) {
             p.streak = (p.streak || 1) + 1;
@@ -5204,7 +5214,7 @@
         rate: rate,
         quests: quests.map(q => ({
           id: q.id,
-          title: q.title,
+          title: q.text || q.title || '',
           completed: !!q.completed
         }))
       };
@@ -5288,18 +5298,19 @@
       // 2. 미션별 달성 현황 집계
       const quests = p.quests || [];
       const habitStats = quests.map(q => {
+        const qTitle = q.text || q.title || '';
         let completedDays = 0;
         recordedDatesInPeriod.forEach(d => {
           const dayData = p.dailyHistory[d];
           if (dayData && dayData.quests) {
-            const found = dayData.quests.find(item => item.id === q.id || item.title === q.title);
+            const found = dayData.quests.find(item => item.id === q.id || item.title === qTitle || item.text === qTitle);
             if (found && found.completed) completedDays++;
           }
         });
         const rate = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
         return {
           id: q.id,
-          title: q.title,
+          title: qTitle,
           completedDays: completedDays,
           totalDays: totalDays,
           rate: rate
@@ -5324,8 +5335,10 @@
 
       const bestValEl = document.getElementById('stats-val-best');
       const bestSubEl = document.getElementById('stats-sub-best');
-      if (bestHabit) {
-        if (bestValEl) bestValEl.innerText = bestHabit.title.split(' ')[0] + ' ' + (bestHabit.title.split(' ')[1] || '');
+      if (bestHabit && bestHabit.title) {
+        const parts = bestHabit.title.split(' ');
+        const shortBest = (parts[0] || '') + ' ' + (parts[1] || '');
+        if (bestValEl) bestValEl.innerText = shortBest;
         if (bestSubEl) bestSubEl.innerText = `달성률 ${bestHabit.rate}% (${bestHabit.completedDays}/${totalDays}일)`;
       } else {
         if (bestValEl) bestValEl.innerText = '-';
@@ -5334,8 +5347,10 @@
 
       const needValEl = document.getElementById('stats-val-need');
       const needSubEl = document.getElementById('stats-sub-need');
-      if (worstHabit && worstHabit.rate < 100) {
-        if (needValEl) needValEl.innerText = worstHabit.title.split(' ')[0] + ' ' + (worstHabit.title.split(' ')[1] || '');
+      if (worstHabit && worstHabit.rate < 100 && worstHabit.title) {
+        const parts = worstHabit.title.split(' ');
+        const shortWorst = (parts[0] || '') + ' ' + (parts[1] || '');
+        if (needValEl) needValEl.innerText = shortWorst;
         if (needSubEl) needSubEl.innerText = `달성률 ${worstHabit.rate}% (미달성 ${totalDays - worstHabit.completedDays}일)`;
       } else if (worstHabit && worstHabit.rate === 100) {
         if (needValEl) needValEl.innerText = '🎉 올클리어!';
@@ -5404,8 +5419,10 @@
           
           let chipsHtml = '';
           dayQuests.forEach(q => {
-            const icon = q.title.split(' ')[0] || '🎯';
-            const shortName = q.title.split(' ')[1] || q.title;
+            const qTitle = q.title || q.text || '미션';
+            const parts = qTitle.split(' ');
+            const icon = parts[0] || '🎯';
+            const shortName = parts[1] || qTitle;
             if (q.completed) {
               chipsHtml += `<span class="daily-chip chip-done">${icon} ${shortName} ✅</span>`;
             } else {
