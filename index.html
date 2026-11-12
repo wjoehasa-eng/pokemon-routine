@@ -1912,15 +1912,56 @@
       marathon: { name: '100일 대장정 (약 3개월)', expMultiplier: 3.0 }
     };
 
+    // 🔥 매일매일 쑥쑥 자라나는 28일 일일 쾌속 성장 코스!
+    // 미션 2~3개만 해도 바로 레벨업! 매일 1~2단계씩 눈에 띄게 진화해요!
     const GROWTH_STAGES = [
-      { level: 0, baseExp: 160, stageName: '신비한 알 🥚', sub: '미션을 완료하면 알이 서서히 깨어나요!', scale: 0.95, aura: 'none', crown: false, speciesIdx: 0, isEgg: true },
-      { level: 1, baseExp: 260, stageName: '아기 파트너 🌱', sub: '첫 주의 노력으로 태어난 귀여운 아기 단계!', scale: 0.8, aura: 'none', crown: false, speciesIdx: 0, isEgg: false },
-      { level: 2, baseExp: 340, stageName: '쑥쑥 자람 ✨', sub: '몸집이 커지고 황금빛 오라가 맴돌아요!', scale: 0.95, aura: 'sparkle', crown: false, speciesIdx: 0, isEgg: false },
-      { level: 3, baseExp: 420, stageName: '파워업 단계 🔥', sub: '진화의 기운이 온몸에 가득! (진화 직전)', scale: 1.05, aura: 'fire', crown: false, speciesIdx: 0, isEgg: false },
-      { level: 4, baseExp: 500, stageName: '1차 진화 달성! ⚡️', sub: '새로운 모습으로 멋지게 1차 진화 변신!', scale: 1.0, aura: 'sparkle', crown: false, speciesIdx: 1, isEgg: false },
-      { level: 5, baseExp: 600, stageName: '슈퍼 에이스 🌟', sub: '3주 차 매일 해낸 든든한 우리 집 에이스!', scale: 1.1, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
-      { level: 6, baseExp: 750, stageName: '최종 진화! 🐉', sub: '한 달의 노력! 최강의 수호신으로 각성!', scale: 1.15, aura: 'fire', crown: false, speciesIdx: 2, isEgg: false },
-      { level: 7, baseExp: 1000, stageName: '황금 마스터 👑', sub: '한 달 습관을 정복한 평생 반려몬 등극!', scale: 1.2, aura: 'champion', crown: true, speciesIdx: 2, isEgg: false }
+      // Day 1: 신비한 알 🥚 (미션 2개만 해도 바로 부화!)
+      { level: 0, baseExp: 50, stageName: '신비한 알 🥚', sub: '미션 2개만 완료해도 알이 바로 깨어나요!', scale: 0.95, aura: 'none', crown: false, speciesIdx: 0, isEgg: true },
+      // Day 1 후반: 아기 파트너 탄생 🌱
+      { level: 1, baseExp: 70, stageName: '아기 파트너 🌱', sub: '알을 깨고 태어난 귀염둥이! 쑥쑥 자라나요!', scale: 0.80, aura: 'none', crown: false, speciesIdx: 0, isEgg: false },
+      // Day 2: 쑥쑥 새싹 🌿
+      { level: 2, baseExp: 80, stageName: '쑥쑥 새싹 🌿', sub: '몸집이 조금씩 커지며 힘이 솟아나요!', scale: 0.86, aura: 'none', crown: false, speciesIdx: 0, isEgg: false },
+      // Day 3: 씩씩이 ✨
+      { level: 3, baseExp: 90, stageName: '씩씩한 친구 ✨', sub: '주변에 반짝이는 황금빛 스파클이 맴돌아요!', scale: 0.92, aura: 'sparkle', crown: false, speciesIdx: 0, isEgg: false },
+      // Day 4: 파워 부스터 🚀
+      { level: 4, baseExp: 95, stageName: '파워 부스터 🚀', sub: '엔진과 마력이 2배로 강해졌어요!', scale: 0.98, aura: 'sparkle', crown: false, speciesIdx: 0, isEgg: false },
+      // Day 5: 진화 에너지 충전 🔥
+      { level: 5, baseExp: 100, stageName: '진화 충전 중 🔥', sub: '진화의 불꽃이 온몸을 감싸요! (진화 직전!)', scale: 1.04, aura: 'fire', crown: false, speciesIdx: 0, isEgg: false },
+
+      // Day 6 (1주 차 주말): ⚡️ 1차 메가 진화 대변신!
+      { level: 6, baseExp: 110, stageName: '1차 메가 진화! ⚡️', sub: '우와아! 멋진 새로운 모습으로 1차 진화 변신!', scale: 0.98, aura: 'sparkle', crown: false, speciesIdx: 1, isEgg: false },
+      // Day 7: 1주일 달성 훈장 🏅
+      { level: 7, baseExp: 115, stageName: '1주일 달성 훈장 🏅', sub: '일주일 습관 완주! 멋진 훈장을 받았어요!', scale: 1.02, aura: 'sparkle', crown: false, speciesIdx: 1, isEgg: false },
+      // Day 8~13: 메가 단계 쾌속 성장
+      { level: 8, baseExp: 120, stageName: '메가 스트롱 💪', sub: '더 씩씩해지고 출력이 넘쳐흘러요!', scale: 1.06, aura: 'sparkle', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 9, baseExp: 120, stageName: '에너지 폭발 💥', sub: '발걸음마다 용기가 뿜어져 나와요!', scale: 1.10, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 10, baseExp: 125, stageName: '메가 에이스 🌟', sub: '열흘 동안 매일 해낸 든든한 에이스!', scale: 1.14, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 11, baseExp: 130, stageName: '파워 스파크 ⚡️', sub: '전격 파워 충전! 미션도 번개처럼 격파!', scale: 1.16, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 12, baseExp: 130, stageName: '질주 본능 🏎️', sub: '멈추지 않는 우리 집 수호 파트너!', scale: 1.18, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 13, baseExp: 135, stageName: '각성의 기운 🌋', sub: '최종 진화의 전설적인 기운이 꿈틀거려요!', scale: 1.20, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
+
+      // Day 14 (2주 차 주말): 🏆 2주 완주 챔피언
+      { level: 14, baseExp: 140, stageName: '2주 완주 챔피언 🏆', sub: '2주 연속 습관 성공! 최강으로 가는 반환점!', scale: 1.22, aura: 'champion', crown: false, speciesIdx: 1, isEgg: false },
+      // Day 15~19: 타이탄 에너지 집결
+      { level: 15, baseExp: 145, stageName: '타이탄 에너지 🔋', sub: '궁극의 힘이 온몸에 충전되고 있어요!', scale: 1.24, aura: 'fire', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 16, baseExp: 145, stageName: '황금 오라 각성 ☀️', sub: '눈부신 황금빛 오라가 뿜어져 나와요!', scale: 1.26, aura: 'champion', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 17, baseExp: 150, stageName: '무한 동력 ⚙️', sub: '지치지 않는 튼튼한 생활 습관의 힘!', scale: 1.28, aura: 'champion', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 18, baseExp: 150, stageName: '폭풍 카운트다운 🌪️', sub: '곧 최종 합체 변신이 시작됩니다!', scale: 1.30, aura: 'champion', crown: false, speciesIdx: 1, isEgg: false },
+      { level: 19, baseExp: 155, stageName: '최종 각성 직전 🔥', sub: '궁극의 타이탄 로봇으로 변신 카운트다운!', scale: 1.32, aura: 'champion', crown: false, speciesIdx: 1, isEgg: false },
+
+      // Day 20 (3주 차): 🤖 최종 합체 진화! (타이탄 로봇 / 최강 몬스터 대변신!)
+      { level: 20, baseExp: 160, stageName: '최종 합체 진화! 🤖', sub: '전설의 타이탄 로봇 / 최강 수호신 등장!', scale: 1.15, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+      // Day 21~27 (4주 차): 수호신 마스터 코스
+      { level: 21, baseExp: 160, stageName: '절대 수호신 🛡️', sub: '우리 가족을 든든하게 지켜주는 지킴이!', scale: 1.18, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+      { level: 22, baseExp: 165, stageName: '슈퍼 히어로 🦸', sub: '습관 정복 히어로! 매일이 완벽해요!', scale: 1.20, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+      { level: 23, baseExp: 170, stageName: '황금 파이터 ⚔️', sub: '어떤 미션도 척척 해내는 무적 파이터!', scale: 1.22, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+      { level: 24, baseExp: 170, stageName: '우주 수호자 🌌', sub: '우주까지 뻗어나가는 멋진 습관 파워!', scale: 1.24, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+      { level: 25, baseExp: 175, stageName: '불멸의 전설 🐉', sub: '한 달 완주를 눈앞에 둔 살아있는 전설!', scale: 1.26, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+      { level: 26, baseExp: 180, stageName: '완주 카운트다운 ⏳', sub: '평생 반려몬 등극 D-2!', scale: 1.28, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+      { level: 27, baseExp: 185, stageName: '영광의 전야제 🎆', sub: '내일이면 대망의 황금 마스터 반려몬 등극!', scale: 1.30, aura: 'champion', crown: false, speciesIdx: 2, isEgg: false },
+
+      // Day 28~30 (한 달 완주): 👑 황금 마스터 반려몬 (평생 수호신 & 명예의 전당)
+      { level: 28, baseExp: 200, stageName: '황금 마스터 반려몬 👑', sub: '한 달 완주! 평생 우리 집을 지키는 반려몬!', scale: 1.35, aura: 'champion', crown: true, speciesIdx: 2, isEgg: false }
     ];
 
     // 7세 희윤이 실제 맞춤 미션 (6가지)
@@ -3068,15 +3109,19 @@
       } else {
         const sleepClass = isHungryOrSleepy ? 'pokemon-sleeping' : '';
         if (dispEl) {
+          // 경험치 비율에 따라 실시간으로 10~15% 부풀어 올라 성장을 체감!
+          const expRatio = Math.min(1, (p.exp || 0) / stage.maxExp);
+          const liveScale = (stage.scale * (1 + expRatio * 0.12)).toFixed(2);
+
           if (currentSpecies.isCustomSvg) {
             dispEl.innerHTML = `
               <div class="${sleepClass}" style="display:flex; justify-content:center; align-items:center;">
-                ${renderCustomSvg(currentSpecies.isCustomSvg, stage.scale)}
+                ${renderCustomSvg(currentSpecies.isCustomSvg, liveScale)}
               </div>
             `;
           } else {
             dispEl.innerHTML = `
-              <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img ${sleepClass}" style="transform: scale(${stage.scale});">
+              <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img ${sleepClass}" style="transform: scale(${liveScale});">
             `;
           }
         }
