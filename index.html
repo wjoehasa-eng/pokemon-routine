@@ -1183,130 +1183,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.15);
     }
 
-    /* 👒 파트너 장착 악세서리 레이어 */
-    .acc-overlay {
-      position: absolute;
-      pointer-events: none;
-      z-index: 6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-    .acc-hat { top: -8px; font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }
-    .acc-glasses { top: 22px; font-size: 24px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
-    .acc-crown { top: -14px; font-size: 30px; animation: crownGlow 1.8s infinite alternate; filter: drop-shadow(0 2px 6px rgba(255,215,0,0.6)); }
-    .acc-siren { top: -14px; font-size: 26px; animation: sirenBlink 0.5s infinite alternate; }
-    .acc-ribbon { top: -2px; right: 8px; font-size: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-    .acc-wings { top: 12px; font-size: 36px; z-index: 1; opacity: 0.95; filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); }
-    .acc-cape { top: 26px; font-size: 34px; z-index: 1; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
-    .acc-helmet { top: -10px; font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }
-
-    @keyframes sirenBlink {
-      0% { transform: scale(0.95); filter: drop-shadow(0 0 4px #E53E3E); }
-      100% { transform: scale(1.15); filter: drop-shadow(0 0 12px #ECC94B); }
-    }
-    @keyframes crownGlow {
-      0% { transform: scale(0.96) rotate(-2deg); }
-      100% { transform: scale(1.05) rotate(2deg); }
-    }
-
-    /* 액션 버튼 추가 스타일 */
-    .btn-explore { background: #319795; color: white; }
-    .btn-dress { background: #9F7AEA; color: white; }
-
-    /* 모달 탭 및 아이템 그리드 */
-    .modal-nav-tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-    .modal-nav-tab {
-      flex: 1;
-      padding: 8px 6px;
-      font-size: 12px;
-      font-weight: 800;
-      border: 1px solid #CBD5E0;
-      background: #F7FAFC;
-      color: #4A5568;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    .modal-nav-tab.active {
-      background: #3182CE;
-      color: white;
-      border-color: #3182CE;
-    }
-
-    .explore-dest-card {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      background: #F7FAFC;
-      border: 2px solid #E2E8F0;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.2s ease;
-    }
-    .explore-dest-card:hover, .explore-dest-card:active {
-      border-color: #319795;
-      background: #E6FFFA;
-      transform: translateY(-2px);
-    }
-    .explore-dest-icon { font-size: 30px; }
-    .explore-dest-name { font-size: 13.5px; font-weight: 800; color: #2D3748; }
-    .explore-dest-desc { font-size: 11px; color: #718096; margin-top: 1px; }
-
-    .treasure-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      max-height: 280px;
-      overflow-y: auto;
-      padding: 2px;
-    }
-    .treasure-card {
-      background: white;
-      border: 1px solid #E2E8F0;
-      border-radius: 10px;
-      padding: 8px 6px;
-      text-align: center;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      position: relative;
-    }
-    .treasure-card.rarity-mythic { border: 2px solid #ECC94B; background: #FFFFF0; }
-    .treasure-card.rarity-legend { border: 2px solid #9F7AEA; background: #FAF5FF; }
-    .treasure-card.rarity-rare { border: 2px solid #63B3ED; background: #EBF8FF; }
-    .treasure-icon { font-size: 28px; margin-bottom: 2px; }
-    .treasure-name { font-size: 11.5px; font-weight: 800; color: #2D3748; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .treasure-rarity { font-size: 9.5px; font-weight: 800; padding: 1px 4px; border-radius: 4px; display: inline-block; margin: 2px 0; }
-    .treasure-story { font-size: 10px; color: #718096; line-height: 1.25; margin-top: 2px; }
-
-    .dress-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .dress-item-card {
-      background: #F7FAFC;
-      border: 2px solid #E2E8F0;
-      border-radius: 12px;
-      padding: 10px 4px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s ease;
-    }
-    .dress-item-card.selected {
-      border-color: #9F7AEA;
-      background: #FAF5FF;
-      box-shadow: 0 0 10px rgba(159, 122, 234, 0.4);
-    }
-    .dress-item-icon { font-size: 32px; margin-bottom: 4px; }
-    .dress-item-name { font-size: 11px; font-weight: 800; color: #2D3748; }
+    
 
   
     .child-avatar-img {
@@ -1380,7 +1257,6 @@
           <div class="pokemon-wrapper" onclick="petPokemon(0)">
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-0"></div>
-            <div class="acc-overlay" id="acc-0"></div>
             <div id="disp-0"></div>
           </div>
 
@@ -1408,7 +1284,6 @@
             <button class="action-btn btn-feed" onclick="feedPokemon(0)">🍎 밥주기</button>
             <button class="action-btn btn-pet" onclick="petPokemon(0)">✨ 쓰담</button>
             <button class="action-btn btn-explore" onclick="openExploreModal(0)">🎒 탐험</button>
-            <button class="action-btn btn-dress" onclick="openDressModal(0)">👒 꾸미기</button>
             <button class="action-btn btn-coupon" id="btn-coupon-0" onclick="openCouponModal(0)">🎁 소원상자</button>
             <button class="action-btn btn-change" onclick="openPartnerSelect(0)">🐾 파트너</button>
           </div>
@@ -1445,7 +1320,6 @@
           <div class="pokemon-wrapper" onclick="petPokemon(1)">
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-1"></div>
-            <div class="acc-overlay" id="acc-1"></div>
             <div id="disp-1"></div>
           </div>
 
@@ -1473,7 +1347,6 @@
             <button class="action-btn btn-feed" onclick="feedPokemon(1)">🍎 밥주기</button>
             <button class="action-btn btn-pet" onclick="petPokemon(1)">✨ 쓰담</button>
             <button class="action-btn btn-explore" onclick="openExploreModal(1)">🎒 탐험</button>
-            <button class="action-btn btn-dress" onclick="openDressModal(1)">👒 꾸미기</button>
             <button class="action-btn btn-coupon" id="btn-coupon-1" onclick="openCouponModal(1)">🎁 소원상자</button>
             <button class="action-btn btn-change" onclick="openPartnerSelect(1)">🐾 파트너</button>
           </div>
@@ -1661,55 +1534,8 @@
     </div>
   </div>
 
-  <!-- 👒 외형 꾸미기 모달 -->
-  <div class="modal-overlay" id="dress-modal">
-    <div class="modal-box">
-      <div style="font-size: 26px;">👒🕶️✨</div>
-      <div style="font-size: 18px; font-weight: 900; color: #6B46C1; margin: 4px 0;" id="dress-modal-title">멋쟁이 파트너 꾸미기</div>
-      <div style="font-size: 11.5px; color: #718096; margin-bottom: 12px;">모자, 선글라스, 사이렌으로 멋지게 꾸며주세요!</div>
+  
 
-      <div class="dress-grid" id="dress-grid">
-        <div class="dress-item-card" onclick="selectAccessory('none')">
-          <div class="dress-item-icon">❌</div>
-          <div class="dress-item-name">착용 안 함</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('hat')">
-          <div class="dress-item-icon">🤠</div>
-          <div class="dress-item-name">탐험가 모자</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('glasses')">
-          <div class="dress-item-icon">🕶️</div>
-          <div class="dress-item-name">힙합 썬글라스</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('crown')">
-          <div class="dress-item-icon">👑</div>
-          <div class="dress-item-name">황금 왕관</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('siren')">
-          <div class="dress-item-icon">🚨</div>
-          <div class="dress-item-name">출동 사이렌</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('ribbon')">
-          <div class="dress-item-icon">🎀</div>
-          <div class="dress-item-name">러블리 리본</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('wings')">
-          <div class="dress-item-icon">🪽</div>
-          <div class="dress-item-name">천사의 날개</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('cape')">
-          <div class="dress-item-icon">🦸</div>
-          <div class="dress-item-name">영웅 번개망토</div>
-        </div>
-        <div class="dress-item-card" onclick="selectAccessory('helmet')">
-          <div class="dress-item-icon">👷</div>
-          <div class="dress-item-name">튼튼 안전모</div>
-        </div>
-      </div>
-
-      <button class="btn-confirm" onclick="closeDressModal()" style="background: #6B46C1;">멋지다! 장착 완료 ❤️</button>
-    </div>
-  </div>
 
   <!-- 🤝 형제 슈퍼 합체 축하 모달 -->
   <div class="modal-overlay" id="synergy-modal">
@@ -3250,28 +3076,7 @@
 
       document.getElementById(`progress-${pIdx}`).innerText = `(${completedCount}/${p.quests ? p.quests.length : 0})`;
 
-      // 👒 악세서리 오버레이 렌더링
-      const accEl = document.getElementById(`acc-${pIdx}`);
-      if (accEl) {
-        const acc = p.accessory || 'none';
-        accEl.className = 'acc-overlay';
-        if (acc !== 'none') {
-          accEl.classList.add(`acc-${acc}`);
-          const ACC_ICONS = {
-            hat: '🤠',
-            glasses: '🕶️',
-            crown: '👑',
-            siren: '🚨',
-            ribbon: '🎀',
-            wings: '🪽',
-            cape: '🦸',
-            helmet: '👷'
-          };
-          accEl.innerText = ACC_ICONS[acc] || '';
-        } else {
-          accEl.innerText = '';
-        }
-      }
+      
 
     }
 
@@ -4110,45 +3915,7 @@
       });
     }
 
-    // =========================================================================
-    // 👒 외형 꾸미기 (모자, 선글라스, 사이렌, 왕관 등)
-    // =========================================================================
-    let currentDressProfileIdx = 0;
-
-    function openDressModal(pIdx) {
-      currentDressProfileIdx = pIdx;
-      const p = appData.profiles[pIdx];
-      document.getElementById('dress-modal-title').innerText = `👒 ${p.name} 파트너 멋쟁이 꾸미기`;
-
-      const currentAcc = p.accessory || 'none';
-      const cards = document.querySelectorAll('.dress-item-card');
-      cards.forEach(card => {
-        const onclickAttr = card.getAttribute('onclick') || '';
-        card.classList.toggle('selected', onclickAttr.includes(`'${currentAcc}'`));
-      });
-
-      document.getElementById('dress-modal').classList.add('active');
-    }
-
-    function selectAccessory(accId) {
-      const p = appData.profiles[currentDressProfileIdx];
-      p.accessory = accId;
-      playDing();
-      saveData();
-      renderProfile(currentDressProfileIdx);
-
-      const cards = document.querySelectorAll('.dress-item-card');
-      cards.forEach(card => {
-        const onclickAttr = card.getAttribute('onclick') || '';
-        card.classList.toggle('selected', onclickAttr.includes(`'${accId}'`));
-      });
-
-      speak(currentDressProfileIdx, accId === 'none' ? "악세서리를 벗었어!" : "우와! 완전 멋져졌어! 마음에 쏙 들어! ✨");
-    }
-
-    function closeDressModal() {
-      document.getElementById('dress-modal').classList.remove('active');
-    }
+    
 
     // =========================================================================
     // 🛡️ 스크린 타임 중독 방지 (3분 초과 시 파트너 퇴장 안내)
