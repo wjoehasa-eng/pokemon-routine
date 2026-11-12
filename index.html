@@ -1134,6 +1134,180 @@
       pointer-events: none;
       z-index: 2000;
     }
+  
+    /* ⚡ 형제 슈퍼 합체 배너 */
+    .synergy-banner-box {
+      width: 100%;
+      max-width: 680px;
+      margin: 6px auto 8px;
+      padding: 7px 12px;
+      background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 50%, #FFD93D 100%);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(255, 107, 107, 0.35);
+      cursor: pointer;
+      display: none;
+      transition: all 0.25s ease;
+      animation: synergyPulse 2s infinite alternate;
+    }
+    @keyframes synergyPulse {
+      0% { transform: scale(0.99); box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3); }
+      100% { transform: scale(1.01); box-shadow: 0 6px 20px rgba(255, 217, 61, 0.55); }
+    }
+    .synergy-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      font-weight: 900;
+    }
+    .synergy-badge {
+      background: rgba(0,0,0,0.22);
+      padding: 2px 7px;
+      border-radius: 8px;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+    .synergy-title {
+      font-size: 13px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      flex: 1;
+      text-align: center;
+      margin: 0 8px;
+    }
+    .synergy-arrow {
+      background: white;
+      color: #E53E3E;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+
+    /* 👒 파트너 장착 악세서리 레이어 */
+    .acc-overlay {
+      position: absolute;
+      pointer-events: none;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .acc-hat { top: -8px; font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }
+    .acc-glasses { top: 22px; font-size: 24px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3)); }
+    .acc-crown { top: -14px; font-size: 30px; animation: crownGlow 1.8s infinite alternate; filter: drop-shadow(0 2px 6px rgba(255,215,0,0.6)); }
+    .acc-siren { top: -14px; font-size: 26px; animation: sirenBlink 0.5s infinite alternate; }
+    .acc-ribbon { top: -2px; right: 8px; font-size: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    .acc-wings { top: 12px; font-size: 36px; z-index: 1; opacity: 0.95; filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); }
+    .acc-cape { top: 26px; font-size: 34px; z-index: 1; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
+    .acc-helmet { top: -10px; font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25)); }
+
+    @keyframes sirenBlink {
+      0% { transform: scale(0.95); filter: drop-shadow(0 0 4px #E53E3E); }
+      100% { transform: scale(1.15); filter: drop-shadow(0 0 12px #ECC94B); }
+    }
+    @keyframes crownGlow {
+      0% { transform: scale(0.96) rotate(-2deg); }
+      100% { transform: scale(1.05) rotate(2deg); }
+    }
+
+    /* 액션 버튼 추가 스타일 */
+    .btn-explore { background: #319795; color: white; }
+    .btn-dress { background: #9F7AEA; color: white; }
+
+    /* 모달 탭 및 아이템 그리드 */
+    .modal-nav-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .modal-nav-tab {
+      flex: 1;
+      padding: 8px 6px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid #CBD5E0;
+      background: #F7FAFC;
+      color: #4A5568;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .modal-nav-tab.active {
+      background: #3182CE;
+      color: white;
+      border-color: #3182CE;
+    }
+
+    .explore-dest-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #F7FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+    .explore-dest-card:hover, .explore-dest-card:active {
+      border-color: #319795;
+      background: #E6FFFA;
+      transform: translateY(-2px);
+    }
+    .explore-dest-icon { font-size: 30px; }
+    .explore-dest-name { font-size: 13.5px; font-weight: 800; color: #2D3748; }
+    .explore-dest-desc { font-size: 11px; color: #718096; margin-top: 1px; }
+
+    .treasure-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding: 2px;
+    }
+    .treasure-card {
+      background: white;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 8px 6px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .treasure-card.rarity-mythic { border: 2px solid #ECC94B; background: #FFFFF0; }
+    .treasure-card.rarity-legend { border: 2px solid #9F7AEA; background: #FAF5FF; }
+    .treasure-card.rarity-rare { border: 2px solid #63B3ED; background: #EBF8FF; }
+    .treasure-icon { font-size: 28px; margin-bottom: 2px; }
+    .treasure-name { font-size: 11.5px; font-weight: 800; color: #2D3748; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .treasure-rarity { font-size: 9.5px; font-weight: 800; padding: 1px 4px; border-radius: 4px; display: inline-block; margin: 2px 0; }
+    .treasure-story { font-size: 10px; color: #718096; line-height: 1.25; margin-top: 2px; }
+
+    .dress-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .dress-item-card {
+      background: #F7FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 10px 4px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .dress-item-card.selected {
+      border-color: #9F7AEA;
+      background: #FAF5FF;
+      box-shadow: 0 0 10px rgba(159, 122, 234, 0.4);
+    }
+    .dress-item-icon { font-size: 32px; margin-bottom: 4px; }
+    .dress-item-name { font-size: 11px; font-weight: 800; color: #2D3748; }
+
   </style>
 </head>
 <body>
@@ -1157,6 +1331,16 @@
       </div>
     </div>
 
+    
+    <!-- 🔥 형제 슈퍼 합체 배너 -->
+    <div class="synergy-banner-box" id="synergy-banner" onclick="openSynergyModal()">
+      <div class="synergy-content">
+        <span class="synergy-badge">⚡ 형제 슈퍼 합체</span>
+        <span class="synergy-title" id="synergy-title">희윤 & 희겸 형제 파워 대폭발! 출동 준비 완료!</span>
+        <span class="synergy-arrow">합체! 👉</span>
+      </div>
+    </div>
+
     <!-- 형제 대시보드 바디 (가로 모드에서는 좌우 반반 양분!) -->
     <div class="dashboard-body">
 
@@ -1176,6 +1360,7 @@
           <div class="pokemon-wrapper" onclick="petPokemon(0)">
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-0"></div>
+            <div class="acc-overlay" id="acc-0"></div>
             <div id="disp-0"></div>
           </div>
 
@@ -1202,6 +1387,8 @@
           <div class="stage-actions">
             <button class="action-btn btn-feed" onclick="feedPokemon(0)">🍎 밥주기</button>
             <button class="action-btn btn-pet" onclick="petPokemon(0)">✨ 쓰담</button>
+            <button class="action-btn btn-explore" onclick="openExploreModal(0)">🎒 탐험</button>
+            <button class="action-btn btn-dress" onclick="openDressModal(0)">👒 꾸미기</button>
             <button class="action-btn btn-coupon" id="btn-coupon-0" onclick="openCouponModal(0)">🎁 소원상자</button>
             <button class="action-btn btn-change" onclick="openPartnerSelect(0)">🐾 파트너</button>
           </div>
@@ -1238,6 +1425,7 @@
           <div class="pokemon-wrapper" onclick="petPokemon(1)">
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-1"></div>
+            <div class="acc-overlay" id="acc-1"></div>
             <div id="disp-1"></div>
           </div>
 
@@ -1264,6 +1452,8 @@
           <div class="stage-actions">
             <button class="action-btn btn-feed" onclick="feedPokemon(1)">🍎 밥주기</button>
             <button class="action-btn btn-pet" onclick="petPokemon(1)">✨ 쓰담</button>
+            <button class="action-btn btn-explore" onclick="openExploreModal(1)">🎒 탐험</button>
+            <button class="action-btn btn-dress" onclick="openDressModal(1)">👒 꾸미기</button>
             <button class="action-btn btn-coupon" id="btn-coupon-1" onclick="openCouponModal(1)">🎁 소원상자</button>
             <button class="action-btn btn-change" onclick="openPartnerSelect(1)">🐾 파트너</button>
           </div>
@@ -1379,6 +1569,158 @@
       </div>
 
       <button class="btn-confirm" onclick="closeCouponModal()">신난다! 고마워 ❤️</button>
+    </div>
+  </div>
+
+  
+  <!-- 🎒 탐험 보내기 & 무한 보물 상자 모달 -->
+  <div class="modal-overlay" id="explore-modal">
+    <div class="modal-box">
+      <div style="font-size: 26px;">🎒🗺️✨</div>
+      <div style="font-size: 18px; font-weight: 900; color: #2C7A7B; margin: 4px 0;" id="explore-modal-title">비밀 탐험 & 보물함</div>
+      <div style="font-size: 11.5px; color: #718096; margin-bottom: 8px;">미션을 완료하면 도시락을 챙겨 신비한 탐험을 떠나요!</div>
+
+      <div class="modal-nav-tabs">
+        <button class="modal-nav-tab active" id="exp-tab-depart" onclick="switchExploreTab('depart')">🗺️ 탐험 떠나기</button>
+        <button class="modal-nav-tab" id="exp-tab-bag" onclick="switchExploreTab('bag')">🎒 발견한 보물 (<span id="treasure-count">0</span>)</button>
+      </div>
+
+      <!-- 1. 탐험 떠나기 탭 -->
+      <div id="explore-view-depart">
+        <div id="explore-dest-list">
+          <div class="explore-dest-card" onclick="startExpedition('forest')">
+            <div class="explore-dest-icon">🌲</div>
+            <div>
+              <div class="explore-dest-name">신비한 비밀 숲</div>
+              <div class="explore-dest-desc">요정의 크리스탈과 고대 나뭇잎이 숨겨진 숲!</div>
+            </div>
+          </div>
+          <div class="explore-dest-card" onclick="startExpedition('construction')">
+            <div class="explore-dest-icon">🚜</div>
+            <div>
+              <div class="explore-dest-name">와글와글 메가 공사장</div>
+              <div class="explore-dest-desc">전설의 황금 볼트와 슈퍼 티타늄 기어 발굴!</div>
+            </div>
+          </div>
+          <div class="explore-dest-card" onclick="startExpedition('ocean')">
+            <div class="explore-dest-icon">🌊</div>
+            <div>
+              <div class="explore-dest-name">에메랄드 무지개 바다</div>
+              <div class="explore-dest-desc">인어의 진주와 반짝이는 고대 조개 화석!</div>
+            </div>
+          </div>
+          <div class="explore-dest-card" onclick="startExpedition('space')">
+            <div class="explore-dest-icon">🌌</div>
+            <div>
+              <div class="explore-dest-name">밤하늘 은하수 우주선</div>
+              <div class="explore-dest-desc">달빛 머금은 별똥별 조각과 운석 보석!</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="explore-active-view" style="display: none; padding: 20px 10px; text-align: center;">
+          <div style="font-size: 42px; margin-bottom: 8px; animation: float 1.5s infinite ease-in-out;" id="explore-anim-icon">🚀</div>
+          <div style="font-size: 15px; font-weight: 900; color: #2C7A7B;" id="explore-anim-text">신비한 탐험지로 출동 중!</div>
+          <div style="font-size: 12px; color: #718096; margin: 4px 0 12px;">두근두근! 어떤 보물을 찾아올까요?</div>
+          <div style="width: 100%; height: 10px; background: #E2E8F0; border-radius: 6px; overflow: hidden; margin-bottom: 12px;">
+            <div id="explore-progress-bar" style="width: 0%; height: 100%; background: #319795; transition: width 0.3s ease;"></div>
+          </div>
+          <button class="btn-confirm" onclick="finishExpeditionImmediately()" style="background: #319795;">🎁 지금 바로 보물 열기!</button>
+        </div>
+      </div>
+
+      <!-- 2. 보물 가방 탭 -->
+      <div id="explore-view-bag" style="display: none;">
+        <div class="treasure-grid" id="treasure-grid"></div>
+        <div id="treasure-empty-msg" style="display: none; padding: 30px 10px; color: #A0AEC0; font-size: 12.5px; line-height: 1.5;">
+          아직 발견한 보물이 없어요!<br>오늘 미션을 하고 탐험을 떠나보세요! ✨
+        </div>
+      </div>
+
+      <button class="btn-confirm" onclick="closeExploreModal()" style="background: #718096; margin-top: 10px;">닫기</button>
+    </div>
+  </div>
+
+  <!-- 👒 외형 꾸미기 모달 -->
+  <div class="modal-overlay" id="dress-modal">
+    <div class="modal-box">
+      <div style="font-size: 26px;">👒🕶️✨</div>
+      <div style="font-size: 18px; font-weight: 900; color: #6B46C1; margin: 4px 0;" id="dress-modal-title">멋쟁이 파트너 꾸미기</div>
+      <div style="font-size: 11.5px; color: #718096; margin-bottom: 12px;">모자, 선글라스, 사이렌으로 멋지게 꾸며주세요!</div>
+
+      <div class="dress-grid" id="dress-grid">
+        <div class="dress-item-card" onclick="selectAccessory('none')">
+          <div class="dress-item-icon">❌</div>
+          <div class="dress-item-name">착용 안 함</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('hat')">
+          <div class="dress-item-icon">🤠</div>
+          <div class="dress-item-name">탐험가 모자</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('glasses')">
+          <div class="dress-item-icon">🕶️</div>
+          <div class="dress-item-name">힙합 썬글라스</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('crown')">
+          <div class="dress-item-icon">👑</div>
+          <div class="dress-item-name">황금 왕관</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('siren')">
+          <div class="dress-item-icon">🚨</div>
+          <div class="dress-item-name">출동 사이렌</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('ribbon')">
+          <div class="dress-item-icon">🎀</div>
+          <div class="dress-item-name">러블리 리본</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('wings')">
+          <div class="dress-item-icon">🪽</div>
+          <div class="dress-item-name">천사의 날개</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('cape')">
+          <div class="dress-item-icon">🦸</div>
+          <div class="dress-item-name">영웅 번개망토</div>
+        </div>
+        <div class="dress-item-card" onclick="selectAccessory('helmet')">
+          <div class="dress-item-icon">👷</div>
+          <div class="dress-item-name">튼튼 안전모</div>
+        </div>
+      </div>
+
+      <button class="btn-confirm" onclick="closeDressModal()" style="background: #6B46C1;">멋지다! 장착 완료 ❤️</button>
+    </div>
+  </div>
+
+  <!-- 🤝 형제 슈퍼 합체 축하 모달 -->
+  <div class="modal-overlay" id="synergy-modal">
+    <div class="modal-box" style="background: linear-gradient(180deg, #FFF5F5 0%, #FFFFFF 100%); border: 3px solid #FEB2B2;">
+      <div style="font-size: 34px; animation: float 1.8s infinite ease-in-out;">⚡🤝🔥</div>
+      <div style="font-size: 20px; font-weight: 900; color: #E53E3E; margin: 4px 0;">희윤 & 희겸 형제 슈퍼 합체!</div>
+      <div style="font-size: 12.5px; color: #4A5568; line-height: 1.4; margin: 6px 0 14px;">
+        형아가 든든하게 이끌고, 동생이 씩씩하게 해냈다!<br>
+        <strong>오늘의 형제 파워 대폭발! ✨</strong>
+      </div>
+
+      <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin: 12px 0;">
+        <div style="text-align: center;">
+          <div id="synergy-partner-0" style="font-size: 40px; margin-bottom: 2px;">👦</div>
+          <div style="font-size: 11px; font-weight: 800; color: #2B6CB0;">형아 희윤 파트너</div>
+        </div>
+        <div style="font-size: 28px; color: #E53E3E; font-weight: 900;">⚡+⚡</div>
+        <div style="text-align: center;">
+          <div id="synergy-partner-1" style="font-size: 40px; margin-bottom: 2px;">👶</div>
+          <div style="font-size: 11px; font-weight: 800; color: #C05621;">동생 희겸 파트너</div>
+        </div>
+      </div>
+
+      <div style="background: #FFF5F5; border: 1px dashed #FEB2B2; border-radius: 10px; padding: 10px; margin-bottom: 14px;">
+        <div style="font-size: 12px; font-weight: 800; color: #C53030;">🎁 오늘의 슈퍼 합체 보너스 지급!</div>
+        <div style="font-size: 13.5px; font-weight: 900; color: #9B2C2C; margin-top: 2px;">
+          희윤 & 희겸 둘 다 <strong>+50 EXP</strong> & <strong>🍎 황금열매 +2개</strong>!
+        </div>
+      </div>
+
+      <button class="btn-confirm" onclick="closeSynergyModal()" style="background: #E53E3E;">신난다! 우리 형제 최고! 🚀</button>
     </div>
   </div>
 
@@ -2859,12 +3201,37 @@
       }
 
       document.getElementById(`progress-${pIdx}`).innerText = `(${completedCount}/${p.quests ? p.quests.length : 0})`;
+
+      // 👒 악세서리 오버레이 렌더링
+      const accEl = document.getElementById(`acc-${pIdx}`);
+      if (accEl) {
+        const acc = p.accessory || 'none';
+        accEl.className = 'acc-overlay';
+        if (acc !== 'none') {
+          accEl.classList.add(`acc-${acc}`);
+          const ACC_ICONS = {
+            hat: '🤠',
+            glasses: '🕶️',
+            crown: '👑',
+            siren: '🚨',
+            ribbon: '🎀',
+            wings: '🪽',
+            cape: '🦸',
+            helmet: '👷'
+          };
+          accEl.innerText = ACC_ICONS[acc] || '';
+        } else {
+          accEl.innerText = '';
+        }
+      }
+
     }
 
     function renderBothProfiles() {
       updateTimeTheme();
       renderProfile(0);
       renderProfile(1);
+      checkBrotherSynergyCondition();
 
       // 세로 모드 탭 활성화 상태
       document.getElementById('tab-0').classList.toggle('active', appData.activeProfile === 0);
@@ -3421,6 +3788,328 @@
 
     loadData();
     renderBothProfiles();
+
+    // =========================================================================
+    // ⚡ 형제 슈퍼 합체 시스템 (가로/세로 듀얼 시너지)
+    // =========================================================================
+    function checkBrotherSynergyCondition() {
+      const p0 = appData.profiles && appData.profiles[0];
+      const p1 = appData.profiles && appData.profiles[1];
+      if (!p0 || !p1) return;
+
+      const q0Done = p0.quests ? p0.quests.filter(q => q.completed).length : 0;
+      const q1Done = p1.quests ? p1.quests.filter(q => q.completed).length : 0;
+
+      const banner = document.getElementById('synergy-banner');
+      const titleEl = document.getElementById('synergy-title');
+
+      const today = getTodayStr();
+      const alreadyFused = (appData.synergyDate === today);
+
+      if (banner) {
+        banner.style.display = 'block';
+        if (alreadyFused) {
+          banner.style.background = 'linear-gradient(135deg, #48BB78 0%, #38A169 100%)';
+          banner.style.boxShadow = '0 3px 10px rgba(72, 187, 120, 0.4)';
+          banner.style.animation = 'none';
+          if (titleEl) {
+            titleEl.style.color = '#FFFFFF';
+            titleEl.innerText = '✨ 오늘 형제 합체 완료! 환상의 호흡 발동 중! ✨';
+          }
+        } else if (q0Done >= 2 && q1Done >= 2) {
+          banner.style.background = 'linear-gradient(135deg, #FF6B6B 0%, #FFA07A 50%, #FFD93D 100%)';
+          banner.style.boxShadow = '0 4px 16px rgba(255, 107, 107, 0.45)';
+          banner.style.animation = 'synergyPulse 1.8s infinite alternate';
+          if (titleEl) {
+            titleEl.style.color = '#FFFFFF';
+            titleEl.innerText = '⚡ 희윤 & 희겸 형제 슈퍼 합체 충전 완료! 출동 준비! ⚡';
+          }
+        } else {
+          banner.style.background = '#EDF2F7';
+          banner.style.boxShadow = 'none';
+          banner.style.animation = 'none';
+          if (titleEl) {
+            titleEl.style.color = '#718096';
+            titleEl.style.textShadow = 'none';
+            titleEl.innerText = `🤝 형제 합체까지: 희윤 (${q0Done}/2) · 희겸 (${q1Done}/2)`;
+          }
+        }
+      }
+    }
+
+    function openSynergyModal() {
+      const p0 = appData.profiles[0];
+      const p1 = appData.profiles[1];
+      const q0Done = p0.quests ? p0.quests.filter(q => q.completed).length : 0;
+      const q1Done = p1.quests ? p1.quests.filter(q => q.completed).length : 0;
+      const today = getTodayStr();
+
+      if (appData.synergyDate === today) {
+        alert("오늘의 형제 슈퍼 합체는 이미 멋지게 완료했어요! ✨\n내일 또 힘을 모아 출동해 봐요!");
+        return;
+      }
+
+      if (q0Done < 2 || q1Done < 2) {
+        alert(`아직 슈퍼 합체 파워가 부족해요!\n\n현재 달성 현황:\n- 👦 희윤 형아: ${q0Done}/2개 완료\n- 👶 희겸 동생: ${q1Done}/2개 완료\n\n둘 다 미션을 2개 이상 완료하면 슈퍼 합체가 충전됩니다! 💪`);
+        return;
+      }
+
+      const fam0 = getFamily(p0.partnerId);
+      const fam1 = getFamily(p1.partnerId);
+      document.getElementById('synergy-partner-0').innerText = fam0.typeName.split(' ')[0] || '🔥';
+      document.getElementById('synergy-partner-1').innerText = fam1.typeName.split(' ')[0] || '🚜';
+
+      // 슈퍼 합체 보너스 지급
+      p0.berries = (p0.berries || 0) + 2;
+      p1.berries = (p1.berries || 0) + 2;
+      addExp(0, 50);
+      addExp(1, 50);
+
+      appData.synergyDate = today;
+      saveData();
+      renderBothProfiles();
+
+      playFanfare();
+      fireConfetti(0);
+      fireConfetti(1);
+
+      document.getElementById('synergy-modal').classList.add('active');
+    }
+
+    function closeSynergyModal() {
+      document.getElementById('synergy-modal').classList.remove('active');
+    }
+
+    // =========================================================================
+    // 🎒 무한 탐험 보물 생성 엔진 (절차적 무한 조합 생성기!)
+    // =========================================================================
+    const TREASURE_PREFIXES = [
+      '반짝이는', '고대 유적의', '무지개빛', '황금빛', '신비로운', '불타오르는', '달빛 머금은',
+      '별빛 가득한', '우주에서 온', '초강력 티타늄', '마법에 걸린', '백악기 공룡의', '비밀 숲의',
+      '전설의 날쌘', '용기의 수호', '바다 깊은 곳의', '에메랄드', '사막 오아시스의', '천사의 숨결',
+      '번개 치는', '행복을 부르는', '얼음 왕국의', '거대 타이탄의', '황금 차고지의'
+    ];
+
+    const TREASURE_ITEMS = [
+      { name: '볼트', icon: '🔩', lore: '고장 난 중장비나 로봇도 단번에 고쳐내는 신기한 볼트!' },
+      { name: '기어', icon: '⚙️', lore: '돌아갈 때마다 엄청난 에너지를 뿜어내는 마법의 기어!' },
+      { name: '너트', icon: '🔧', lore: '단단하게 모든 부품을 꽉 잡아주는 특수 합금 너트!' },
+      { name: '화석', icon: '🦴', lore: '수억 년 전 거대 공룡이 남겨놓은 전설의 뼈 화석!' },
+      { name: '크리스탈', icon: '💎', lore: '햇빛을 받으면 일곱 빛깔 무지개를 뿜어내는 영롱한 보석!' },
+      { name: '조개껍데기', icon: '🐚', lore: '귀에 대면 파도 소리와 인어의 노랫소리가 들리는 조개!' },
+      { name: '별똥별 조각', icon: '☄️', lore: '어젯밤 밤하늘에서 소원을 싣고 떨어진 별똥별 파편!' },
+      { name: '황금 열매', icon: '🫐', lore: '먹으면 눈이 번쩍 뜨이고 기운이 솟구치는 귀한 열매!' },
+      { name: '나뭇잎', icon: '🍃', lore: '숲속 요정들이 비를 피할 때 우산으로 쓰는 마법 나뭇잎!' },
+      { name: '깃털', icon: '🪶', lore: '하늘 높이 날아다니는 전설의 수호새가 떨어뜨린 깃털!' },
+      { name: '용의 비늘', icon: '🐉', lore: '어떤 불길과 충격도 튕겨내는 용맹한 드래곤의 비늘!' },
+      { name: '나침반', icon: '🧭', lore: '항상 착한 아이가 있는 쪽을 가리키는 신비한 나침반!' },
+      { name: '비밀 열쇠', icon: '🗝️', lore: '어디선가 잠겨 있는 숨겨진 보물 상자를 여는 마법 열쇠!' },
+      { name: '다이아몬드', icon: '💠', lore: '세상에서 가장 단단하고 영롱하게 반짝이는 으뜸 보석!' },
+      { name: '황금 동전', icon: '🪙', lore: '고대 왕국의 왕이 착한 기사에게 수여했던 귀한 금화!' },
+      { name: '행운의 네잎클로버', icon: '🍀', lore: '주머니에 넣고 다니면 하루 종일 좋은 일만 생기는 풀!' },
+      { name: '달빛 수정구', icon: '🔮', lore: '가만히 들여다보면 내일의 재미있는 일이 비치는 구슬!' },
+      { name: '황금 호루라기', icon: '📣', lore: '한 번 불면 숲속의 동물 친구들이 모두 모여드는 피리!' },
+      { name: '스파크 플러그', icon: '⚡', lore: '엔진에 불꽃을 팍팍 튀겨 번개처럼 달리게 해주는 부품!' },
+      { name: '도토리 왕관', icon: '🌰', lore: '다람쥐 마을의 꼬마 대장이 쓰고 다니던 앙증맞은 왕관!' }
+    ];
+
+    const RARITIES = [
+      { id: 'normal', name: '일반 🌱', class: 'rarity-normal', exp: 35 },
+      { id: 'rare', name: '희귀 💎', class: 'rarity-rare', exp: 50 },
+      { id: 'legend', name: '전설 👑', class: 'rarity-legend', exp: 75 },
+      { id: 'mythic', name: '신화 ✨', class: 'rarity-mythic', exp: 120 }
+    ];
+
+    function generateInfiniteTreasure() {
+      const roll = Math.random() * 100;
+      let rarity = RARITIES[0];
+      if (roll < 5) rarity = RARITIES[3];
+      else if (roll < 20) rarity = RARITIES[2];
+      else if (roll < 50) rarity = RARITIES[1];
+
+      const prefix = TREASURE_PREFIXES[Math.floor(Math.random() * TREASURE_PREFIXES.length)];
+      const baseItem = TREASURE_ITEMS[Math.floor(Math.random() * TREASURE_ITEMS.length)];
+
+      const fullName = `${prefix} ${baseItem.name}`;
+      return {
+        id: 'trs_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+        name: fullName,
+        icon: baseItem.icon,
+        rarity: rarity.name,
+        rarityClass: rarity.class,
+        expBonus: rarity.exp,
+        story: baseItem.lore,
+        date: getTodayStr()
+      };
+    }
+
+    let currentExploreProfileIdx = 0;
+
+    function openExploreModal(pIdx) {
+      currentExploreProfileIdx = pIdx;
+      const p = appData.profiles[pIdx];
+      if (!p.treasures) p.treasures = [];
+
+      document.getElementById('explore-modal-title').innerText = `🎒 ${p.name}의 비밀 탐험 & 보물함`;
+      document.getElementById('treasure-count').innerText = p.treasures.length;
+
+      switchExploreTab('depart');
+      document.getElementById('explore-modal').classList.add('active');
+    }
+
+    function closeExploreModal() {
+      document.getElementById('explore-modal').classList.remove('active');
+    }
+
+    function switchExploreTab(tab) {
+      document.getElementById('exp-tab-depart').classList.toggle('active', tab === 'depart');
+      document.getElementById('exp-tab-bag').classList.toggle('active', tab === 'bag');
+
+      document.getElementById('explore-view-depart').style.display = (tab === 'depart') ? 'block' : 'none';
+      document.getElementById('explore-view-bag').style.display = (tab === 'bag') ? 'block' : 'none';
+
+      if (tab === 'bag') {
+        renderTreasureGrid();
+      } else {
+        document.getElementById('explore-dest-list').style.display = 'block';
+        document.getElementById('explore-active-view').style.display = 'none';
+      }
+    }
+
+    function startExpedition(destType) {
+      const p = appData.profiles[currentExploreProfileIdx];
+      const completedCount = p.quests ? p.quests.filter(q => q.completed).length : 0;
+      if (completedCount === 0) {
+        alert("오늘 미션을 1개 이상 완료해야 탐험 도시락🍱을 챙겨 떠날 수 있어요!");
+        return;
+      }
+
+      document.getElementById('explore-dest-list').style.display = 'none';
+      document.getElementById('explore-active-view').style.display = 'block';
+
+      const animIcon = document.getElementById('explore-anim-icon');
+      const animText = document.getElementById('explore-anim-text');
+      const pBar = document.getElementById('explore-progress-bar');
+      pBar.style.width = '0%';
+
+      const destIcons = { forest: '🌲', construction: '🚜', ocean: '🌊', space: '🌌' };
+      const destNames = { forest: '신비한 비밀 숲', construction: '와글와글 메가 공사장', ocean: '에메랄드 무지개 바다', space: '밤하늘 은하수 우주선' };
+
+      animIcon.innerText = destIcons[destType] || '🚀';
+      animText.innerText = `${destNames[destType] || '미지의 세계'}으로 신나게 탐험 중...`;
+
+      playTone(400, 'sine', 0.1, 0);
+      playTone(550, 'sine', 0.15, 120);
+
+      let step = 0;
+      const interval = setInterval(() => {
+        step += 25;
+        pBar.style.width = `${step}%`;
+        if (step >= 100) {
+          clearInterval(interval);
+          finishExpeditionImmediately();
+        }
+      }, 350);
+    }
+
+    function finishExpeditionImmediately() {
+      const p = appData.profiles[currentExploreProfileIdx];
+      if (!p.treasures) p.treasures = [];
+
+      const newTreasure = generateInfiniteTreasure();
+      p.treasures.unshift(newTreasure);
+      p.berries = (p.berries || 0) + 1;
+      addExp(currentExploreProfileIdx, newTreasure.expBonus);
+
+      fireConfetti(currentExploreProfileIdx);
+      playFanfare();
+
+      saveData();
+      renderProfile(currentExploreProfileIdx);
+
+      alert(`🎉 탐험 성공! 신비한 보물 발견!\n\n[${newTreasure.rarity}] ${newTreasure.icon} ${newTreasure.name}\n- 보너스: +${newTreasure.expBonus} EXP & 🍎 열매 +1개!\n- ${newTreasure.story}`);
+
+      document.getElementById('treasure-count').innerText = p.treasures.length;
+      switchExploreTab('bag');
+    }
+
+    function renderTreasureGrid() {
+      const p = appData.profiles[currentExploreProfileIdx];
+      const grid = document.getElementById('treasure-grid');
+      const emptyMsg = document.getElementById('treasure-empty-msg');
+      grid.innerHTML = '';
+
+      if (!p.treasures || p.treasures.length === 0) {
+        emptyMsg.style.display = 'block';
+        return;
+      }
+      emptyMsg.style.display = 'none';
+
+      p.treasures.forEach(t => {
+        const card = document.createElement('div');
+        card.className = `treasure-card ${t.rarityClass || ''}`;
+        card.innerHTML = `
+          <div class="treasure-icon">${t.icon}</div>
+          <div class="treasure-name" title="${t.name}">${t.name}</div>
+          <div class="treasure-rarity">${t.rarity}</div>
+          <div class="treasure-story">${t.story}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // =========================================================================
+    // 👒 외형 꾸미기 (모자, 선글라스, 사이렌, 왕관 등)
+    // =========================================================================
+    let currentDressProfileIdx = 0;
+
+    function openDressModal(pIdx) {
+      currentDressProfileIdx = pIdx;
+      const p = appData.profiles[pIdx];
+      document.getElementById('dress-modal-title').innerText = `👒 ${p.name} 파트너 멋쟁이 꾸미기`;
+
+      const currentAcc = p.accessory || 'none';
+      const cards = document.querySelectorAll('.dress-item-card');
+      cards.forEach(card => {
+        const onclickAttr = card.getAttribute('onclick') || '';
+        card.classList.toggle('selected', onclickAttr.includes(`'${currentAcc}'`));
+      });
+
+      document.getElementById('dress-modal').classList.add('active');
+    }
+
+    function selectAccessory(accId) {
+      const p = appData.profiles[currentDressProfileIdx];
+      p.accessory = accId;
+      playDing();
+      saveData();
+      renderProfile(currentDressProfileIdx);
+
+      const cards = document.querySelectorAll('.dress-item-card');
+      cards.forEach(card => {
+        const onclickAttr = card.getAttribute('onclick') || '';
+        card.classList.toggle('selected', onclickAttr.includes(`'${accId}'`));
+      });
+
+      speak(currentDressProfileIdx, accId === 'none' ? "악세서리를 벗었어!" : "우와! 완전 멋져졌어! 마음에 쏙 들어! ✨");
+    }
+
+    function closeDressModal() {
+      document.getElementById('dress-modal').classList.remove('active');
+    }
+
+    // =========================================================================
+    // 🛡️ 스크린 타임 중독 방지 (3분 초과 시 파트너 퇴장 안내)
+    // =========================================================================
+    let screenTimeSeconds = 0;
+    setInterval(() => {
+      screenTimeSeconds++;
+      if (screenTimeSeconds === 180) { // 3분 경과 시 1회 발동
+        speak(0, "희윤아, 눈 아프다! 화면 끄고 아빠랑 신나게 놀자! 🚀");
+        speak(1, "희겸아, 포크레인도 쉬러 갈래! 화면 끄고 코코 쉬자! 💤");
+      }
+    }, 1000);
+
   </script>
 </body>
 </html>
