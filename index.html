@@ -1308,6 +1308,26 @@
     .dress-item-icon { font-size: 32px; margin-bottom: 4px; }
     .dress-item-name { font-size: 11px; font-weight: 800; color: #2D3748; }
 
+  
+    .child-avatar-img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+      flex-shrink: 0;
+    }
+    .child-avatar-lg {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #FEB2B2;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+      margin-bottom: 4px;
+    }
+
   </style>
 </head>
 <body>
@@ -1326,8 +1346,8 @@
 
       <!-- 세로 모드 전용 탭 전환 버튼 -->
       <div class="portrait-tabs">
-        <button class="portrait-tab active" id="tab-0" onclick="switchPortraitTab(0)">👦 희윤이 (7세)</button>
-        <button class="portrait-tab" id="tab-1" onclick="switchPortraitTab(1)">👶 희겸이 (3세)</button>
+        <button class="portrait-tab active" id="tab-0" onclick="switchPortraitTab(0)"><img src="heeyoon_face.png" class="child-avatar-img" alt="희윤"> 희윤이 (7세)</button>
+        <button class="portrait-tab" id="tab-1" onclick="switchPortraitTab(1)"><img src="heegyeom_face.png" class="child-avatar-img" alt="희겸"> 희겸이 (3세)</button>
       </div>
     </div>
 
@@ -1347,7 +1367,7 @@
       <!-- ================= 👦 왼쪽 컬럼: 첫째 희윤이 (7세) ================= -->
       <div class="profile-col active-col" id="col-0">
         <div class="col-header col-header-boy">
-          <div class="col-profile-title">👦 희윤이 (7세)</div>
+          <div class="col-profile-title"><img src="heeyoon_face.png" class="child-avatar-img" alt="희윤"> 희윤이 (7세)</div>
           <div class="col-stats-row">
             <span class="col-days-pill" id="days-0">🏠 1일째</span>
             <button class="col-trophy-btn" onclick="openHallOfFame(0)">🏆 도감 (<span id="hof-count-0">0</span>)</button>
@@ -1412,7 +1432,7 @@
       <!-- ================= 👶 오른쪽 컬럼: 둘째 희겸이 (3세) ================= -->
       <div class="profile-col" id="col-1">
         <div class="col-header col-header-toddler">
-          <div class="col-profile-title">👶 희겸이 (3세)</div>
+          <div class="col-profile-title"><img src="heegyeom_face.png" class="child-avatar-img" alt="희겸"> 희겸이 (3세)</div>
           <div class="col-stats-row">
             <span class="col-days-pill" id="days-1">🏠 1일째</span>
             <button class="col-trophy-btn" onclick="openHallOfFame(1)">🏆 도감 (<span id="hof-count-1">0</span>)</button>
@@ -1703,13 +1723,13 @@
 
       <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin: 12px 0;">
         <div style="text-align: center;">
-          <div id="synergy-partner-0" style="font-size: 40px; margin-bottom: 2px;">👦</div>
-          <div style="font-size: 11px; font-weight: 800; color: #2B6CB0;">형아 희윤 파트너</div>
+          <img src="heeyoon_face.png" class="child-avatar-lg" alt="희윤">
+          <div style="font-size: 12px; font-weight: 800; color: #2B6CB0;">형아 희윤 (7세)</div>
         </div>
         <div style="font-size: 28px; color: #E53E3E; font-weight: 900;">⚡+⚡</div>
         <div style="text-align: center;">
-          <div id="synergy-partner-1" style="font-size: 40px; margin-bottom: 2px;">👶</div>
-          <div style="font-size: 11px; font-weight: 800; color: #C05621;">동생 희겸 파트너</div>
+          <img src="heegyeom_face.png" class="child-avatar-lg" alt="희겸">
+          <div style="font-size: 12px; font-weight: 800; color: #C05621;">동생 희겸 (3세)</div>
         </div>
       </div>
 
