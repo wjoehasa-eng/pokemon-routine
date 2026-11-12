@@ -842,27 +842,48 @@
         padding: 4px 11px;
       }
 
-      /* 🔥 캐릭터 스테이지 시원하게 대확대! */
+      /* 🔥 캐릭터 스테이지 시원하게 2배 초대형 대확대! (240px~250px) */
       .stage {
-        padding: 12px 18px;
+        padding: 14px 18px 12px;
       }
 
       .pokemon-speech {
-        margin-bottom: 6px;
-        font-size: 13px;
-        padding: 5px 14px;
+        margin-bottom: 8px;
+        font-size: 13.5px;
+        padding: 6px 16px;
         border-radius: 14px;
       }
 
       .pokemon-wrapper {
-        width: 140px;
-        height: 140px;
-        margin-bottom: 6px;
+        width: 250px;
+        height: 250px;
+        margin-bottom: 8px;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .pokemon-wrapper:hover {
+        transform: scale(1.04);
+      }
+
+      .pokemon-wrapper:active {
+        transform: scale(0.95);
       }
 
       .pokemon-img, .pokemon-wrapper svg {
-        max-width: 128px;
-        max-height: 128px;
+        max-width: 230px;
+        max-height: 230px;
+      }
+
+      .pokemon-shadow {
+        width: 180px;
+        height: 18px;
+        bottom: 4px;
+        filter: blur(3px);
+      }
+
+      .aura-ring {
+        width: 230px;
+        height: 230px;
       }
 
       .name-title-row {
@@ -1730,7 +1751,6 @@
 
           <div class="stage-actions">
             <button class="action-btn btn-feed" onclick="feedPokemon(0)">🍎 밥주기</button>
-            <button class="action-btn btn-pet" onclick="petPokemon(0)">✨ 쓰담</button>
             <button class="action-btn btn-explore" onclick="openExploreModal(0)">🎒 탐험</button>
             <button class="action-btn btn-coupon" id="btn-coupon-0" onclick="openCouponModal(0)">🎁 소원상자</button>
             <button class="action-btn btn-change" onclick="openPartnerSelect(0)">🐾 파트너</button>
@@ -1795,7 +1815,6 @@
 
           <div class="stage-actions">
             <button class="action-btn btn-feed" onclick="feedPokemon(1)">🍎 밥주기</button>
-            <button class="action-btn btn-pet" onclick="petPokemon(1)">✨ 쓰담</button>
             <button class="action-btn btn-explore" onclick="openExploreModal(1)">🎒 탐험</button>
             <button class="action-btn btn-coupon" id="btn-coupon-1" onclick="openCouponModal(1)">🎁 소원상자</button>
             <button class="action-btn btn-change" onclick="openPartnerSelect(1)">🐾 파트너</button>
@@ -1840,9 +1859,10 @@
       <div class="partner-cat-tabs" id="partner-cat-tabs">
         <button class="cat-tab active" onclick="filterPartnerCat('all')">전체</button>
         <button class="cat-tab" onclick="filterPartnerCat('heavy')">🚜 중장비·차 (12종)</button>
+        <button class="cat-tab" onclick="filterPartnerCat('pokemon')">⚡️ 포켓몬 (13종)</button>
+        <button class="cat-tab" onclick="filterPartnerCat('disney')">🏰 미키와 친구들 (6종)</button>
         <button class="cat-tab" onclick="filterPartnerCat('beast')">🦁 동물·공룡</button>
         <button class="cat-tab" onclick="filterPartnerCat('cute')">💖 큐트·펫</button>
-        <button class="cat-tab" onclick="filterPartnerCat('pokemon')">⚡️ 포켓몬</button>
       </div>
 
       <div class="select-grid" id="select-grid"></div>
@@ -2336,6 +2356,176 @@
           { name: '토게틱', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/176.png' },
           { name: '토게키스', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/468.png' }
         ]
+      },
+      {
+        id: 'bulbasaur',
+        category: 'pokemon',
+        typeName: '풀/독 포켓몬',
+        eggColor: '#68D391',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '이상해씨', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png' },
+          { name: '이상해풀', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png' },
+          { name: '이상해꽃', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png' }
+        ]
+      },
+      {
+        id: 'greninja',
+        category: 'pokemon',
+        typeName: '닌자 포켓몬',
+        eggColor: '#63B3ED',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '개구마르', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/656.png' },
+          { name: '개굴반장', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/657.png' },
+          { name: '개굴닌자', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/658.png' }
+        ]
+      },
+      {
+        id: 'lucario',
+        category: 'pokemon',
+        typeName: '파동 포켓몬',
+        eggColor: '#4299E1',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '리오르', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/447.png' },
+          { name: '루카리오', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png' },
+          { name: '메가 루카리오', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png' }
+        ]
+      },
+      {
+        id: 'snorlax',
+        category: 'pokemon',
+        typeName: '잠꾸러기 포켓몬',
+        eggColor: '#4A5568',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '먹고자', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/446.png' },
+          { name: '잠만보', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png' },
+          { name: '거다이맥스 잠만보', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png' }
+        ]
+      },
+      {
+        id: 'gengar',
+        category: 'pokemon',
+        typeName: '그림자 포켓몬',
+        eggColor: '#805AD5',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '고오스', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/92.png' },
+          { name: '고우스트', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/93.png' },
+          { name: '팬텀', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png' }
+        ]
+      },
+      {
+        id: 'mewtwo',
+        category: 'pokemon',
+        typeName: '전설 포켓몬',
+        eggColor: '#ED64A6',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '뮤', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png' },
+          { name: '뮤츠', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png' },
+          { name: '각성 메가뮤츠', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png' }
+        ]
+      },
+      {
+        id: 'fuecoco',
+        category: 'pokemon',
+        typeName: '불꽃 악어 포켓몬',
+        eggColor: '#E53E3E',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '뜨아거', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/909.png' },
+          { name: '악뜨거', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/910.png' },
+          { name: '라우드본', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/911.png' }
+        ]
+      },
+      {
+        id: 'sprigatito',
+        category: 'pokemon',
+        typeName: '풀고양이 포켓몬',
+        eggColor: '#48BB78',
+        dialogueType: 'pokemon',
+        species: [
+          { name: '냐오하', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png' },
+          { name: '나로테', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/907.png' },
+          { name: '마스카나', img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/908.png' }
+        ]
+      },
+
+      // 5. 미키와 친구들 (디즈니 6대 대표 캐릭터 전원 구현!)
+      {
+        id: 'mickey',
+        category: 'disney',
+        typeName: '🐭 디즈니 마법 스타',
+        eggColor: '#FEB2B2',
+        dialogueType: 'disney',
+        species: [
+          { name: '꼬마 미키', isCustomSvg: 'mickey_baby' },
+          { name: '클래식 미키', isCustomSvg: 'mickey_classic' },
+          { name: '마법사 미키', isCustomSvg: 'mickey_sorcerer' }
+        ]
+      },
+      {
+        id: 'minnie',
+        category: 'disney',
+        typeName: '🎀 리본 요정 미니',
+        eggColor: '#FBB6CE',
+        dialogueType: 'disney',
+        species: [
+          { name: '꼬마 미니', isCustomSvg: 'minnie_baby' },
+          { name: '클래식 미니', isCustomSvg: 'minnie_classic' },
+          { name: '프린세스 미니', isCustomSvg: 'minnie_princess' }
+        ]
+      },
+      {
+        id: 'donald',
+        category: 'disney',
+        typeName: '🦆 용감한 도널드',
+        eggColor: '#90CDF4',
+        dialogueType: 'disney',
+        species: [
+          { name: '꼬마 도널드', isCustomSvg: 'donald_baby' },
+          { name: '세일러 도널드', isCustomSvg: 'donald_classic' },
+          { name: '캡틴 도널드', isCustomSvg: 'donald_captain' }
+        ]
+      },
+      {
+        id: 'daisy',
+        category: 'disney',
+        typeName: '💜 뷰티 스타 데이지',
+        eggColor: '#D6BCFA',
+        dialogueType: 'disney',
+        species: [
+          { name: '꼬마 데이지', isCustomSvg: 'daisy_baby' },
+          { name: '리본 데이지', isCustomSvg: 'daisy_classic' },
+          { name: '슈퍼스타 데이지', isCustomSvg: 'daisy_star' }
+        ]
+      },
+      {
+        id: 'goofy',
+        category: 'disney',
+        typeName: '🎩 유쾌한 구피',
+        eggColor: '#9AE6B4',
+        dialogueType: 'disney',
+        species: [
+          { name: '꼬마 구피', isCustomSvg: 'goofy_baby' },
+          { name: '유쾌한 구피', isCustomSvg: 'goofy_classic' },
+          { name: '슈퍼 구피', isCustomSvg: 'goofy_super' }
+        ]
+      },
+      {
+        id: 'pluto',
+        category: 'disney',
+        typeName: '🐶 골든 플루토',
+        eggColor: '#FBD38D',
+        dialogueType: 'disney',
+        species: [
+          { name: '아기 플루토', isCustomSvg: 'pluto_baby' },
+          { name: '씩씩한 플루토', isCustomSvg: 'pluto_classic' },
+          { name: '골든 플루토', isCustomSvg: 'pluto_golden' }
+        ]
       }
     ];
 
@@ -2509,6 +2699,14 @@
         "헤헤 간지러워~ 까르르! 볼에 부비부비~ 🐰",
         "세상에서 제일 포근해! 사랑해~ 🌸",
         "천사 날개가 파닥파닥~ 기분 날아갈 것 같아! 🧚‍♀️"
+      ],
+      disney: [
+        "하하! 안녕 친구야! 오늘 하루도 마법처럼 신나게 놀아보자! 🏰✨",
+        "미키 미니랑 같이 핫도그 댄스 출 사람 손! 💃🕺",
+        "꽉꽉! 도널드가 응원해! 미션도 번쩍 해치우자! 🦆⚡",
+        "아효~ 구피가 칭찬해! 넌 진짜 대단한 꼬마 친구야! 🎩🐾",
+        "플루토 꼬리가 붕붕붕~ 너무 기뻐서 뽀뽀 쪽! 🐶❤️",
+        "꿈과 희망의 마법이 반짝반짝 쏟아지고 있어! 🌟"
       ],
       pokemon: [
         "피카피카! 찌릿찌릿 사랑의 전기 방출! ⚡️",
@@ -3394,6 +3592,289 @@
             </svg>
           `;
 
+        // --- 5. 미키와 친구들 (디즈니 6종) ---
+        case 'mickey_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="35" cy="35" r="22" fill="#1A202C"/>
+              <circle cx="85" cy="35" r="22" fill="#1A202C"/>
+              <circle cx="60" cy="65" r="32" fill="#1A202C"/>
+              <ellipse cx="60" cy="70" rx="24" ry="22" fill="#FED7AA"/>
+              <ellipse cx="52" cy="62" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="68" cy="62" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="53" cy="60" rx="1.5" ry="3" fill="#FFFFFF"/>
+              <ellipse cx="69" cy="60" rx="1.5" ry="3" fill="#FFFFFF"/>
+              <ellipse cx="60" cy="74" rx="6" ry="4" fill="#1A202C"/>
+              <path d="M 48 78 Q 60 90 72 78" stroke="#1A202C" stroke-width="2.5" fill="#FC8181" stroke-linecap="round"/>
+            </svg>
+          `;
+        case 'mickey_classic':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="32" cy="32" r="22" fill="#1A202C"/>
+              <circle cx="88" cy="32" r="22" fill="#1A202C"/>
+              <circle cx="60" cy="58" r="32" fill="#1A202C"/>
+              <ellipse cx="60" cy="64" rx="25" ry="22" fill="#FED7AA"/>
+              <ellipse cx="52" cy="56" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="68" cy="56" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="53" cy="54" rx="1.5" ry="3" fill="#FFFFFF"/>
+              <ellipse cx="69" cy="54" rx="1.5" ry="3" fill="#FFFFFF"/>
+              <ellipse cx="60" cy="68" rx="6.5" ry="4.5" fill="#1A202C"/>
+              <path d="M 47 73 Q 60 88 73 73" stroke="#1A202C" stroke-width="2.5" fill="#FC8181" stroke-linecap="round"/>
+              <path d="M 40 92 L 40 110 Q 60 114 80 110 L 80 92 Z" fill="#E53E3E" stroke="#C53030" stroke-width="1.5"/>
+              <ellipse cx="50" cy="102" rx="3" ry="5" fill="#FFFFFF"/>
+              <ellipse cx="70" cy="102" rx="3" ry="5" fill="#FFFFFF"/>
+            </svg>
+          `;
+        case 'mickey_sorcerer':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="32" cy="42" r="22" fill="#1A202C"/>
+              <circle cx="88" cy="42" r="22" fill="#1A202C"/>
+              <circle cx="60" cy="68" r="32" fill="#1A202C"/>
+              <ellipse cx="60" cy="74" rx="25" ry="22" fill="#FED7AA"/>
+              <ellipse cx="52" cy="66" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="68" cy="66" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="60" cy="78" rx="6" ry="4" fill="#1A202C"/>
+              <path d="M 48 83 Q 60 95 72 83" stroke="#1A202C" stroke-width="2.5" fill="#FC8181" stroke-linecap="round"/>
+              <polygon points="60,5 38,48 82,48" fill="#2B6CB0" stroke="#2C5282" stroke-width="2"/>
+              <path d="M 34 48 Q 60 55 86 48" stroke="#2C5282" stroke-width="3" fill="none"/>
+              <polygon points="60,18 63,26 71,26 65,31 67,39 60,34 53,39 55,31 49,26 57,26" fill="#ECC94B"/>
+              <path d="M 50 36 Q 55 42 63 38 Q 58 46 48 42 Z" fill="#ECC94B"/>
+            </svg>
+          `;
+
+        case 'minnie_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="35" cy="38" r="22" fill="#1A202C"/>
+              <circle cx="85" cy="38" r="22" fill="#1A202C"/>
+              <circle cx="60" cy="68" r="32" fill="#1A202C"/>
+              <ellipse cx="60" cy="74" rx="24" ry="22" fill="#FED7AA"/>
+              <ellipse cx="52" cy="66" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="68" cy="66" rx="4.5" ry="9" fill="#1A202C"/>
+              <path d="M 46 62 L 42 58 M 48 60 L 46 54" stroke="#1A202C" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M 74 62 L 78 58 M 72 60 L 74 54" stroke="#1A202C" stroke-width="1.8" stroke-linecap="round"/>
+              <ellipse cx="60" cy="76" rx="6" ry="4" fill="#1A202C"/>
+              <path d="M 48 81 Q 60 92 72 81" stroke="#1A202C" stroke-width="2.5" fill="#FC8181" stroke-linecap="round"/>
+              <polygon points="60,40 45,28 48,46" fill="#F687B3"/>
+              <polygon points="60,40 75,28 72,46" fill="#F687B3"/>
+              <circle cx="60" cy="40" r="6" fill="#ED64A6"/>
+            </svg>
+          `;
+        case 'minnie_classic':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="32" cy="38" r="22" fill="#1A202C"/>
+              <circle cx="88" cy="38" r="22" fill="#1A202C"/>
+              <circle cx="60" cy="66" r="32" fill="#1A202C"/>
+              <ellipse cx="60" cy="72" rx="25" ry="22" fill="#FED7AA"/>
+              <ellipse cx="52" cy="64" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="68" cy="64" rx="4.5" ry="9" fill="#1A202C"/>
+              <path d="M 46 60 L 42 56 M 48 58 L 46 52" stroke="#1A202C" stroke-width="2" stroke-linecap="round"/>
+              <path d="M 74 60 L 78 56 M 72 58 L 74 52" stroke="#1A202C" stroke-width="2" stroke-linecap="round"/>
+              <ellipse cx="60" cy="75" rx="6.5" ry="4.5" fill="#1A202C"/>
+              <path d="M 47 80 Q 60 93 73 80" stroke="#1A202C" stroke-width="2.5" fill="#FC8181" stroke-linecap="round"/>
+              <polygon points="60,38 38,20 42,48" fill="#E53E3E" stroke="#C53030" stroke-width="1.5"/>
+              <polygon points="60,38 82,20 78,48" fill="#E53E3E" stroke="#C53030" stroke-width="1.5"/>
+              <circle cx="60" cy="38" r="7" fill="#C53030"/>
+              <circle cx="45" cy="30" r="2.5" fill="#FFFFFF"/>
+              <circle cx="75" cy="30" r="2.5" fill="#FFFFFF"/>
+              <circle cx="50" cy="40" r="2" fill="#FFFFFF"/>
+              <circle cx="70" cy="40" r="2" fill="#FFFFFF"/>
+            </svg>
+          `;
+        case 'minnie_princess':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="32" cy="38" r="22" fill="#1A202C"/>
+              <circle cx="88" cy="38" r="22" fill="#1A202C"/>
+              <circle cx="60" cy="66" r="32" fill="#1A202C"/>
+              <ellipse cx="60" cy="72" rx="25" ry="22" fill="#FED7AA"/>
+              <ellipse cx="52" cy="64" rx="4.5" ry="9" fill="#1A202C"/>
+              <ellipse cx="68" cy="64" rx="4.5" ry="9" fill="#1A202C"/>
+              <polygon points="46,28 53,16 60,24 67,16 74,28" fill="#ECC94B" stroke="#D69E2E" stroke-width="1.5"/>
+              <circle cx="53" cy="15" r="2" fill="#E53E3E"/>
+              <circle cx="67" cy="15" r="2" fill="#3182CE"/>
+              <polygon points="60,38 38,22 42,48" fill="#ED64A6"/>
+              <polygon points="60,38 82,22 78,48" fill="#ED64A6"/>
+              <circle cx="60" cy="38" r="6" fill="#D53F8C"/>
+              <ellipse cx="60" cy="75" rx="6" ry="4" fill="#1A202C"/>
+              <path d="M 47 80 Q 60 93 73 80" stroke="#1A202C" stroke-width="2.5" fill="#FC8181" stroke-linecap="round"/>
+            </svg>
+          `;
+
+        case 'donald_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="60" cy="58" r="26" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="2"/>
+              <ellipse cx="60" cy="70" rx="18" ry="10" fill="#F6E05E" stroke="#D69E2E" stroke-width="1.5"/>
+              <ellipse cx="52" cy="54" rx="3.5" ry="7" fill="#2B6CB0"/>
+              <ellipse cx="68" cy="54" rx="3.5" ry="7" fill="#2B6CB0"/>
+              <circle cx="60" cy="32" r="8" fill="#3182CE" stroke="#2B6CB0" stroke-width="1.5"/>
+            </svg>
+          `;
+        case 'donald_classic':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="60" cy="60" r="28" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="2"/>
+              <ellipse cx="60" cy="72" rx="22" ry="12" fill="#ECC94B" stroke="#D69E2E" stroke-width="2"/>
+              <path d="M 42 70 Q 60 76 78 70" stroke="#B7791F" stroke-width="2" fill="none"/>
+              <ellipse cx="50" cy="56" rx="4" ry="8" fill="#2B6CB0"/>
+              <ellipse cx="70" cy="56" rx="4" ry="8" fill="#2B6CB0"/>
+              <ellipse cx="60" cy="67" rx="3" ry="2" fill="#B7791F"/>
+              <ellipse cx="60" cy="38" rx="18" ry="7" fill="#2B6CB0"/>
+              <rect x="50" y="32" width="20" height="8" fill="#2B6CB0"/>
+              <circle cx="60" cy="30" r="4" fill="#1A202C"/>
+              <path d="M 72 38 L 84 48 L 78 50" stroke="#1A202C" stroke-width="3" fill="none"/>
+              <path d="M 48 90 L 40 85 L 60 95 L 80 85 L 72 90 Z" fill="#E53E3E"/>
+            </svg>
+          `;
+        case 'donald_captain':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="60" cy="62" r="28" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="2"/>
+              <ellipse cx="60" cy="74" rx="22" ry="12" fill="#ECC94B" stroke="#D69E2E" stroke-width="2"/>
+              <ellipse cx="50" cy="58" rx="4" ry="8" fill="#2B6CB0"/>
+              <ellipse cx="70" cy="58" rx="4" ry="8" fill="#2B6CB0"/>
+              <rect x="40" y="28" width="40" height="14" rx="4" fill="#FFFFFF" stroke="#1A202C" stroke-width="2"/>
+              <path d="M 36 42 Q 60 48 84 42" stroke="#1A202C" stroke-width="4" fill="none"/>
+              <polygon points="60,30 62,35 67,35 63,38 65,43 60,40 55,43 57,38 53,35 58,35" fill="#ECC94B"/>
+            </svg>
+          `;
+
+        case 'daisy_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="60" cy="58" r="26" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="2"/>
+              <ellipse cx="60" cy="70" rx="18" ry="10" fill="#F6E05E" stroke="#D69E2E" stroke-width="1.5"/>
+              <ellipse cx="52" cy="54" rx="3.5" ry="7" fill="#4A5568"/>
+              <ellipse cx="68" cy="54" rx="3.5" ry="7" fill="#4A5568"/>
+              <polygon points="60,34 46,22 48,40" fill="#B794F4"/>
+              <polygon points="60,34 74,22 72,40" fill="#B794F4"/>
+              <circle cx="60" cy="34" r="5" fill="#9F7AEA"/>
+            </svg>
+          `;
+        case 'daisy_classic':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="60" cy="60" r="28" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="2"/>
+              <ellipse cx="60" cy="72" rx="22" ry="12" fill="#ECC94B" stroke="#D69E2E" stroke-width="2"/>
+              <path d="M 46 52 L 40 48 M 48 50 L 44 44" stroke="#1A202C" stroke-width="2" stroke-linecap="round"/>
+              <path d="M 74 52 L 80 48 M 72 50 L 76 44" stroke="#1A202C" stroke-width="2" stroke-linecap="round"/>
+              <ellipse cx="50" cy="56" rx="4" ry="8" fill="#4A5568"/>
+              <ellipse cx="70" cy="56" rx="4" ry="8" fill="#4A5568"/>
+              <polygon points="60,32 38,14 42,42" fill="#9F7AEA" stroke="#805AD5" stroke-width="1.5"/>
+              <polygon points="60,32 82,14 78,42" fill="#9F7AEA" stroke="#805AD5" stroke-width="1.5"/>
+              <circle cx="60" cy="32" r="7" fill="#6B46C1"/>
+            </svg>
+          `;
+        case 'daisy_star':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <circle cx="60" cy="60" r="28" fill="#FFFFFF" stroke="#CBD5E0" stroke-width="2"/>
+              <ellipse cx="60" cy="72" rx="22" ry="12" fill="#ECC94B" stroke="#D69E2E" stroke-width="2"/>
+              <ellipse cx="50" cy="56" rx="4" ry="8" fill="#4A5568"/>
+              <ellipse cx="70" cy="56" rx="4" ry="8" fill="#4A5568"/>
+              <polygon points="60,32 38,14 42,42" fill="#D6BCFA" stroke="#9F7AEA" stroke-width="1.5"/>
+              <polygon points="60,32 82,14 78,42" fill="#D6BCFA" stroke="#9F7AEA" stroke-width="1.5"/>
+              <circle cx="60" cy="32" r="7" fill="#805AD5"/>
+              <polygon points="60,12 62,17 67,17 63,20 65,25 60,22 55,25 57,20 53,17 58,17" fill="#ECC94B"/>
+            </svg>
+          `;
+
+        case 'goofy_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <ellipse cx="60" cy="65" rx="22" ry="24" fill="#4A5568"/>
+              <ellipse cx="60" cy="72" rx="16" ry="16" fill="#FED7AA"/>
+              <ellipse cx="36" cy="72" rx="7" ry="20" fill="#1A202C" transform="rotate(-12 36 72)"/>
+              <ellipse cx="84" cy="72" rx="7" ry="20" fill="#1A202C" transform="rotate(12 84 72)"/>
+              <ellipse cx="54" cy="56" rx="3" ry="6" fill="#1A202C"/>
+              <ellipse cx="66" cy="56" rx="3" ry="6" fill="#1A202C"/>
+              <ellipse cx="60" cy="70" rx="6" ry="4" fill="#1A202C"/>
+            </svg>
+          `;
+        case 'goofy_classic':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <ellipse cx="60" cy="65" rx="24" ry="28" fill="#4A5568"/>
+              <ellipse cx="60" cy="74" rx="18" ry="18" fill="#FED7AA"/>
+              <ellipse cx="32" cy="75" rx="8" ry="24" fill="#1A202C" transform="rotate(-15 32 75)"/>
+              <ellipse cx="88" cy="75" rx="8" ry="24" fill="#1A202C" transform="rotate(15 88 75)"/>
+              <ellipse cx="54" cy="54" rx="3.5" ry="7" fill="#1A202C"/>
+              <ellipse cx="66" cy="54" rx="3.5" ry="7" fill="#1A202C"/>
+              <ellipse cx="60" cy="72" rx="7" ry="5" fill="#1A202C"/>
+              <rect x="55" y="84" width="4" height="6" rx="1" fill="#FFFFFF" stroke="#CBD5E0"/>
+              <rect x="61" y="84" width="4" height="6" rx="1" fill="#FFFFFF" stroke="#CBD5E0"/>
+              <path d="M 48 82 Q 60 92 72 82" stroke="#1A202C" stroke-width="2.5" fill="none"/>
+              <rect x="52" y="22" width="16" height="20" rx="4" fill="#38A169" stroke="#276749" stroke-width="2"/>
+              <rect x="44" y="38" width="32" height="6" rx="2" fill="#276749"/>
+            </svg>
+          `;
+        case 'goofy_super':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <path d="M 30 80 L 15 115 L 105 115 L 90 80 Z" fill="#E53E3E"/>
+              <ellipse cx="60" cy="65" rx="24" ry="28" fill="#4A5568"/>
+              <ellipse cx="60" cy="74" rx="18" ry="18" fill="#FED7AA"/>
+              <ellipse cx="32" cy="75" rx="8" ry="24" fill="#1A202C" transform="rotate(-15 32 75)"/>
+              <ellipse cx="88" cy="75" rx="8" ry="24" fill="#1A202C" transform="rotate(15 88 75)"/>
+              <path d="M 44 54 Q 60 50 76 54 L 74 62 Q 60 58 46 62 Z" fill="#3182CE"/>
+              <ellipse cx="54" cy="56" rx="3" ry="5" fill="#FFFFFF"/>
+              <ellipse cx="66" cy="56" rx="3" ry="5" fill="#FFFFFF"/>
+              <ellipse cx="60" cy="72" rx="7" ry="5" fill="#1A202C"/>
+              <rect x="55" y="84" width="4" height="6" rx="1" fill="#FFFFFF" stroke="#CBD5E0"/>
+              <rect x="61" y="84" width="4" height="6" rx="1" fill="#FFFFFF" stroke="#CBD5E0"/>
+            </svg>
+          `;
+
+        case 'pluto_baby':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <ellipse cx="60" cy="62" rx="24" ry="22" fill="#F6E05E" stroke="#D69E2E" stroke-width="1.5"/>
+              <ellipse cx="60" cy="72" rx="16" ry="12" fill="#ECC94B"/>
+              <ellipse cx="36" cy="66" rx="6" ry="18" fill="#1A202C" transform="rotate(-8 36 66)"/>
+              <ellipse cx="84" cy="66" rx="6" ry="18" fill="#1A202C" transform="rotate(8 84 66)"/>
+              <ellipse cx="54" cy="56" rx="3.5" ry="6" fill="#1A202C"/>
+              <ellipse cx="66" cy="56" rx="3.5" ry="6" fill="#1A202C"/>
+              <ellipse cx="60" cy="70" rx="6" ry="4" fill="#1A202C"/>
+              <circle cx="60" cy="84" r="4" fill="#E53E3E"/>
+            </svg>
+          `;
+        case 'pluto_classic':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <ellipse cx="60" cy="62" rx="26" ry="24" fill="#F6E05E" stroke="#D69E2E" stroke-width="2"/>
+              <ellipse cx="60" cy="74" rx="18" ry="14" fill="#ECC94B"/>
+              <ellipse cx="32" cy="68" rx="7" ry="22" fill="#1A202C" transform="rotate(-10 32 68)"/>
+              <ellipse cx="88" cy="68" rx="7" ry="22" fill="#1A202C" transform="rotate(10 88 68)"/>
+              <ellipse cx="52" cy="56" rx="4" ry="7" fill="#1A202C"/>
+              <ellipse cx="68" cy="56" rx="4" ry="7" fill="#1A202C"/>
+              <ellipse cx="60" cy="72" rx="7" ry="5" fill="#1A202C"/>
+              <path d="M 50 78 Q 60 88 70 78" stroke="#1A202C" stroke-width="2.5" fill="none"/>
+              <ellipse cx="62" cy="86" rx="4" ry="7" fill="#FC8181" transform="rotate(10 62 86)"/>
+              <rect x="44" y="88" width="32" height="6" rx="3" fill="#38A169" stroke="#22543D" stroke-width="1.5"/>
+            </svg>
+          `;
+        case 'pluto_golden':
+          return `
+            <svg viewBox="0 0 120 120" width="110" height="110" style="transform: scale(${scale});">
+              <ellipse cx="60" cy="62" rx="26" ry="24" fill="#ECC94B" stroke="#D69E2E" stroke-width="2.5"/>
+              <ellipse cx="60" cy="74" rx="18" ry="14" fill="#D69E2E"/>
+              <ellipse cx="32" cy="68" rx="7" ry="22" fill="#1A202C" transform="rotate(-10 32 68)"/>
+              <ellipse cx="88" cy="68" rx="7" ry="22" fill="#1A202C" transform="rotate(10 88 68)"/>
+              <polygon points="48,38 54,26 60,34 66,26 72,38" fill="#ECC94B" stroke="#B7791F" stroke-width="1.5"/>
+              <ellipse cx="52" cy="56" rx="4" ry="7" fill="#1A202C"/>
+              <ellipse cx="68" cy="56" rx="4" ry="7" fill="#1A202C"/>
+              <ellipse cx="60" cy="72" rx="7" ry="5" fill="#1A202C"/>
+              <path d="M 50 78 Q 60 88 70 78" stroke="#1A202C" stroke-width="2.5" fill="none"/>
+              <ellipse cx="62" cy="86" rx="4" ry="7" fill="#FC8181" transform="rotate(10 62 86)"/>
+              <rect x="44" y="88" width="32" height="7" rx="3.5" fill="#E53E3E" stroke="#C53030" stroke-width="1.5"/>
+              <circle cx="60" cy="96" r="4" fill="#ECC94B"/>
+            </svg>
+          `;
+
         default:
           return `
             <svg viewBox="0 0 120 120" width="105" height="105">
@@ -3407,7 +3888,7 @@
 
     function renderEggSvg(color, hasCrack) {
       return `
-        <svg viewBox="0 0 120 140" width="95" height="110" class="egg-shake">
+        <svg viewBox="0 0 120 140" class="egg-svg egg-shake" style="width: 100%; height: 100%; max-width: 210px; max-height: 230px;">
           <defs>
             <radialGradient id="eggGrad_${color.replace('#','')}" cx="40%" cy="35%" r="60%">
               <stop offset="0%" stop-color="#FFFFFF"/>
