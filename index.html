@@ -2524,9 +2524,9 @@
         </div>
         <div style="display: flex; gap: 6px; flex-wrap: wrap;">
           <button class="col-stats-btn" onclick="manualSetLevel(0, 0)">🥚 알 상태</button>
-          <button class="col-stats-btn" onclick="manualSetLevel(0, 1)" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">🌱 Lv.1 아기 파이리</button>
-          <button class="col-stats-btn" onclick="manualSetLevel(0, 2)" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">⛑️ Lv.2 헬멧</button>
-          <button class="col-stats-btn" onclick="manualSetLevel(0, 3)" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">🚨 Lv.3 사이렌</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(0, 1, 'tyranno')" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">🦖 Lv.1 꼬마 티라노</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(0, 2, 'tyranno')" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">⛑️ Lv.2 가시뿔 티라노</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(0, 3, 'tyranno')" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">👑 Lv.3 티라노 킹</button>
         </div>
       </div>
 
@@ -3247,10 +3247,10 @@
         {
           name: '희윤',
           age: '7세',
-          partnerId: 'charmander',
-          growthLevel: 0,
-          exp: 0,
-          berries: 3,
+          partnerId: 'tyranno',
+          growthLevel: 1,
+          exp: 25,
+          berries: 5,
           streak: 1,
           totalHabitsDone: 0,
           companionDays: 1,
@@ -3372,20 +3372,27 @@
         }
       });
 
-      // 🚑 [1. 긴급 부화 자동 복원 패치]
-      // 오늘 이미 활동했던 캐릭터가 클라우드 빈 데이터로 알(Lv.0)로 초기화된 경우 즉시 Lv.1 부화 복원!
-      const emergencyRestoredKey = 'pokemon_routine_hatch_restored_20261112_v3';
+      // 🚑 [1. 긴급 꼬마 티라노 & 포크레인 부화 복원 패치]
+      // 희윤이는 꼬마 티라노(Lv.1), 희겸이는 꼬마 포크레인(Lv.1)으로 즉시 건강하게 부화 복원!
+      const emergencyRestoredKey = 'pokemon_routine_hatch_tyranno_20261112_v5';
       if (!localStorage.getItem(emergencyRestoredKey)) {
         if (appData.profiles) {
-          appData.profiles.forEach(p => {
-            if (!p.growthLevel || p.growthLevel === 0) {
-              p.growthLevel = 1; // 아기 파트너 즉시 부화 상태로 복구!
-              p.exp = 25;
-              p.berries = Math.max(p.berries || 0, 5);
-              p.totalHabitsDone = Math.max(p.totalHabitsDone || 0, 2);
-              ensurePartnerHistory(p);
-            }
-          });
+          if (appData.profiles[0]) {
+            appData.profiles[0].partnerId = 'tyranno';
+            appData.profiles[0].growthLevel = 1; // 꼬마 티라노 부화!
+            appData.profiles[0].exp = 25;
+            appData.profiles[0].berries = Math.max(appData.profiles[0].berries || 0, 5);
+            appData.profiles[0].totalHabitsDone = Math.max(appData.profiles[0].totalHabitsDone || 0, 2);
+            ensurePartnerHistory(appData.profiles[0]);
+          }
+          if (appData.profiles[1]) {
+            appData.profiles[1].partnerId = 'excavator';
+            appData.profiles[1].growthLevel = 1; // 꼬마 포크레인 부화!
+            appData.profiles[1].exp = 25;
+            appData.profiles[1].berries = Math.max(appData.profiles[1].berries || 0, 5);
+            appData.profiles[1].totalHabitsDone = Math.max(appData.profiles[1].totalHabitsDone || 0, 2);
+            ensurePartnerHistory(appData.profiles[1]);
+          }
           localStorage.setItem(emergencyRestoredKey, 'true');
         }
       }
@@ -5889,9 +5896,10 @@
       document.getElementById('restore-modal').classList.remove('active');
     }
 
-    function manualSetLevel(pIdx, lvl) {
+    function manualSetLevel(pIdx, lvl, forcePartnerId = null) {
       const p = appData.profiles[pIdx];
       if (!p) return;
+      if (forcePartnerId) p.partnerId = forcePartnerId;
       p.growthLevel = lvl;
       p.exp = (lvl === 0) ? 0 : 25;
       p.berries = Math.max(p.berries || 0, 5);
@@ -5902,13 +5910,20 @@
     }
 
     function quickRestoreHatched() {
-      appData.profiles.forEach(p => {
-        p.growthLevel = Math.max(1, p.growthLevel || 1);
-        p.exp = 25;
-        p.berries = Math.max(p.berries || 0, 5);
-        p.totalHabitsDone = Math.max(p.totalHabitsDone || 0, 2);
-        ensurePartnerHistory(p);
-      });
+      if (appData.profiles[0]) {
+        appData.profiles[0].partnerId = 'tyranno';
+        appData.profiles[0].growthLevel = 1;
+        appData.profiles[0].exp = 25;
+        appData.profiles[0].berries = Math.max(appData.profiles[0].berries || 0, 5);
+        ensurePartnerHistory(appData.profiles[0]);
+      }
+      if (appData.profiles[1]) {
+        appData.profiles[1].partnerId = 'excavator';
+        appData.profiles[1].growthLevel = 1;
+        appData.profiles[1].exp = 25;
+        appData.profiles[1].berries = Math.max(appData.profiles[1].berries || 0, 5);
+        ensurePartnerHistory(appData.profiles[1]);
+      }
       saveData();
       renderBothProfiles();
       closeEmergencyRestoreModal();
