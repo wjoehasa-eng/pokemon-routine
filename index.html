@@ -1892,9 +1892,11 @@
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
+    const DEFAULT_SHEETS_SYNC_URL = 'https://script.google.com/macros/s/AKfycbzmKchg7btpHQkhCqFNU3gHhFQU5H5hNuwNoz30L0wj_jLYuPbaPQCU1zrSyL-fsfdS/exec';
+
     let appData = {
       activeProfile: 0,
-      sheetsSyncUrl: '',
+      sheetsSyncUrl: DEFAULT_SHEETS_SYNC_URL,
       profiles: [
         {
           name: '희윤',
@@ -1982,6 +1984,11 @@
         appData.questVersion = '20261112_custom_v1';
       }
 
+      // 구글 시트 실시간 동기화 URL 자동 기본 탑재
+      if (!appData.sheetsSyncUrl) {
+        appData.sheetsSyncUrl = DEFAULT_SHEETS_SYNC_URL;
+      }
+
       const today = getTodayStr();
       appData.profiles.forEach(p => {
         if (!p.lastDate) p.lastDate = today;
@@ -2011,14 +2018,14 @@
       }
     }
 
-    function saveData() {
+    function saveData(skipRemoteSync = false) {
       try {
         localStorage.setItem('pokemon_routine_v9', JSON.stringify(appData));
       } catch (e) {
         console.warn("Storage save fallback:", e);
       }
 
-      if (appData.sheetsSyncUrl) {
+      if (!skipRemoteSync && appData.sheetsSyncUrl) {
         syncToGoogleSheets();
       }
     }
@@ -2041,9 +2048,9 @@
         fetch(appData.sheetsSyncUrl)
           .then(res => res.json())
           .then(data => {
-            if (data && data.profiles) {
+            if (data && data.profiles && Array.isArray(data.profiles) && data.profiles.length >= 2) {
               appData = data;
-              saveData();
+              saveData(true);
               renderBothProfiles();
             }
           })
