@@ -2024,9 +2024,9 @@
       <div class="top-action-row">
         <div class="app-title-badge">🐾 우리 집 루틴 다마고치</div>
         <div class="top-sync-btns">
-          <button class="top-btn" onclick="openStatsModal()" style="background: linear-gradient(135deg, #3182CE, #2B6CB0); color: white; border: none; font-weight: 800;">📊 습관 통계 리포트</button>
-          <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: linear-gradient(135deg, #E53E3E, #C53030); color: white; border: none; font-weight: 800;">🛡️ 데이터 복구</button>
-          <button class="top-btn" onclick="openSyncModal()">☁️ 기기 동기화/백업</button>
+          <button class="top-btn" onclick="openStatsModal()" style="background: linear-gradient(135deg, #3182CE, #2B6CB0); color: white; border: none; font-weight: 800;">📊 통계 리포트</button>
+          <button class="top-btn" onclick="openSyncModal()" style="background: linear-gradient(135deg, #2F855A, #276749); color: white; border: none; font-weight: 800;">💾 데이터 백업/복원</button>
+          <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: linear-gradient(135deg, #E53E3E, #C53030); color: white; border: none; font-weight: 800;">🛡️ 레벨 조절</button>
         </div>
       </div>
 
@@ -2235,30 +2235,71 @@
     </div>
   </div>
 
-  <!-- 동기화 모달 -->
+  <!-- 💾 타임머신 백업 & 안심 복원 센터 모달 -->
   <div class="modal-overlay" id="sync-modal">
-    <div class="modal-box">
-      <div style="font-size: 17px; font-weight: 900; margin-bottom: 3px;">☁️ 기기 간 동기화 & 백업</div>
-      <div style="font-size: 11.5px; color: #718096; margin-bottom: 10px;">기기가 바뀌어도 소중한 기록을 이어가세요!</div>
+    <div class="modal-box" style="max-width: 480px; text-align: left; background: #FFFFFF; border-radius: 20px; padding: 20px 18px;">
+      <div style="text-align: center; margin-bottom: 12px;">
+        <div style="font-size: 28px;">💾⏱️🛡️</div>
+        <div style="font-size: 18px; font-weight: 900; color: #2D3748; margin: 3px 0;">타임머신 백업 & 안심 복원 센터</div>
+        <div style="font-size: 11.5px; color: #718096;">소중한 아이들의 성장 기록을 언제든 1초 만에 저장하고 되돌릴 수 있습니다.</div>
+      </div>
 
-      <div class="sync-section">
-        <div class="sync-title">1. 백업 코드 복사 / 불러오기</div>
-        <div class="sync-desc">복사한 코드를 새 기기에서 붙여넣으면 즉시 복원됩니다.</div>
-        <textarea class="code-textarea" id="backup-code-text" placeholder="백업 코드가 여기에 표시됩니다"></textarea>
-        <div class="btn-row">
-          <button class="btn-sm btn-copy" onclick="exportBackupCode()">📋 코드 복사</button>
-          <button class="btn-sm btn-paste" onclick="importBackupCode()">📥 코드로 복원</button>
+      <!-- 1. 원클릭 수동 백업 -->
+      <div style="background: linear-gradient(135deg, #F0FFF4, #E6FFFA); border: 1.5px solid #68D391; border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 13px; font-weight: 900; color: #22543D;">💾 지금 이 순간 상태 저장</span>
+          <span style="font-size: 10.5px; color: #276749; font-weight: 700;">원클릭 스냅샷</span>
+        </div>
+        <div style="font-size: 11px; color: #4A5568; margin-bottom: 8px;">미션을 완료했거나 레벨업했을 때 눌러두면, 언제든 이 시점으로 100% 되돌릴 수 있어요.</div>
+        <button class="btn-confirm" onclick="createManualSnapshot()" style="background: linear-gradient(135deg, #38A169, #2F855A); margin: 0; padding: 9px 12px; font-size: 12.5px; font-weight: 800;">
+          ✨ 지금 상태 안전하게 백업 저장하기
+        </button>
+      </div>
+
+      <!-- 2. 저장된 백업 시점 목록 (타임머신 롤백) -->
+      <div style="margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 12.5px; font-weight: 900; color: #2D3748;">⏱️ 저장된 백업 목록 (원클릭 되돌리기)</span>
+          <span style="font-size: 10.5px; color: #718096;" id="snapshot-count-label">0개 보관 중</span>
+        </div>
+        <div id="snapshot-list" style="display: flex; flex-direction: column; gap: 6px; max-height: 160px; overflow-y: auto; padding-right: 2px;">
+          <!-- 동적 렌더링 -->
         </div>
       </div>
 
-      <div class="sync-section">
-        <div class="sync-title">2. 구글 시트 실시간 자동 동기화</div>
-        <div class="sync-desc">Apps Script 웹 앱 URL을 등록하면 실시간 자동 동기화됩니다.</div>
-        <input type="text" class="input-text" id="sheets-url-input" placeholder="Google Apps Script 웹 앱 URL 입력" style="margin-bottom: 6px;">
-        <button class="btn-sm btn-sync-save" style="width: 100%;" onclick="saveSheetsSyncUrl()">💾 구글 시트 연동 저장 & 동기화</button>
+      <!-- 3. 파일로 영구 보관 (JSON 다운로드 & 업로드) -->
+      <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+        <div style="font-size: 12px; font-weight: 800; color: #2D3748; margin-bottom: 4px;">📂 파일로 영구 보관하기 (JSON)</div>
+        <div style="font-size: 11px; color: #718096; margin-bottom: 8px;">브라우저 캐시를 싹 지워도 파일만 있으면 100% 복원됩니다.</div>
+        <div style="display: flex; gap: 6px;">
+          <button class="top-btn" onclick="downloadBackupJsonFile()" style="flex: 1; background: #4A5568; color: white;">📥 파일 다운로드 (.json)</button>
+          <button class="top-btn" onclick="triggerJsonFileInput()" style="flex: 1; background: #3182CE; color: white;">📂 파일 열어서 복원</button>
+          <input type="file" id="json-file-input" accept=".json" style="display: none;" onchange="loadBackupFromJsonFile(event)">
+        </div>
       </div>
 
-      <button class="btn-confirm" onclick="closeSyncModal()" style="background: #718096;">닫기</button>
+      <!-- 4. 구글 시트 강제 동기화 & 복원 -->
+      <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+        <div style="font-size: 12px; font-weight: 800; color: #2D3748; margin-bottom: 4px;">☁️ 구글 시트 클라우드 백업</div>
+        <div style="display: flex; gap: 6px; margin-bottom: 6px;">
+          <button class="top-btn" onclick="forcePushToSheets()" style="flex: 1; background: #2F855A; color: white;">⬆️ 시트로 강제 저장</button>
+          <button class="top-btn" onclick="forcePullFromSheets()" style="flex: 1; background: #4A5568; color: white;">⬇️ 시트에서 불러오기</button>
+        </div>
+        <input type="text" class="input-text" id="sheets-url-input" placeholder="Google Apps Script 웹 앱 URL" style="font-size: 11px; padding: 6px 8px; margin-bottom: 4px;">
+        <button class="col-stats-btn" style="width: 100%; padding: 4px;" onclick="saveSheetsSyncUrl()">URL 설정 저장</button>
+      </div>
+
+      <!-- 5. 텍스트 백업 코드 -->
+      <details style="font-size: 11px; color: #718096; margin-bottom: 10px;">
+        <summary style="cursor: pointer; font-weight: 700;">📋 텍스트 백업 코드로 복사/불러오기 (열기)</summary>
+        <textarea class="code-textarea" id="backup-code-text" placeholder="백업 코드가 여기에 표시됩니다" style="margin-top: 6px; height: 50px;"></textarea>
+        <div class="btn-row" style="margin-top: 4px;">
+          <button class="btn-sm btn-copy" onclick="exportBackupCode()">📋 코드 복사</button>
+          <button class="btn-sm btn-paste" onclick="importBackupCode()">📥 코드로 복원</button>
+        </div>
+      </details>
+
+      <button class="btn-confirm" onclick="closeSyncModal()" style="background: #4A5568; margin-top: 0;">닫기</button>
     </div>
   </div>
 
@@ -5181,16 +5222,203 @@
     }
 
     // =========================================================================
-    // ☁️ 동기화 및 백업
+    // 💾 타임머신 백업 & 원클릭 안심 복구 센터
     // =========================================================================
     function openSyncModal() {
       document.getElementById('sheets-url-input').value = appData.sheetsSyncUrl || '';
       document.getElementById('backup-code-text').value = '';
+      renderSnapshotList();
       document.getElementById('sync-modal').classList.add('active');
     }
 
     function closeSyncModal() {
       document.getElementById('sync-modal').classList.remove('active');
+    }
+
+    function createManualSnapshot(note = "수동 저장") {
+      try {
+        const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
+        let snapshots = [];
+        try { snapshots = JSON.parse(rawList); } catch(e){}
+        if (!Array.isArray(snapshots)) snapshots = [];
+
+        const now = new Date();
+        const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+        
+        const p0 = appData.profiles && appData.profiles[0];
+        const p1 = appData.profiles && appData.profiles[1];
+        const fam0 = p0 ? getFamily(p0.partnerId) : null;
+        const fam1 = p1 ? getFamily(p1.partnerId) : null;
+        const name0 = fam0 && fam0.species && fam0.species[0] ? fam0.species[0].name : '파트너';
+        const name1 = fam1 && fam1.species && fam1.species[0] ? fam1.species[0].name : '파트너';
+
+        const summary = `${p0 ? p0.name + '(' + name0 + ' Lv.' + (p0.growthLevel||0) + ')' : ''} · ${p1 ? p1.name + '(' + name1 + ' Lv.' + (p1.growthLevel||0) + ')' : ''}`;
+
+        const snapshot = {
+          id: 'snap_' + Date.now(),
+          time: timeStr,
+          note: note,
+          summary: summary,
+          data: JSON.parse(JSON.stringify(appData))
+        };
+
+        snapshots.unshift(snapshot);
+        if (snapshots.length > 10) snapshots = snapshots.slice(0, 10); // 최근 최대 10개 롤링 보관
+
+        localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(snapshots));
+        renderSnapshotList();
+        if (note === "수동 저장") {
+          alert(`현재 상태가 안전하게 백업되었습니다! (${timeStr})\n\n[${summary}]`);
+        }
+      } catch (e) {
+        console.warn("Snapshot error:", e);
+      }
+    }
+
+    function renderSnapshotList() {
+      const container = document.getElementById('snapshot-list');
+      const countEl = document.getElementById('snapshot-count-label');
+      if (!container) return;
+
+      const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
+      let snapshots = [];
+      try { snapshots = JSON.parse(rawList); } catch(e){}
+
+      if (countEl) countEl.innerText = `${snapshots.length}개 보관 중`;
+      container.innerHTML = '';
+
+      if (snapshots.length === 0) {
+        container.innerHTML = '<div style="font-size: 11px; color: #A0AEC0; text-align: center; padding: 14px;">저장된 백업이 없습니다. 위의 저장 버튼을 눌러보세요!</div>';
+        return;
+      }
+
+      snapshots.forEach((snap) => {
+        const item = document.createElement('div');
+        item.style.cssText = "background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;";
+        item.innerHTML = `
+          <div style="flex: 1; min-width: 0; padding-right: 8px;">
+            <div style="font-size: 11px; font-weight: 800; color: #2D3748;">
+              <span>${snap.time}</span> <span style="font-size: 9.5px; color: #3182CE; font-weight: 700;">[${snap.note}]</span>
+            </div>
+            <div style="font-size: 10px; color: #718096; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">
+              ${snap.summary}
+            </div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-shrink: 0;">
+            <button class="col-stats-btn" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0; font-size: 10.5px; padding: 3px 6px;" onclick="restoreSnapshot('${snap.id}')">↺ 복원</button>
+            <button class="col-stats-btn" style="color: #E53E3E; font-size: 10.5px; padding: 3px 5px;" onclick="deleteSnapshot('${snap.id}')">✕</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function restoreSnapshot(snapId) {
+      const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
+      let snapshots = [];
+      try { snapshots = JSON.parse(rawList); } catch(e){}
+      const found = snapshots.find(s => s.id === snapId);
+      if (!found || !found.data) {
+        alert('백업 데이터를 찾을 수 없습니다.');
+        return;
+      }
+
+      if (confirm(`선택한 시점(${found.time})으로 되돌리시겠습니까?\n\n[${found.summary}]`)) {
+        appData = JSON.parse(JSON.stringify(found.data));
+        saveData();
+        renderBothProfiles();
+        alert('성공적으로 해당 시점으로 복원되었습니다! 🎉');
+        closeSyncModal();
+      }
+    }
+
+    function deleteSnapshot(snapId) {
+      const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
+      let snapshots = [];
+      try { snapshots = JSON.parse(rawList); } catch(e){}
+      snapshots = snapshots.filter(s => s.id !== snapId);
+      localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(snapshots));
+      renderSnapshotList();
+    }
+
+    function downloadBackupJsonFile() {
+      const jsonStr = JSON.stringify(appData, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+      a.href = url;
+      a.download = `우리집_다마고치_백업_${dateStr}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function triggerJsonFileInput() {
+      document.getElementById('json-file-input').click();
+    }
+
+    function loadBackupFromJsonFile(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const parsed = JSON.parse(evt.target.result);
+          if (parsed && parsed.profiles && Array.isArray(parsed.profiles)) {
+            if (confirm('선택한 파일의 백업 데이터로 복원하시겠습니까?')) {
+              appData = parsed;
+              saveData();
+              renderBothProfiles();
+              createManualSnapshot("파일 복원");
+              alert('백업 파일에서 성공적으로 복원되었습니다! 🎉');
+              closeSyncModal();
+            }
+          } else {
+            alert('올바른 백업 파일 형식이 아닙니다.');
+          }
+        } catch(err) {
+          alert('파일을 읽는 중 오류가 발생했습니다: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function forcePushToSheets() {
+      if (!appData.sheetsSyncUrl) {
+        alert('구글 시트 연동 URL이 설정되어 있지 않습니다.');
+        return;
+      }
+      syncToGoogleSheets();
+      createManualSnapshot("시트 저장");
+      alert('현재 기기의 최신 데이터를 구글 시트에 안전하게 강제 저장했습니다!');
+    }
+
+    function forcePullFromSheets() {
+      if (!appData.sheetsSyncUrl) {
+        alert('구글 시트 연동 URL이 설정되어 있지 않습니다.');
+        return;
+      }
+      if (confirm('구글 시트에서 최신 데이터를 가져와 덮어씌우시겠습니까?\n(만약을 위해 현재 상태가 자동으로 먼저 백업됩니다)')) {
+        createManualSnapshot("시트 불러오기 전 자동저장");
+        fetch(appData.sheetsSyncUrl)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.profiles) {
+              appData = mergeAppData(appData, data);
+              saveData(true);
+              renderBothProfiles();
+              renderSnapshotList();
+              alert('구글 시트에서 안전하게 데이터를 불러왔습니다! 🎉');
+            } else {
+              alert('구글 시트에 유효한 데이터가 없습니다.');
+            }
+          })
+          .catch(err => alert('구글 시트 통신 오류: ' + err.message));
+      }
     }
 
     function exportBackupCode() {
@@ -5240,7 +5468,7 @@
             closeSyncModal();
           }
         } else {
-          alert('구글 시트 Web App URL을 먼저 입력해 주세요!\n\n(URL 설정 없이 기기를 옮기실 때는 바로 위의 1번 "코드 복사"를 쓰시면 1초 만에 복원됩니다)');
+          alert('구글 시트 Web App URL을 먼저 입력해 주세요!');
         }
         return;
       }
