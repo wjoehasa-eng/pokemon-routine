@@ -2025,6 +2025,7 @@
         <div class="app-title-badge">🐾 우리 집 루틴 다마고치</div>
         <div class="top-sync-btns">
           <button class="top-btn" onclick="openStatsModal()" style="background: linear-gradient(135deg, #3182CE, #2B6CB0); color: white; border: none; font-weight: 800;">📊 습관 통계 리포트</button>
+          <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: linear-gradient(135deg, #E53E3E, #C53030); color: white; border: none; font-weight: 800;">🛡️ 데이터 복구</button>
           <button class="top-btn" onclick="openSyncModal()">☁️ 기기 동기화/백업</button>
         </div>
       </div>
@@ -2504,6 +2505,48 @@
       </a>
 
       <button class="btn-confirm" onclick="closeStatsModal()" style="background: #4A5568; margin-top: 10px;">닫기</button>
+    </div>
+  </div>
+
+  <!-- 🛡️ 긴급 상태 복원 & 성장 맞춤 조절 모달 -->
+  <div class="modal-overlay" id="restore-modal">
+    <div class="modal-box" style="max-width: 440px; text-align: left; background: #FFFFFF; border-radius: 20px; padding: 20px 18px;">
+      <div style="text-align: center; margin-bottom: 14px;">
+        <div style="font-size: 28px;">🛡️⚡️✨</div>
+        <div style="font-size: 18px; font-weight: 900; color: #2D3748; margin: 4px 0;">긴급 데이터 복구 & 성장 조절</div>
+        <div style="font-size: 11.5px; color: #718096;">캐시 초기화나 동기화 오류 시 원하는 성장 단계로 언제든 즉시 되돌릴 수 있습니다.</div>
+      </div>
+
+      <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px; margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 13.5px; font-weight: 800; color: #2D3748;">🔥 희윤이 (7세)</span>
+          <span id="restore-status-0" style="font-size: 11px; font-weight: 800; color: #3182CE;">현재 상태 확인 중</span>
+        </div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button class="col-stats-btn" onclick="manualSetLevel(0, 0)">🥚 알 상태</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(0, 1)" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">🌱 Lv.1 아기 파이리</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(0, 2)" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">⛑️ Lv.2 헬멧</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(0, 3)" style="background: #EBF8FF; border-color: #3182CE; color: #2B6CB0;">🚨 Lv.3 사이렌</button>
+        </div>
+      </div>
+
+      <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 14px; padding: 12px; margin-bottom: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 13.5px; font-weight: 800; color: #2D3748;">🚜 희겸이 (3세)</span>
+          <span id="restore-status-1" style="font-size: 11px; font-weight: 800; color: #DD6B20;">현재 상태 확인 중</span>
+        </div>
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button class="col-stats-btn" onclick="manualSetLevel(1, 0)">🥚 알 상태</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(1, 1)" style="background: #FFFAF0; border-color: #DD6B20; color: #C05621;">🌱 Lv.1 아기 포크레인</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(1, 2)" style="background: #FFFAF0; border-color: #DD6B20; color: #C05621;">⛑️ Lv.2 헬멧</button>
+          <button class="col-stats-btn" onclick="manualSetLevel(1, 3)" style="background: #FFFAF0; border-color: #DD6B20; color: #C05621;">🚨 Lv.3 사이렌</button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-confirm" onclick="quickRestoreHatched()" style="flex: 2; background: linear-gradient(135deg, #38A169, #2F855A); margin-top: 0;">✨ 둘 다 부화(Lv.1)로 즉시 복구</button>
+        <button class="btn-confirm" onclick="closeEmergencyRestoreModal()" style="flex: 1; background: #718096; margin-top: 0;">닫기</button>
+      </div>
     </div>
   </div>
 
@@ -3328,6 +3371,38 @@
           p.lastDate = today;
         }
       });
+
+      // 🚑 [1. 긴급 부화 자동 복원 패치]
+      // 오늘 이미 활동했던 캐릭터가 클라우드 빈 데이터로 알(Lv.0)로 초기화된 경우 즉시 Lv.1 부화 복원!
+      const emergencyRestoredKey = 'pokemon_routine_hatch_restored_20261112_v3';
+      if (!localStorage.getItem(emergencyRestoredKey)) {
+        if (appData.profiles) {
+          appData.profiles.forEach(p => {
+            if (!p.growthLevel || p.growthLevel === 0) {
+              p.growthLevel = 1; // 아기 파트너 즉시 부화 상태로 복구!
+              p.exp = 25;
+              p.berries = Math.max(p.berries || 0, 5);
+              p.totalHabitsDone = Math.max(p.totalHabitsDone || 0, 2);
+              ensurePartnerHistory(p);
+            }
+          });
+          localStorage.setItem(emergencyRestoredKey, 'true');
+        }
+      }
+
+      // 🛡️ [2. 알 회귀 방어선]: 만약 둘 다 레벨 0인데 이전에 부화한 백업본이 있다면 즉시 롤백 복원
+      if (appData.profiles && appData.profiles[0].growthLevel === 0 && appData.profiles[1].growthLevel === 0) {
+        const hatchedBackup = localStorage.getItem('pokemon_routine_hatched_backup');
+        if (hatchedBackup) {
+          try {
+            const parsed = JSON.parse(hatchedBackup);
+            if (parsed && parsed.profiles && (parsed.profiles[0].growthLevel >= 1 || parsed.profiles[1].growthLevel >= 1)) {
+              appData = parsed;
+            }
+          } catch(e){}
+        }
+      }
+
       recordTodayHistory(0);
       recordTodayHistory(1);
       saveData();
@@ -3339,7 +3414,12 @@
 
     function saveData(skipRemoteSync = false) {
       try {
-        localStorage.setItem('pokemon_routine_v9', JSON.stringify(appData));
+        const serialized = JSON.stringify(appData);
+        localStorage.setItem('pokemon_routine_v9', serialized);
+        localStorage.setItem('pokemon_routine_backup_latest', serialized);
+        if (appData.profiles && (appData.profiles[0].growthLevel >= 1 || appData.profiles[1].growthLevel >= 1)) {
+          localStorage.setItem('pokemon_routine_hatched_backup', serialized);
+        }
       } catch (e) {
         console.warn("Storage save fallback:", e);
       }
@@ -3361,6 +3441,77 @@
       } catch (e) {}
     }
 
+    // 🛡️ [스마트 병합 엔진]: 클라우드 데이터가 오더라도 레벨·경험치·완료 미션을 절대 깎거나 초기화하지 않음!
+    function mergeAppData(local, incoming) {
+      if (!incoming || !incoming.profiles || !Array.isArray(incoming.profiles) || incoming.profiles.length < 2) {
+        return local;
+      }
+
+      incoming.profiles.forEach((remoteP, idx) => {
+        const localP = local.profiles && local.profiles[idx];
+        if (!localP) return;
+
+        const remoteLvl = Number(remoteP.growthLevel) || 0;
+        const localLvl = Number(localP.growthLevel) || 0;
+
+        // 1. 레벨 & 경험치: 절대로 후퇴 금지! 더 높은 성장 상태 보존
+        if (remoteLvl > localLvl) {
+          localP.growthLevel = remoteLvl;
+          localP.exp = remoteP.exp || 0;
+        } else if (remoteLvl === localLvl) {
+          localP.exp = Math.max(localP.exp || 0, remoteP.exp || 0);
+        }
+        // 로컬이 이미 부화(Lvl >= 1)했으면 원격이 0(알)을 보내와도 절대 알로 안 돌아감!
+        if (localLvl >= 1 && localP.growthLevel < 1) {
+          localP.growthLevel = localLvl;
+        }
+
+        // 2. 사과, 스트릭, 미션 총 달성 수
+        localP.berries = Math.max(localP.berries || 0, remoteP.berries || 0, 3);
+        localP.streak = Math.max(localP.streak || 1, remoteP.streak || 1);
+        localP.totalHabitsDone = Math.max(localP.totalHabitsDone || 0, remoteP.totalHabitsDone || 0);
+
+        // 3. 미션 상태 병합: 한쪽이라도 체크했으면 체크 상태 보존 (체크 풀림 방지)
+        if (localP.quests && remoteP.quests) {
+          localP.quests.forEach(lq => {
+            const rq = remoteP.quests.find(q => q.id === lq.id || (q.text && q.text === lq.text));
+            if (rq && rq.completed) {
+              lq.completed = true;
+            }
+          });
+        }
+
+        // 4. 파트너 기록 병합
+        if (remoteP.partnerHistory) {
+          if (!localP.partnerHistory) localP.partnerHistory = {};
+          Object.keys(remoteP.partnerHistory).forEach(pid => {
+            const rh = remoteP.partnerHistory[pid];
+            const lh = localP.partnerHistory[pid];
+            if (!lh) {
+              localP.partnerHistory[pid] = rh;
+            } else {
+              lh.level = Math.max(lh.level || 0, rh.level || 0);
+              lh.exp = Math.max(lh.exp || 0, rh.exp || 0);
+              lh.habitsDone = Math.max(lh.habitsDone || 0, rh.habitsDone || 0);
+              if (rh.isChampion) lh.isChampion = true;
+            }
+          });
+        }
+
+        // 5. 일일 통계 히스토리 병합
+        if (remoteP.dailyHistory) {
+          if (!localP.dailyHistory) localP.dailyHistory = {};
+          Object.keys(remoteP.dailyHistory).forEach(dt => {
+            if (!localP.dailyHistory[dt]) {
+              localP.dailyHistory[dt] = remoteP.dailyHistory[dt];
+            }
+          });
+        }
+      });
+
+      return local;
+    }
+
     function syncFromGoogleSheets() {
       if (!appData.sheetsSyncUrl) return;
       try {
@@ -3368,7 +3519,7 @@
           .then(res => res.json())
           .then(data => {
             if (data && data.profiles && Array.isArray(data.profiles) && data.profiles.length >= 2) {
-              appData = data;
+              appData = mergeAppData(appData, data);
               saveData(true);
               renderBothProfiles();
             }
@@ -5720,6 +5871,48 @@
     }
 
     
+
+    // =========================================================================
+    // 🛡️ 긴급 상태 복원 & 성장 맞춤 조절 엔진
+    // =========================================================================
+    function openEmergencyRestoreModal() {
+      const p0 = appData.profiles && appData.profiles[0];
+      const p1 = appData.profiles && appData.profiles[1];
+      const st0 = document.getElementById('restore-status-0');
+      const st1 = document.getElementById('restore-status-1');
+      if (st0 && p0) st0.innerText = `현재: ${p0.growthLevel === 0 ? '알 🥚' : 'Lv.' + p0.growthLevel} (${p0.exp} EXP)`;
+      if (st1 && p1) st1.innerText = `현재: ${p1.growthLevel === 0 ? '알 🥚' : 'Lv.' + p1.growthLevel} (${p1.exp} EXP)`;
+      document.getElementById('restore-modal').classList.add('active');
+    }
+
+    function closeEmergencyRestoreModal() {
+      document.getElementById('restore-modal').classList.remove('active');
+    }
+
+    function manualSetLevel(pIdx, lvl) {
+      const p = appData.profiles[pIdx];
+      if (!p) return;
+      p.growthLevel = lvl;
+      p.exp = (lvl === 0) ? 0 : 25;
+      p.berries = Math.max(p.berries || 0, 5);
+      ensurePartnerHistory(p);
+      saveData();
+      renderProfile(pIdx);
+      openEmergencyRestoreModal();
+    }
+
+    function quickRestoreHatched() {
+      appData.profiles.forEach(p => {
+        p.growthLevel = Math.max(1, p.growthLevel || 1);
+        p.exp = 25;
+        p.berries = Math.max(p.berries || 0, 5);
+        p.totalHabitsDone = Math.max(p.totalHabitsDone || 0, 2);
+        ensurePartnerHistory(p);
+      });
+      saveData();
+      renderBothProfiles();
+      closeEmergencyRestoreModal();
+    }
 
     // =========================================================================
     // 🛡️ 스크린 타임 중독 방지 (3분 초과 시 파트너 퇴장 안내)
