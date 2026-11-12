@@ -1675,6 +1675,343 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
+  
+    /* ============================================================
+       📊 주간·월간·연간 습관 통계 리포트 모달 스타일
+       ============================================================ */
+    .stats-modal-box {
+      max-width: 520px;
+      background: #FFFFFF;
+      border-radius: 22px;
+      padding: 18px 16px;
+      text-align: left;
+    }
+
+    .stats-modal-header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .stats-modal-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: #2D3748;
+      margin: 3px 0;
+    }
+
+    .stats-modal-subtitle {
+      font-size: 11.5px;
+      color: #718096;
+    }
+
+    .stats-child-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .stats-child-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: #EDF2F7;
+      border: 2px solid transparent;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #4A5568;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .stats-child-tab.active {
+      background: #EBF8FF;
+      border-color: #3182CE;
+      color: #2B6CB0;
+      box-shadow: 0 2px 6px rgba(49, 130, 206, 0.2);
+    }
+
+    .child-avatar-sm {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid white;
+    }
+
+    .stats-period-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .stats-period-tab {
+      flex: 1;
+      padding: 7px 4px;
+      border-radius: 10px;
+      background: #F7FAFC;
+      border: 1px solid #E2E8F0;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #718096;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .stats-period-tab.active {
+      background: #4A5568;
+      color: white;
+      border-color: #4A5568;
+    }
+
+    /* 통계 요약 카드 3종 */
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .stats-card {
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .card-total {
+      background: linear-gradient(135deg, #EBF8FF, #BEE3F8);
+      border: 1px solid #90CDF4;
+    }
+
+    .card-best {
+      background: linear-gradient(135deg, #F0FFF4, #C6F6D5);
+      border: 1px solid #9AE6B4;
+    }
+
+    .card-need {
+      background: linear-gradient(135deg, #FFFAF0, #FEEBC8);
+      border: 1px solid #FBD38D;
+    }
+
+    .stats-card-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #4A5568;
+      margin-bottom: 3px;
+    }
+
+    .stats-card-value {
+      font-size: 16px;
+      font-weight: 900;
+      color: #2D3748;
+    }
+
+    .stats-card-value.best-habit {
+      color: #22543D;
+      font-size: 11.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stats-card-value.need-habit {
+      color: #742A2A;
+      font-size: 11.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .stats-card-sub {
+      font-size: 9px;
+      color: #718096;
+      margin-top: 2px;
+    }
+
+    /* 섹션 공통 */
+    .stats-section {
+      margin-bottom: 14px;
+    }
+
+    .stats-section-title {
+      font-size: 12.5px;
+      font-weight: 900;
+      color: #2D3748;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stats-habit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .stats-habit-card {
+      background: #F7FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+
+    .habit-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .habit-title-text {
+      font-size: 12px;
+      font-weight: 800;
+      color: #2D3748;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 65%;
+    }
+
+    .habit-status-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+
+    .badge-perfect {
+      background: #C6F6D5;
+      color: #22543D;
+    }
+
+    .badge-good {
+      background: #BEE3F8;
+      color: #2B6CB0;
+    }
+
+    .badge-need {
+      background: #FED7D7;
+      color: #9B2C2C;
+    }
+
+    .habit-bar-track {
+      height: 7px;
+      background: #EDF2F7;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .habit-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease-out;
+    }
+
+    .habit-footer-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10.5px;
+      color: #718096;
+    }
+
+    /* 일자별 기록 타임라인 */
+    .stats-daily-log-table {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .daily-log-row {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 7px 9px;
+    }
+
+    .daily-log-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .daily-chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .daily-chip {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .chip-done {
+      background: #F0FFF4;
+      color: #276749;
+      border: 1px solid #C6F6D5;
+    }
+
+    .chip-miss {
+      background: #FFF5F5;
+      color: #C53030;
+      border: 1px solid #FED7D7;
+    }
+
+    .sheets-open-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #22543D, #2F855A);
+      color: white;
+      padding: 10px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 800;
+      margin: 10px 0 4px;
+      box-shadow: 0 2px 6px rgba(47, 133, 90, 0.25);
+      transition: opacity 0.2s;
+    }
+
+    .sheets-open-banner:hover {
+      opacity: 0.95;
+    }
+
+    .col-stats-btn {
+      background: #EDF2F7;
+      border: 1px solid #CBD5E0;
+      border-radius: 10px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #4A5568;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .col-stats-btn:hover {
+      background: #E2E8F0;
+      color: #2D3748;
+    }
+
   </style>
 </head>
 <body>
@@ -1687,6 +2024,7 @@
       <div class="top-action-row">
         <div class="app-title-badge">🐾 우리 집 루틴 다마고치</div>
         <div class="top-sync-btns">
+          <button class="top-btn" onclick="openStatsModal()" style="background: linear-gradient(135deg, #3182CE, #2B6CB0); color: white; border: none; font-weight: 800;">📊 습관 통계 리포트</button>
           <button class="top-btn" onclick="openSyncModal()">☁️ 기기 동기화/백업</button>
         </div>
       </div>
@@ -1718,6 +2056,7 @@
           <div class="col-stats-row">
             <span class="col-days-pill" id="days-0">🏠 1일째</span>
             <button class="col-trophy-btn" onclick="openHallOfFame(0)">🏆 도감 (<span id="hof-count-0">0</span>)</button>
+            <button class="col-stats-btn" onclick="openStatsModal(0)">📊 통계</button>
             <button class="col-berry-btn" onclick="feedPokemon(0)">🍎 <span id="berry-0">3</span>개</button>
           </div>
         </div>
@@ -1782,6 +2121,7 @@
           <div class="col-stats-row">
             <span class="col-days-pill" id="days-1">🏠 1일째</span>
             <button class="col-trophy-btn" onclick="openHallOfFame(1)">🏆 도감 (<span id="hof-count-1">0</span>)</button>
+            <button class="col-stats-btn" onclick="openStatsModal(1)">📊 통계</button>
             <button class="col-berry-btn" onclick="feedPokemon(1)">🍎 <span id="berry-1">3</span>개</button>
           </div>
         </div>
@@ -2095,6 +2435,78 @@
       <button class="btn-confirm" onclick="saveManageSettings()">설정 완료</button>
     </div>
   </div>
+
+  <!-- 📊 우리 집 습관 통계 & 리포트 모달 (주간·월간·연간) -->
+  <div class="modal-overlay" id="stats-modal">
+    <div class="modal-box stats-modal-box">
+      <div class="stats-modal-header">
+        <div style="font-size: 26px;">📊📈🎯</div>
+        <div class="stats-modal-title">우리 아이 습관 통계 리포트</div>
+        <div class="stats-modal-subtitle">어떤 습관을 잘 지켰고, 어떤 습관에 응원이 필요한지 확인해보세요!</div>
+      </div>
+
+      <!-- 아이 선택 탭 (희윤 vs 희겸) -->
+      <div class="stats-child-tabs">
+        <button class="stats-child-tab active" id="stats-child-btn-0" onclick="switchStatsChild(0)">
+          <img src="heeyoon_face.png" class="child-avatar-sm" alt="희윤"> 희윤이 (7세)
+        </button>
+        <button class="stats-child-tab" id="stats-child-btn-1" onclick="switchStatsChild(1)">
+          <img src="heegyeom_face.png" class="child-avatar-sm" alt="희겸"> 희겸이 (3세)
+        </button>
+      </div>
+
+      <!-- 기간 선택 탭 (주간 / 월간 / 연간) -->
+      <div class="stats-period-tabs">
+        <button class="stats-period-tab active" id="stats-pbtn-week" onclick="switchStatsPeriod('week')">📅 주간 (최근 7일)</button>
+        <button class="stats-period-tab" id="stats-pbtn-month" onclick="switchStatsPeriod('month')">🗓️ 월간 (이번 달)</button>
+        <button class="stats-period-tab" id="stats-pbtn-year" onclick="switchStatsPeriod('year')">🌟 연간 / 전체</button>
+      </div>
+
+      <!-- 종합 하이라이트 요약 카드 3종 -->
+      <div class="stats-summary-grid">
+        <div class="stats-card card-total">
+          <div class="stats-card-label">🎯 종합 달성률</div>
+          <div class="stats-card-value" id="stats-val-rate">0%</div>
+          <div class="stats-card-sub" id="stats-sub-count">0/0회 실천</div>
+        </div>
+        <div class="stats-card card-best">
+          <div class="stats-card-label">🥇 가장 잘 지킨 습관</div>
+          <div class="stats-card-value best-habit" id="stats-val-best">-</div>
+          <div class="stats-card-sub" id="stats-sub-best">완벽 실천!</div>
+        </div>
+        <div class="stats-card card-need">
+          <div class="stats-card-label">💡 응원이 필요한 습관</div>
+          <div class="stats-card-value need-habit" id="stats-val-need">-</div>
+          <div class="stats-card-sub" id="stats-sub-need">내일 더 신경써요!</div>
+        </div>
+      </div>
+
+      <!-- 항목별 상세 분석 (지킨 습관 & 안 지킨 습관) -->
+      <div class="stats-section">
+        <div class="stats-section-title">📋 미션별 실천율 분석 (어떤 걸 지켰을까?)</div>
+        <div class="stats-habit-list" id="stats-habit-list">
+          <!-- 동적 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 일자별 실천 기록 테이블 / 로그 -->
+      <div class="stats-section">
+        <div class="stats-section-title">🗓️ 일자별 실천 기록 (O / X 체크)</div>
+        <div class="stats-daily-log-table" id="stats-daily-log">
+          <!-- 동적 렌더링 -->
+        </div>
+      </div>
+
+      <!-- 구글 시트 연동 링크 배너 -->
+      <a href="https://docs.google.com/spreadsheets/d/1tGc76pthEikquKDNU5VVIkGeCfvr5namK3GNuYWTHQk/edit" target="_blank" class="sheets-open-banner">
+        <span style="font-size: 18px;">📊</span>
+        <span>구글 시트에서 전체 통계 스프레드시트 열기 ↗</span>
+      </a>
+
+      <button class="btn-confirm" onclick="closeStatsModal()" style="background: #4A5568; margin-top: 10px;">닫기</button>
+    </div>
+  </div>
+
 
   <script>
     // =========================================================================
@@ -2906,6 +3318,8 @@
           p.lastDate = today;
         }
       });
+      recordTodayHistory(0);
+      recordTodayHistory(1);
       saveData();
 
       if (appData.sheetsSyncUrl) {
@@ -4216,6 +4630,7 @@
         speak(pIdx, "미션을 다시 도전 상태로 바꿨어!");
       }
 
+      recordTodayHistory(pIdx);
       ensurePartnerHistory(p);
       saveData();
       renderProfile(pIdx);
@@ -4764,6 +5179,256 @@
         renderProfile(pIdx);
       }
     }
+
+
+    // =========================================================================
+    // 📊 주간·월간·연간 습관 통계 리포트 엔진
+    // =========================================================================
+    let currentStatsChild = 0; // 0: 희윤, 1: 희겸
+    let currentStatsPeriod = 'week'; // 'week' | 'month' | 'year'
+
+    function recordTodayHistory(pIdx) {
+      const p = appData.profiles && appData.profiles[pIdx];
+      if (!p) return;
+      if (!p.dailyHistory) p.dailyHistory = {};
+      const today = getTodayStr();
+      const quests = p.quests || [];
+      const completedCount = quests.filter(q => q.completed).length;
+      const totalCount = quests.length;
+      const rate = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+      p.dailyHistory[today] = {
+        date: today,
+        completedCount: completedCount,
+        totalCount: totalCount,
+        rate: rate,
+        quests: quests.map(q => ({
+          id: q.id,
+          title: q.title,
+          completed: !!q.completed
+        }))
+      };
+    }
+
+    function openStatsModal(pIdx = 0) {
+      currentStatsChild = pIdx;
+      // 오늘 실천 상태 최신 반영
+      recordTodayHistory(0);
+      recordTodayHistory(1);
+      switchStatsChild(pIdx);
+      document.getElementById('stats-modal').classList.add('active');
+    }
+
+    function closeStatsModal() {
+      document.getElementById('stats-modal').classList.remove('active');
+    }
+
+    function switchStatsChild(pIdx) {
+      currentStatsChild = pIdx;
+      const btn0 = document.getElementById('stats-child-btn-0');
+      const btn1 = document.getElementById('stats-child-btn-1');
+      if (btn0) btn0.classList.toggle('active', pIdx === 0);
+      if (btn1) btn1.classList.toggle('active', pIdx === 1);
+      renderStatsModal();
+    }
+
+    function switchStatsPeriod(period) {
+      currentStatsPeriod = period;
+      const pWeek = document.getElementById('stats-pbtn-week');
+      const pMonth = document.getElementById('stats-pbtn-month');
+      const pYear = document.getElementById('stats-pbtn-year');
+      if (pWeek) pWeek.classList.toggle('active', period === 'week');
+      if (pMonth) pMonth.classList.toggle('active', period === 'month');
+      if (pYear) pYear.classList.toggle('active', period === 'year');
+      renderStatsModal();
+    }
+
+    function renderStatsModal() {
+      const p = appData.profiles && appData.profiles[currentStatsChild];
+      if (!p) return;
+
+      // 1. 기간별 대상 날짜 산출
+      const today = getTodayStr();
+      const now = new Date();
+      let targetDates = [];
+
+      if (currentStatsPeriod === 'week') {
+        // 최근 7일 (오늘 포함)
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date(now);
+          d.setDate(d.getDate() - i);
+          const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+          targetDates.push(ds);
+        }
+      } else if (currentStatsPeriod === 'month') {
+        // 이번 달 1일부터 오늘까지
+        const curYearMonth = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+        const todayDate = now.getDate();
+        for (let day = 1; day <= todayDate; day++) {
+          const ds = `${curYearMonth}-${String(day).padStart(2,'0')}`;
+          targetDates.push(ds);
+        }
+      } else {
+        // 연간 / 전체: 기록된 모든 날짜 또는 올해 전체
+        const recorded = Object.keys(p.dailyHistory || {});
+        if (!recorded.includes(today)) recorded.push(today);
+        recorded.sort();
+        targetDates = recorded;
+      }
+
+      // 실제 데이터가 존재하는 날짜들 (최소 오늘 1일은 보장)
+      const recordedDatesInPeriod = targetDates.filter(d => p.dailyHistory && p.dailyHistory[d]);
+      if (!recordedDatesInPeriod.includes(today)) {
+        recordTodayHistory(currentStatsChild);
+        if (!recordedDatesInPeriod.includes(today)) recordedDatesInPeriod.push(today);
+      }
+
+      const totalDays = recordedDatesInPeriod.length;
+
+      // 2. 미션별 달성 현황 집계
+      const quests = p.quests || [];
+      const habitStats = quests.map(q => {
+        let completedDays = 0;
+        recordedDatesInPeriod.forEach(d => {
+          const dayData = p.dailyHistory[d];
+          if (dayData && dayData.quests) {
+            const found = dayData.quests.find(item => item.id === q.id || item.title === q.title);
+            if (found && found.completed) completedDays++;
+          }
+        });
+        const rate = totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0;
+        return {
+          id: q.id,
+          title: q.title,
+          completedDays: completedDays,
+          totalDays: totalDays,
+          rate: rate
+        };
+      });
+
+      // 종합 달성률
+      let totalHabitOpportunities = totalDays * quests.length;
+      let totalHabitsDoneInPeriod = habitStats.reduce((acc, h) => acc + h.completedDays, 0);
+      let overallRate = totalHabitOpportunities > 0 ? Math.round((totalHabitsDoneInPeriod / totalHabitOpportunities) * 100) : 0;
+
+      // 하이라이트 요약값
+      const rateEl = document.getElementById('stats-val-rate');
+      const countEl = document.getElementById('stats-sub-count');
+      if (rateEl) rateEl.innerText = `${overallRate}%`;
+      if (countEl) countEl.innerText = `총 ${totalHabitOpportunities}회 중 ${totalHabitsDoneInPeriod}회 실천 (기록 ${totalDays}일간)`;
+
+      // 가장 잘 지킨 습관 & 응원이 필요한 습관 선정
+      const sortedByRate = [...habitStats].sort((a, b) => b.rate - a.rate);
+      const bestHabit = sortedByRate[0];
+      const worstHabit = [...habitStats].sort((a, b) => a.rate - b.rate)[0];
+
+      const bestValEl = document.getElementById('stats-val-best');
+      const bestSubEl = document.getElementById('stats-sub-best');
+      if (bestHabit) {
+        if (bestValEl) bestValEl.innerText = bestHabit.title.split(' ')[0] + ' ' + (bestHabit.title.split(' ')[1] || '');
+        if (bestSubEl) bestSubEl.innerText = `달성률 ${bestHabit.rate}% (${bestHabit.completedDays}/${totalDays}일)`;
+      } else {
+        if (bestValEl) bestValEl.innerText = '-';
+        if (bestSubEl) bestSubEl.innerText = '미션 실천 대기 중';
+      }
+
+      const needValEl = document.getElementById('stats-val-need');
+      const needSubEl = document.getElementById('stats-sub-need');
+      if (worstHabit && worstHabit.rate < 100) {
+        if (needValEl) needValEl.innerText = worstHabit.title.split(' ')[0] + ' ' + (worstHabit.title.split(' ')[1] || '');
+        if (needSubEl) needSubEl.innerText = `달성률 ${worstHabit.rate}% (미달성 ${totalDays - worstHabit.completedDays}일)`;
+      } else if (worstHabit && worstHabit.rate === 100) {
+        if (needValEl) needValEl.innerText = '🎉 올클리어!';
+        if (needSubEl) needSubEl.innerText = '모든 습관을 100% 지켰어요!';
+      } else {
+        if (needValEl) needValEl.innerText = '-';
+        if (needSubEl) needSubEl.innerText = '미션 실천 대기 중';
+      }
+
+      // 3. 미션별 실천 현황 리스트 렌더링
+      const habitListEl = document.getElementById('stats-habit-list');
+      if (habitListEl) {
+        habitListEl.innerHTML = '';
+        sortedByRate.forEach(h => {
+          let statusClass = 'badge-good';
+          let statusText = '👏 잘하고 있어요';
+          let barColor = '#4299E1';
+
+          if (h.rate >= 80) {
+            statusClass = 'badge-perfect';
+            statusText = '🌟 완벽 실천!';
+            barColor = '#38A169';
+          } else if (h.rate < 60) {
+            statusClass = 'badge-need';
+            statusText = '💡 응원 필요';
+            barColor = '#DD6B20';
+          }
+
+          const card = document.createElement('div');
+          card.className = 'stats-habit-card';
+          card.innerHTML = `
+            <div class="habit-header-row">
+              <span class="habit-title-text">${h.title}</span>
+              <span class="habit-status-badge ${statusClass}">${statusText} (${h.rate}%)</span>
+            </div>
+            <div class="habit-bar-track">
+              <div class="habit-bar-fill" style="width: ${h.rate}%; background: ${barColor};"></div>
+            </div>
+            <div class="habit-footer-row">
+              <span>실천 성공: <strong>${h.completedDays}일</strong> / 미달성: <span style="color: #E53E3E;">${h.totalDays - h.completedDays}일</span></span>
+              <span style="font-weight: 800; color: ${barColor};">${h.rate}%</span>
+            </div>
+          `;
+          habitListEl.appendChild(card);
+        });
+      }
+
+      // 4. 일자별 실천 기록 (O / X 체크 타임라인)
+      const logEl = document.getElementById('stats-daily-log');
+      if (logEl) {
+        logEl.innerHTML = '';
+        const displayDates = [...recordedDatesInPeriod].reverse().slice(0, 7); // 최근 최대 7일치 노출
+        displayDates.forEach(d => {
+          const dayData = p.dailyHistory[d];
+          if (!dayData) return;
+
+          const isToday = (d === today);
+          const dateLabel = isToday ? `${d} (오늘)` : d;
+          const dayQuests = dayData.quests || [];
+          const doneCnt = dayQuests.filter(q => q.completed).length;
+          const totalCnt = dayQuests.length;
+          const dayRate = totalCnt > 0 ? Math.round((doneCnt / totalCnt) * 100) : 0;
+
+          const row = document.createElement('div');
+          row.className = 'daily-log-row';
+          
+          let chipsHtml = '';
+          dayQuests.forEach(q => {
+            const icon = q.title.split(' ')[0] || '🎯';
+            const shortName = q.title.split(' ')[1] || q.title;
+            if (q.completed) {
+              chipsHtml += `<span class="daily-chip chip-done">${icon} ${shortName} ✅</span>`;
+            } else {
+              chipsHtml += `<span class="daily-chip chip-miss">${icon} ${shortName} ❌</span>`;
+            }
+          });
+
+          row.innerHTML = `
+            <div class="daily-log-top">
+              <span class="daily-log-date">${dateLabel}</span>
+              <span class="daily-log-rate" style="color: ${dayRate >= 80 ? '#38A169' : (dayRate >= 50 ? '#3182CE' : '#DD6B20')}; font-weight: 900;">
+                ${doneCnt}/${totalCnt} 달성 (${dayRate}%)
+              </span>
+            </div>
+            <div class="daily-chips-wrap">
+              ${chipsHtml}
+            </div>
+          `;
+          logEl.appendChild(row);
+        });
+      }
+    }
+
 
     loadData();
     renderBothProfiles();
