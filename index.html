@@ -124,7 +124,8 @@
 
     /* 형제 대시보드 바디 컨테이너 */
     .dashboard-body {
-      flex: 1;
+      flex: 1 1 0%;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -135,9 +136,12 @@
     .profile-col {
       display: flex;
       flex-direction: column;
-      flex: 1;
+      flex: 1 1 0%;
+      min-height: 0;
       background: #FFFFFF;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
       position: relative;
     }
 
@@ -487,10 +491,8 @@
 
     /* 미션 퀘스트 섹션 */
     .quest-section {
-      flex: 1;
-      padding: 8px 10px 12px;
+      padding: 8px 10px 16px;
       background: #FFFFFF;
-      overflow-y: auto;
     }
 
     .section-header {
@@ -633,18 +635,24 @@
        ============================================================ */
     @media (orientation: landscape) and (min-width: 540px), (min-width: 800px) {
       body {
-        padding: 8px 12px;
-        align-items: center;
-        background-color: #CBD5E0;
+        padding: 0 !important;
+        margin: 0 !important;
+        align-items: stretch !important;
+        background-color: #EDF2F7 !important;
+        min-height: 100vh;
+        height: 100vh;
+        height: 100dvh;
       }
 
       .app-container {
-        max-width: 1060px;
-        height: min(96vh, 640px);
-        min-height: auto;
-        border-radius: 22px;
-        overflow: hidden;
-        box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        min-height: 100% !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
       }
 
       /* 가로 모드에서는 상단 탭 숨김 (둘 다 한 화면에 동시에 보임!) */
@@ -653,7 +661,7 @@
       }
 
       .header-bar {
-        padding: 6px 14px;
+        padding: 4px 12px;
       }
 
       .top-action-row {
@@ -667,67 +675,110 @@
 
       /* 대시보드 바디: 좌우 50% 50% 반반 양분 */
       .dashboard-body {
+        flex: 1 1 0% !important;
+        min-height: 0 !important;
+        height: 100% !important;
         flex-direction: row !important;
         gap: 6px;
-        padding: 6px;
+        padding: 4px 6px 6px;
         background: #E2E8F0;
+        overflow: hidden !important;
       }
 
       /* 두 컬럼 모두 상시 표시! */
       .profile-col {
         display: flex !important;
-        flex: 1 !important;
-        border-radius: 16px;
+        flex-direction: column !important;
+        flex: 1 1 0% !important;
+        min-height: 0 !important;
+        border-radius: 12px;
         box-shadow: 0 3px 12px rgba(0,0,0,0.06);
-        overflow-y: auto;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+        overscroll-behavior-y: contain !important;
       }
 
       .stage {
-        padding: 6px 8px;
+        padding: 4px 6px;
+      }
+
+      .pokemon-speech {
+        margin-bottom: 3px;
+        font-size: 11px;
+        padding: 2px 8px;
       }
 
       .pokemon-wrapper {
-        width: 90px;
-        height: 90px;
+        width: 74px;
+        height: 74px;
+        margin-bottom: 2px;
       }
 
       .pokemon-img, .pokemon-wrapper svg {
-        max-width: 82px;
-        max-height: 82px;
+        max-width: 68px;
+        max-height: 68px;
+      }
+
+      .name-title-row {
+        gap: 4px;
       }
 
       .name-title {
-        font-size: 15px;
+        font-size: 13.5px;
+      }
+
+      .stage-pill {
+        font-size: 9.5px;
+        padding: 1px 5px;
+      }
+
+      .sub-title {
+        font-size: 9.5px;
+        margin: 1px 0 2px;
+      }
+
+      .companion-stat-pill {
+        font-size: 9px;
+        padding: 1px 5px;
       }
 
       .exp-container {
-        margin-bottom: 4px;
-        max-width: 240px;
+        margin-bottom: 3px;
+        max-width: 210px;
       }
 
       .stage-actions {
-        max-width: 290px;
+        max-width: 270px;
+        gap: 3px;
       }
 
       .action-btn {
-        padding: 5px 2px;
-        font-size: 10.5px;
+        padding: 3px 2px;
+        font-size: 9.5px;
+      }
+
+      .quest-section {
+        flex: none !important;
+        overflow: visible !important;
+        padding: 6px 8px 16px;
       }
 
       .quest-card {
-        min-height: 44px;
-        padding: 5px 8px;
+        min-height: 42px;
+        padding: 4px 8px;
+        margin-bottom: 5px;
       }
 
       .quest-checkbox-icon {
-        width: 26px;
-        height: 26px;
-        font-size: 15px;
-        margin-right: 8px;
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        margin-right: 7px;
       }
 
       .quest-title {
-        font-size: 12.5px;
+        font-size: 12px;
       }
     }
 
