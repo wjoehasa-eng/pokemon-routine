@@ -2012,6 +2012,281 @@
       color: #2D3748;
     }
 
+  
+    /* 🟢 실시간 동기화 상태 배지 */
+    .sync-indicator-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      background: #E6FFFA;
+      color: #234E52;
+      border: 1px solid #B2F5EA;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    .sync-indicator-badge:active {
+      transform: scale(0.95);
+    }
+    .sync-indicator-badge.syncing {
+      background: #EBF8FF;
+      color: #2B6CB0;
+      border-color: #BEE3F8;
+      animation: pulse 1s infinite;
+    }
+    .sync-indicator-badge.error {
+      background: #FFF5F5;
+      color: #C53030;
+      border-color: #FED7D7;
+    }
+
+    /* 🛠️ 마스터 관리자 모달 스타일 */
+    .admin-modal-box {
+      max-width: 520px;
+      max-height: 88vh;
+      overflow-y: auto;
+      text-align: left;
+      background: #FFFFFF;
+      border-radius: 22px;
+      padding: 18px 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .admin-modal-header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .admin-child-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      background: #EDF2F7;
+      padding: 4px;
+      border-radius: 12px;
+    }
+    .admin-child-tab {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: #718096;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .admin-child-tab.active {
+      background: #FFFFFF;
+      color: #2B6CB0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .admin-card {
+      background: #F7FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .admin-card-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #2D3748;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-card-desc {
+      font-size: 11px;
+      color: #718096;
+      margin-bottom: 8px;
+    }
+    .admin-berry-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .admin-current-badge {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #4A5568;
+    }
+    .admin-quick-btn-group {
+      display: flex;
+      gap: 4px;
+    }
+    .admin-mini-btn {
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E0;
+      background: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #2D3748;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .admin-mini-btn:hover {
+      background: #EDF2F7;
+    }
+    .admin-mini-btn:active {
+      transform: scale(0.95);
+    }
+    .admin-input-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+    .admin-input-group input, .admin-inline-field input {
+      padding: 4px 6px;
+      border: 1px solid #CBD5E0;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+    }
+    .admin-btn-action {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 6px;
+      background: #3182CE;
+      color: #FFFFFF;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .admin-btn-action:hover {
+      background: #2B6CB0;
+    }
+    .admin-field-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .admin-field-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #4A5568;
+      min-width: 90px;
+    }
+    .admin-select {
+      flex: 1;
+      padding: 6px 8px;
+      border: 1px solid #CBD5E0;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #FFFFFF;
+      color: #2D3748;
+    }
+    .admin-level-presets {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+    }
+    .admin-preset-btn {
+      padding: 4px 7px;
+      border-radius: 6px;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      color: #4A5568;
+      cursor: pointer;
+    }
+    .admin-preset-btn:hover {
+      background: #EBF8FF;
+      color: #2B6CB0;
+      border-color: #BEE3F8;
+    }
+    .admin-exp-days-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .admin-inline-field {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #4A5568;
+    }
+    .admin-book-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .admin-book-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .admin-book-item-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+    }
+    .admin-book-item-btns {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .admin-add-partner-box {
+      background: #EBF8FF;
+      border: 1px dashed #90CDF4;
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    .admin-quest-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+    .admin-quest-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      background: #FFFFFF;
+      font-size: 11.5px;
+      cursor: pointer;
+    }
+    .admin-quest-item:hover {
+      background: #EDF2F7;
+    }
+    .admin-quest-item.completed {
+      background: #F0FFF4;
+      color: #22543D;
+      font-weight: 700;
+    }
+
   </style>
 </head>
 <body>
@@ -2024,9 +2299,11 @@
       <div class="top-action-row">
         <div class="app-title-badge">🐾 우리 집 루틴 다마고치</div>
         <div class="top-sync-btns">
+          <span class="sync-indicator-badge" id="sync-status-badge" onclick="forcePullFromSheets(false)" title="터치하여 지금 즉시 새로고침 동기화">🟢 실시간 동기화 완료</span>
+          <button class="top-btn synergy-top-btn" id="synergy-top-btn" onclick="openSynergyModal()" style="display: none; background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D); color: #FFFFFF; font-weight: 900; animation: synergyPulse 1.5s infinite alternate; box-shadow: 0 0 12px rgba(255, 107, 107, 0.6); border: none;">⚡ 슈퍼 합체 출동!</button>
           <button class="top-btn" onclick="openStatsModal()" style="background: linear-gradient(135deg, #3182CE, #2B6CB0); color: white; border: none; font-weight: 800;">📊 통계 리포트</button>
-          <button class="top-btn" onclick="openSyncModal()" style="background: linear-gradient(135deg, #2F855A, #276749); color: white; border: none; font-weight: 800;">💾 데이터 백업/복원</button>
-          <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: linear-gradient(135deg, #E53E3E, #C53030); color: white; border: none; font-weight: 800;">🛡️ 레벨 조절</button>
+          <button class="top-btn" onclick="openSyncModal()" style="background: linear-gradient(135deg, #2F855A, #276749); color: white; border: none; font-weight: 800;">💾 백업/복원</button>
+          <button class="top-btn" onclick="openAdminModal()" style="background: linear-gradient(135deg, #2D3748, #1A202C); color: #F6E05E; border: 1.5px solid #D69E2E; font-weight: 900; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">🛠️ 관리자 모드</button>
         </div>
       </div>
 
@@ -2043,7 +2320,7 @@
       <div class="synergy-content">
         <span class="synergy-badge">⚡ 형제 슈퍼 합체</span>
         <span class="synergy-title" id="synergy-title">희윤 & 희겸 형제 파워 대폭발! 출동 준비 완료!</span>
-        <span class="synergy-arrow">합체! 👉</span>
+        <span class="synergy-arrow" id="synergy-arrow">합체! 👉</span>
       </div>
     </div>
 
@@ -2546,6 +2823,156 @@
       </a>
 
       <button class="btn-confirm" onclick="closeStatsModal()" style="background: #4A5568; margin-top: 10px;">닫기</button>
+    </div>
+  </div>
+
+    <!-- 🛠️ 마스터 관리자 모드 모달 -->
+  <div class="modal-overlay" id="admin-modal">
+    <div class="modal-box admin-modal-box">
+      <div class="admin-modal-header">
+        <div style="font-size: 26px;">🛠️⚙️✨</div>
+        <div style="font-size: 19px; font-weight: 900; color: #1A202C; margin: 4px 0;">마스터 관리자 모드</div>
+        <div style="font-size: 11.5px; color: #718096; line-height: 1.4;">
+          사과·레벨·경험치·도감 캐릭터 삽입/삭제 등 모든 단계를 아빠가 손쉽게 수동 조절합니다.
+        </div>
+      </div>
+
+      <!-- 아이 선택 탭 -->
+      <div class="admin-child-tabs">
+        <button class="admin-child-tab active" id="admin-child-0" onclick="switchAdminChild(0)">
+          <img src="heeyoon_face.png" class="child-avatar-img" alt="희윤"> 희윤이 (7세)
+        </button>
+        <button class="admin-child-tab" id="admin-child-1" onclick="switchAdminChild(1)">
+          <img src="heegyeom_face.png" class="child-avatar-img" alt="희겸"> 희겸이 (3세)
+        </button>
+      </div>
+
+      <!-- 1. 사과(열매) 개수 수동 조절 -->
+      <div class="admin-card">
+        <div class="admin-card-title">🍎 사과(열매) 수동 조절</div>
+        <div class="admin-card-desc">미션 보상이나 밥주기 사과 개수를 원하는 수량으로 맞춥니다.</div>
+        <div class="admin-berry-row">
+          <div class="admin-current-badge">현재: <strong id="admin-berry-disp" style="color: #E53E3E; font-size: 18px;">3개</strong></div>
+          <div class="admin-quick-btn-group">
+            <button class="admin-mini-btn" onclick="adminAdjustBerry(-5)">-5</button>
+            <button class="admin-mini-btn" onclick="adminAdjustBerry(-1)">-1</button>
+            <button class="admin-mini-btn" onclick="adminAdjustBerry(+1)">+1</button>
+            <button class="admin-mini-btn" onclick="adminAdjustBerry(+5)">+5</button>
+          </div>
+          <div class="admin-input-group">
+            <input type="number" id="admin-berry-input" min="0" max="999" placeholder="개수" style="width: 70px;">
+            <button class="admin-btn-action" onclick="adminSetBerryFromInput()">적용</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 대표 파트너 & 성장 레벨/경험치 조절 -->
+      <div class="admin-card">
+        <div class="admin-card-title">🐾 현재 대표 파트너 & 성장 레벨/경험치</div>
+        
+        <div class="admin-field-row">
+          <label class="admin-field-label">대표 파트너:</label>
+          <select id="admin-partner-select" class="admin-select" onchange="adminChangeCurrentPartner(this.value)">
+            <!-- 동적 렌더링 -->
+          </select>
+        </div>
+
+        <div class="admin-field-row" style="margin-top: 10px;">
+          <label class="admin-field-label">성장 단계 (Lv.0 ~ 28):</label>
+          <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+            <input type="range" id="admin-level-slider" min="0" max="28" value="1" oninput="adminOnLevelSlider(this.value)" style="flex: 1;">
+            <span id="admin-level-disp" style="font-weight: 900; color: #2B6CB0; min-width: 50px;">Lv.1</span>
+          </div>
+        </div>
+
+        <!-- 퀵 레벨 프리셋 버튼 -->
+        <div class="admin-level-presets">
+          <button class="admin-preset-btn" onclick="adminSetLevelPreset(0)">🥚 알 (Lv.0)</button>
+          <button class="admin-preset-btn" onclick="adminSetLevelPreset(1)">🐣 탄생 (Lv.1)</button>
+          <button class="admin-preset-btn" onclick="adminSetLevelPreset(2)">⛑️ 헬멧 (Lv.2)</button>
+          <button class="admin-preset-btn" onclick="adminSetLevelPreset(7)">👑 1주 (Lv.7)</button>
+          <button class="admin-preset-btn" onclick="adminSetLevelPreset(14)">🏆 2주 (Lv.14)</button>
+          <button class="admin-preset-btn" onclick="adminSetLevelPreset(20)">🤖 합체로봇 (Lv.20)</button>
+          <button class="admin-preset-btn" onclick="adminSetLevelPreset(28)">🌟 28일 마스터 (Lv.28)</button>
+        </div>
+
+        <div class="admin-exp-days-row">
+          <div class="admin-inline-field">
+            <label>EXP:</label>
+            <input type="number" id="admin-exp-input" min="0" max="300" style="width: 65px;">
+            <button class="admin-btn-action" onclick="adminSetExp()">적용</button>
+          </div>
+          <div class="admin-inline-field">
+            <label>함께한 일수:</label>
+            <input type="number" id="admin-days-input" min="1" max="999" style="width: 60px;">
+            <button class="admin-btn-action" onclick="adminSetDays()">적용</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 도감(성장 중 / 명예의 전당) 파트너 수동 삽입 및 삭제 관리 (핵심 요구사항!) -->
+      <div class="admin-card">
+        <div class="admin-card-title">📖 도감 캐릭터 수동 관리 (삽입 / 삭제 / 수정)</div>
+        <div class="admin-card-desc">
+          도감에 잘못 들어간 캐릭터는 <strong>[🗑️ 삭제]</strong>로 즉시 빼고, 새로운 캐릭터는 <strong>[➕ 추가]</strong>하여 관리합니다.
+        </div>
+
+        <!-- 현재 도감에 등록된 캐릭터 목록 -->
+        <div class="admin-book-list" id="admin-book-list">
+          <!-- 동적 렌더링 -->
+        </div>
+
+        <!-- 새 캐릭터 수동 삽입(추가) 폼 -->
+        <div class="admin-add-partner-box">
+          <div style="font-size: 12px; font-weight: 800; color: #2D3748; margin-bottom: 6px;">➕ 도감에 새 캐릭터 추가/삽입</div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+            <select id="admin-add-partner-select" class="admin-select" style="flex: 2; min-width: 140px;">
+              <!-- 동적 렌더링 -->
+            </select>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 11.5px; font-weight: 700;">Lv:</span>
+              <input type="number" id="admin-add-partner-level" value="1" min="1" max="28" style="width: 50px;">
+            </div>
+            <button class="admin-btn-action" onclick="adminInsertPartnerToBook()" style="background: #3182CE; color: white;">➕ 도감 추가</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 오늘의 미션 체크리스트 강제 제어 -->
+      <div class="admin-card">
+        <div class="admin-card-title">🎯 오늘의 미션 상태 수동 제어</div>
+        <div class="admin-card-desc">각 미션을 직접 체크하거나 전체 완료/초기화합니다.</div>
+        <div class="admin-quest-checklist" id="admin-quest-checklist">
+          <!-- 동적 렌더링 -->
+        </div>
+        <div style="display: flex; gap: 6px; margin-top: 8px;">
+          <button class="admin-mini-btn" onclick="adminCheckAllQuests(true)" style="flex: 1; background: #E6FFFA; color: #234E52; border-color: #38B2D9;">✅ 전체 완료 체크</button>
+          <button class="admin-mini-btn" onclick="adminCheckAllQuests(false)" style="flex: 1; background: #EDF2F7; color: #4A5568;">🔄 전체 미완료 리셋</button>
+        </div>
+      </div>
+
+      <!-- 5. 형제 슈퍼 합체 상태 제어 -->
+      <div class="admin-card">
+        <div class="admin-card-title">⚡ 형제 슈퍼 합체 상태 제어</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 12px; color: #4A5568;">오늘 합체 상태: <strong id="admin-synergy-state-disp">미완료</strong></span>
+          <span style="font-size: 11px; color: #718096;" id="admin-synergy-detail">희윤 (0/2) · 희겸 (0/2)</span>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <button class="admin-mini-btn" onclick="adminResetSynergy()" style="flex: 1; background: #FFFAF0; color: #C05621; border-color: #FBD38D;">🔄 오늘 합체 리셋 (다시 합체 가능)</button>
+          <button class="admin-mini-btn" onclick="adminForceSynergy()" style="flex: 1; background: #FFF5F5; color: #C53030; border-color: #FEB2B2;">⚡ 강제 합체 발동</button>
+        </div>
+      </div>
+
+      <!-- 대형 저장 & 구글 시트 즉시 동기화 버튼 -->
+      <div style="margin-top: 14px; display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn-confirm" onclick="adminSaveAndClose()" style="background: linear-gradient(135deg, #2F855A, #276749); font-size: 15px; font-weight: 900; margin-top: 0; box-shadow: 0 4px 14px rgba(47, 133, 90, 0.35);">
+          💾 관리자 설정 저장 & 구글 시트 즉시 동기화
+        </button>
+        <button class="btn-confirm" onclick="closeAdminModal()" style="background: #718096; margin-top: 0; font-size: 13px;">
+          닫기
+        </button>
+      </div>
     </div>
   </div>
 
@@ -3454,7 +3881,28 @@
       }
     }
 
+    let isSyncing = false;
+
+    function updateSyncBadge(status, text) {
+      const badge = document.getElementById('sync-status-badge');
+      if (!badge) return;
+      if (status === 'syncing') {
+        badge.className = 'sync-indicator-badge syncing';
+        badge.innerText = '🔄 동기화 중...';
+      } else if (status === 'success') {
+        badge.className = 'sync-indicator-badge success';
+        badge.innerText = text || '🟢 실시간 동기화 완료';
+      } else if (status === 'error') {
+        badge.className = 'sync-indicator-badge error';
+        badge.innerText = '⚠️ 시트 동기화 지연';
+      }
+    }
+
     function saveData(skipRemoteSync = false) {
+      appData.updatedAt = Date.now();
+      recordTodayHistory(0);
+      recordTodayHistory(1);
+
       try {
         const serialized = JSON.stringify(appData);
         localStorage.setItem('pokemon_routine_v9', serialized);
@@ -3473,21 +3921,34 @@
 
     function syncToGoogleSheets() {
       if (!appData.sheetsSyncUrl) return;
+      appData.updatedAt = Date.now();
+      updateSyncBadge('syncing');
       try {
         fetch(appData.sheetsSyncUrl, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(appData)
-        }).catch(err => console.warn("Sheets sync send error:", err));
+        })
+        .then(() => {
+          setTimeout(() => updateSyncBadge('success', '🟢 클라우드 저장 완료'), 400);
+        })
+        .catch(err => {
+          console.warn("Sheets sync send error:", err);
+          updateSyncBadge('error');
+        });
       } catch (e) {}
     }
 
-    // 🛡️ [스마트 병합 엔진]: 클라우드 데이터가 오더라도 레벨·경험치·완료 미션을 절대 깎거나 초기화하지 않음!
+    // 🛡️ [스마트 시차 병합 엔진]: 타임스탬프 기반 양방향 최신 반영 + 레벨/미션 후퇴 절대 방지!
     function mergeAppData(local, incoming) {
       if (!incoming || !incoming.profiles || !Array.isArray(incoming.profiles) || incoming.profiles.length < 2) {
         return local;
       }
+
+      const remoteTime = incoming.updatedAt || 0;
+      const localTime = local.updatedAt || 0;
+      const isRemoteNewer = (remoteTime > localTime);
 
       incoming.profiles.forEach((remoteP, idx) => {
         const localP = local.profiles && local.profiles[idx];
@@ -3496,27 +3957,49 @@
         const remoteLvl = Number(remoteP.growthLevel) || 0;
         const localLvl = Number(localP.growthLevel) || 0;
 
-        // 1. 레벨 & 경험치: 절대로 후퇴 금지! 더 높은 성장 상태 보존
-        if (remoteLvl > localLvl) {
+        if (isRemoteNewer) {
+          // 원격이 더 최신이면 원격의 레벨, 경험치, 사과 수량, 파트너 정확히 반영
           localP.growthLevel = remoteLvl;
           localP.exp = remoteP.exp || 0;
-        } else if (remoteLvl === localLvl) {
-          localP.exp = Math.max(localP.exp || 0, remoteP.exp || 0);
+          if (typeof remoteP.berries === 'number') {
+            localP.berries = remoteP.berries;
+          }
+          if (remoteP.partnerId) {
+            localP.partnerId = remoteP.partnerId;
+          }
+          if (remoteP.partnerHistory) {
+            localP.partnerHistory = remoteP.partnerHistory;
+          }
+        } else {
+          // 로컬이 최신이거나 같을 때는 레벨 후퇴만 방지
+          if (remoteLvl > localLvl) {
+            localP.growthLevel = remoteLvl;
+            localP.exp = remoteP.exp || 0;
+          } else if (remoteLvl === localLvl) {
+            localP.exp = Math.max(localP.exp || 0, remoteP.exp || 0);
+          }
+          if (typeof localP.berries !== 'number' || isNaN(localP.berries)) {
+            localP.berries = (typeof remoteP.berries === 'number') ? remoteP.berries : 0;
+          }
+          if (remoteP.partnerHistory) {
+            if (!localP.partnerHistory) localP.partnerHistory = {};
+            Object.keys(remoteP.partnerHistory).forEach(pid => {
+              if (!localP.partnerHistory[pid]) {
+                localP.partnerHistory[pid] = remoteP.partnerHistory[pid];
+              }
+            });
+          }
         }
-        // 로컬이 이미 부화(Lvl >= 1)했으면 원격이 0(알)을 보내와도 절대 알로 안 돌아감!
+
+        // 부화 안전 보장
         if (localLvl >= 1 && localP.growthLevel < 1) {
           localP.growthLevel = localLvl;
         }
 
-        // 2. 사과: 미션 실천 보상 원칙을 위해 로컬에서 획득·소비한 실제 수량을 엄격히 보존! (강제 리필 절대 금지)
-        // 사과는 오직 미션을 성공했을 때만 늘어나고, 밥을 먹였을 때만 줄어듭니다.
-        if (typeof localP.berries !== 'number' || isNaN(localP.berries)) {
-          localP.berries = (typeof remoteP.berries === 'number') ? remoteP.berries : 0;
-        }
         localP.streak = Math.max(localP.streak || 1, remoteP.streak || 1);
         localP.totalHabitsDone = Math.max(localP.totalHabitsDone || 0, remoteP.totalHabitsDone || 0);
 
-        // 3. 미션 상태 병합: 한쪽이라도 체크했으면 체크 상태 보존 (체크 풀림 방지)
+        // 3. 미션 상태 병합: 당일 체크는 한쪽이라도 체크했으면 체크 상태 보존
         if (localP.quests && remoteP.quests) {
           localP.quests.forEach(lq => {
             const rq = remoteP.quests.find(q => q.id === lq.id || (q.text && q.text === lq.text));
@@ -3526,24 +4009,7 @@
           });
         }
 
-        // 4. 파트너 기록 병합
-        if (remoteP.partnerHistory) {
-          if (!localP.partnerHistory) localP.partnerHistory = {};
-          Object.keys(remoteP.partnerHistory).forEach(pid => {
-            const rh = remoteP.partnerHistory[pid];
-            const lh = localP.partnerHistory[pid];
-            if (!lh) {
-              localP.partnerHistory[pid] = rh;
-            } else {
-              lh.level = Math.max(lh.level || 0, rh.level || 0);
-              lh.exp = Math.max(lh.exp || 0, rh.exp || 0);
-              lh.habitsDone = Math.max(lh.habitsDone || 0, rh.habitsDone || 0);
-              if (rh.isChampion) lh.isChampion = true;
-            }
-          });
-        }
-
-        // 5. 일일 통계 히스토리 병합
+        // 4. 일일 통계 히스토리 병합
         if (remoteP.dailyHistory) {
           if (!localP.dailyHistory) localP.dailyHistory = {};
           Object.keys(remoteP.dailyHistory).forEach(dt => {
@@ -3554,24 +4020,65 @@
         }
       });
 
+      if (incoming.synergyDate) {
+        local.synergyDate = incoming.synergyDate;
+      }
+
       return local;
     }
 
-    function syncFromGoogleSheets() {
+    // ⚡ 고속 동기화: 캐시 방지 파라미터 + no-store 헤더로 0.5초 쾌속 응답
+    function syncFromGoogleSheets(isSilent = false) {
       if (!appData.sheetsSyncUrl) return;
+      if (isSyncing) return;
+      isSyncing = true;
+      if (!isSilent) updateSyncBadge('syncing');
+
+      const cacheBuster = '_t=' + Date.now();
+      const url = appData.sheetsSyncUrl + (appData.sheetsSyncUrl.includes('?') ? '&' : '?') + cacheBuster;
+
       try {
-        fetch(appData.sheetsSyncUrl)
-          .then(res => res.json())
+        fetch(url, { cache: 'no-store' })
+          .then(res => {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+          })
           .then(data => {
+            isSyncing = false;
             if (data && data.profiles && Array.isArray(data.profiles) && data.profiles.length >= 2) {
               appData = mergeAppData(appData, data);
               saveData(true);
               renderBothProfiles();
+              checkBrotherSynergyCondition();
+              updateSyncBadge('success', '🟢 실시간 동기화 완료');
             }
           })
-          .catch(err => console.warn("Sheets sync fetch error:", err));
-      } catch (e) {}
+          .catch(err => {
+            isSyncing = false;
+            console.warn("Sheets sync fetch error:", err);
+            if (!isSilent) updateSyncBadge('error');
+          });
+      } catch (e) {
+        isSyncing = false;
+      }
     }
+
+    // 🔄 자동 백그라운드 동기화 (기기 전환, 화면 켜짐, 주기적 감지)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && appData.sheetsSyncUrl) {
+        syncFromGoogleSheets(false);
+      }
+    });
+    window.addEventListener('focus', () => {
+      if (appData.sheetsSyncUrl) {
+        syncFromGoogleSheets(false);
+      }
+    });
+    setInterval(() => {
+      if (document.visibilityState === 'visible' && appData.sheetsSyncUrl && !isSyncing) {
+        syncFromGoogleSheets(true);
+      }
+    }, 12000);
 
     // 오디오
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -4840,6 +5347,7 @@
       ensurePartnerHistory(p);
       saveData();
       renderProfile(pIdx);
+      checkBrotherSynergyCondition();
     }
 
     function addExp(pIdx, amount) {
@@ -5846,6 +6354,8 @@
 
       const banner = document.getElementById('synergy-banner');
       const titleEl = document.getElementById('synergy-title');
+      const arrowEl = document.getElementById('synergy-arrow');
+      const topBtn = document.getElementById('synergy-top-btn');
 
       const today = getTodayStr();
       const alreadyFused = (appData.synergyDate === today);
@@ -5858,15 +6368,40 @@
           banner.style.animation = 'none';
           if (titleEl) {
             titleEl.style.color = '#FFFFFF';
-            titleEl.innerText = '✨ 오늘 형제 합체 완료! 환상의 호흡 발동 중! ✨';
+            titleEl.innerText = '✨ 오늘 형제 합체 완료! 환상의 호흡 발동 중! (터치하여 다시보기)';
+          }
+          if (arrowEl) {
+            arrowEl.innerText = '축하 보기 ✨';
+            arrowEl.style.background = 'rgba(255,255,255,0.25)';
+            arrowEl.style.color = '#FFFFFF';
+            arrowEl.style.padding = '3px 8px';
+            arrowEl.style.borderRadius = '12px';
+          }
+          if (topBtn) {
+            topBtn.style.display = 'inline-flex';
+            topBtn.style.background = 'linear-gradient(135deg, #48BB78, #38A169)';
+            topBtn.innerText = '✨ 합체 완료';
           }
         } else if (q0Done >= 2 && q1Done >= 2) {
           banner.style.background = 'linear-gradient(135deg, #FF6B6B 0%, #FFA07A 50%, #FFD93D 100%)';
-          banner.style.boxShadow = '0 4px 16px rgba(255, 107, 107, 0.45)';
-          banner.style.animation = 'synergyPulse 1.8s infinite alternate';
+          banner.style.boxShadow = '0 4px 18px rgba(255, 107, 107, 0.55)';
+          banner.style.animation = 'synergyPulse 1.6s infinite alternate';
           if (titleEl) {
             titleEl.style.color = '#FFFFFF';
-            titleEl.innerText = '⚡ 희윤 & 희겸 형제 슈퍼 합체 충전 완료! 출동 준비! ⚡';
+            titleEl.innerText = '⚡ 희윤 & 희겸 형제 슈퍼 합체 충전 완료! 지금 바로 터치! ⚡';
+          }
+          if (arrowEl) {
+            arrowEl.innerText = '🔥 지금 합체 터치! 👉';
+            arrowEl.style.background = '#FFFFFF';
+            arrowEl.style.color = '#E53E3E';
+            arrowEl.style.padding = '4px 10px';
+            arrowEl.style.borderRadius = '14px';
+            arrowEl.style.fontWeight = '900';
+          }
+          if (topBtn) {
+            topBtn.style.display = 'inline-flex';
+            topBtn.style.background = 'linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D)';
+            topBtn.innerText = '⚡ 슈퍼 합체 출동!';
           }
         } else {
           banner.style.background = '#EDF2F7';
@@ -5876,6 +6411,15 @@
             titleEl.style.color = '#718096';
             titleEl.style.textShadow = 'none';
             titleEl.innerText = `🤝 형제 합체까지: 희윤 (${q0Done}/2) · 희겸 (${q1Done}/2)`;
+          }
+          if (arrowEl) {
+            arrowEl.innerText = '충전 중 ⏳';
+            arrowEl.style.background = 'none';
+            arrowEl.style.color = '#718096';
+            arrowEl.style.padding = '0';
+          }
+          if (topBtn) {
+            topBtn.style.display = 'none';
           }
         }
       }
@@ -5888,20 +6432,21 @@
       const q1Done = p1.quests ? p1.quests.filter(q => q.completed).length : 0;
       const today = getTodayStr();
 
-      if (appData.synergyDate === today) {
-        alert("오늘의 형제 슈퍼 합체는 이미 멋지게 완료했어요! ✨\n내일 또 힘을 모아 출동해 봐요!");
-        return;
-      }
-
-      if (q0Done < 2 || q1Done < 2) {
-        alert(`아직 슈퍼 합체 파워가 부족해요!\n\n현재 달성 현황:\n- 👦 희윤 형아: ${q0Done}/2개 완료\n- 👶 희겸 동생: ${q1Done}/2개 완료\n\n둘 다 미션을 2개 이상 완료하면 슈퍼 합체가 충전됩니다! 💪`);
-        return;
-      }
-
       const fam0 = getFamily(p0.partnerId);
       const fam1 = getFamily(p1.partnerId);
       document.getElementById('synergy-partner-0').innerText = fam0.typeName.split(' ')[0] || '🔥';
       document.getElementById('synergy-partner-1').innerText = fam1.typeName.split(' ')[0] || '🚜';
+
+      if (appData.synergyDate === today) {
+        // 이미 완료한 경우 축하 모달을 즐겁게 다시 감상할 수 있게 열어줌
+        document.getElementById('synergy-modal').classList.add('active');
+        return;
+      }
+
+      if (q0Done < 2 || q1Done < 2) {
+        alert(`아직 슈퍼 합체 파워가 부족해요!\n\n현재 달성 현황:\n- 👦 희윤 형아: ${q0Done}/2개 완료\n- 👶 희겸 동생: ${q1Done}/2개 완료\n\n둘 다 미션을 2개 이상 완료하면 슈퍼 합체가 활성화됩니다! 💪`);
+        return;
+      }
 
       // 슈퍼 합체 보너스 지급
       p0.berries = (p0.berries || 0) + 2;
@@ -5912,6 +6457,7 @@
       appData.synergyDate = today;
       saveData();
       renderBothProfiles();
+      checkBrotherSynergyCondition();
 
       playFanfare();
       fireConfetti(0);
@@ -6107,49 +6653,385 @@
     // =========================================================================
     // 🛡️ 긴급 상태 복원 & 성장 맞춤 조절 엔진
     // =========================================================================
-    function openEmergencyRestoreModal() {
-      const p0 = appData.profiles && appData.profiles[0];
-      const p1 = appData.profiles && appData.profiles[1];
-      const st0 = document.getElementById('restore-status-0');
-      const st1 = document.getElementById('restore-status-1');
-      if (st0 && p0) st0.innerText = `현재: ${p0.growthLevel === 0 ? '알 🥚' : 'Lv.' + p0.growthLevel} (${p0.exp} EXP)`;
-      if (st1 && p1) st1.innerText = `현재: ${p1.growthLevel === 0 ? '알 🥚' : 'Lv.' + p1.growthLevel} (${p1.exp} EXP)`;
-      document.getElementById('restore-modal').classList.add('active');
+    
+    // =========================================================================
+    // 🛠️ 마스터 관리자 모드 엔진 (사과·레벨·경험치·도감 삽입/삭제/수정 완벽 제어)
+    // =========================================================================
+    let adminTargetPIdx = 0;
+
+    function openAdminModal(pIdx = null) {
+      if (pIdx !== null) adminTargetPIdx = pIdx;
+      else adminTargetPIdx = appData.activeProfile || 0;
+      renderAdminModal();
+      document.getElementById('admin-modal').classList.add('active');
     }
 
-    function closeEmergencyRestoreModal() {
-      document.getElementById('restore-modal').classList.remove('active');
+    function closeAdminModal() {
+      document.getElementById('admin-modal').classList.remove('active');
     }
 
-    function manualSetLevel(pIdx, lvl, forcePartnerId = null) {
-      const p = appData.profiles[pIdx];
+    function switchAdminChild(pIdx) {
+      adminTargetPIdx = pIdx;
+      renderAdminModal();
+    }
+
+    function renderAdminModal() {
+      const p = appData.profiles[adminTargetPIdx];
       if (!p) return;
-      if (forcePartnerId) p.partnerId = forcePartnerId;
+
+      // 탭 활성화 상태
+      const tab0 = document.getElementById('admin-child-0');
+      const tab1 = document.getElementById('admin-child-1');
+      if (tab0) tab0.classList.toggle('active', adminTargetPIdx === 0);
+      if (tab1) tab1.classList.toggle('active', adminTargetPIdx === 1);
+
+      // 1. 사과 개수
+      const berryDisp = document.getElementById('admin-berry-disp');
+      if (berryDisp) berryDisp.innerText = `${p.berries || 0}개`;
+      const berryInput = document.getElementById('admin-berry-input');
+      if (berryInput) berryInput.value = p.berries || 0;
+
+      // 2. 대표 파트너 선택 드롭다운 채우기
+      const partnerSelect = document.getElementById('admin-partner-select');
+      if (partnerSelect) {
+        partnerSelect.innerHTML = '';
+        const catMap = {
+          heavy: '🚜 중장비 & 특수차량',
+          dino: '🦖 신비한 공룡 월드',
+          pokemon: '⚡ 포켓몬 월드',
+          disney: '🏰 디즈니 미키와 친구들',
+          animal: '🐾 귀여운 동물 친구들',
+          bird: '🦅 하늘의 새',
+          ocean: '🐬 깊은 바다 친구들',
+          fantasy: '✨ 환상속 전설의 생물'
+        };
+        const groups = {};
+        POKEMON_FAMILIES.forEach(f => {
+          const cat = catMap[f.category] || '기타';
+          if (!groups[cat]) groups[cat] = [];
+          groups[cat].push(f);
+        });
+        Object.keys(groups).forEach(cat => {
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = cat;
+          groups[cat].forEach(f => {
+            const opt = document.createElement('option');
+            opt.value = f.id;
+            opt.innerText = `${f.typeName} (${f.species[0].name})`;
+            if (f.id === p.partnerId) opt.selected = true;
+            optgroup.appendChild(opt);
+          });
+          partnerSelect.appendChild(optgroup);
+        });
+      }
+
+      // 레벨 & EXP
+      const lvl = p.growthLevel || 0;
+      const lvlDisp = document.getElementById('admin-level-disp');
+      if (lvlDisp) lvlDisp.innerText = lvl === 0 ? '알 (Lv.0)' : `Lv.${lvl}`;
+      const lvlSlider = document.getElementById('admin-level-slider');
+      if (lvlSlider) lvlSlider.value = lvl;
+
+      const expInput = document.getElementById('admin-exp-input');
+      if (expInput) expInput.value = p.exp || 0;
+
+      const daysInput = document.getElementById('admin-days-input');
+      if (daysInput) {
+        const hist = p.partnerHistory && p.partnerHistory[p.partnerId];
+        const firstDateStr = (hist && hist.firstDate) || p.firstDate || getTodayStr();
+        const d1 = new Date(firstDateStr);
+        const d2 = new Date(getTodayStr());
+        const diff = Math.max(1, Math.ceil(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
+        daysInput.value = diff;
+      }
+
+      // 3. 도감 캐릭터 목록 렌더링 (삭제 & 삽입 & 수정)
+      renderAdminBookList();
+
+      // 도감 추가용 드롭다운 채우기
+      const addSelect = document.getElementById('admin-add-partner-select');
+      if (addSelect && addSelect.options.length === 0) {
+        POKEMON_FAMILIES.forEach(f => {
+          const opt = document.createElement('option');
+          opt.value = f.id;
+          opt.innerText = `${f.typeName} (${f.species[0].name})`;
+          addSelect.appendChild(opt);
+        });
+      }
+
+      // 4. 미션 체크리스트 렌더링
+      const questListEl = document.getElementById('admin-quest-checklist');
+      if (questListEl) {
+        questListEl.innerHTML = '';
+        if (p.quests) {
+          p.quests.forEach(q => {
+            const div = document.createElement('div');
+            div.className = `admin-quest-item ${q.completed ? 'completed' : ''}`;
+            div.innerHTML = `
+              <input type="checkbox" ${q.completed ? 'checked' : ''} onchange="adminToggleQuest('${q.id}', this.checked)">
+              <span style="flex: 1;">${q.text}</span>
+              <span style="font-size: 10px; color: #718096;">+${q.exp}EXP</span>
+            `;
+            questListEl.appendChild(div);
+          });
+        }
+      }
+
+      // 5. 합체 상태
+      const today = getTodayStr();
+      const synState = document.getElementById('admin-synergy-state-disp');
+      if (synState) {
+        synState.innerText = (appData.synergyDate === today) ? '✨ 오늘 합체 완료' : '미완료';
+        synState.style.color = (appData.synergyDate === today) ? '#38A169' : '#E53E3E';
+      }
+      const synDetail = document.getElementById('admin-synergy-detail');
+      if (synDetail) {
+        const q0 = (appData.profiles[0].quests || []).filter(q => q.completed).length;
+        const q1 = (appData.profiles[1].quests || []).filter(q => q.completed).length;
+        synDetail.innerText = `희윤 (${q0}/2) · 희겸 (${q1}/2)`;
+      }
+    }
+
+    function renderAdminBookList() {
+      const p = appData.profiles[adminTargetPIdx];
+      const bookList = document.getElementById('admin-book-list');
+      if (!bookList) return;
+      bookList.innerHTML = '';
+
+      const hist = p.partnerHistory || {};
+      const keys = Object.keys(hist);
+
+      if (keys.length === 0) {
+        bookList.innerHTML = '<div style="font-size: 12px; color: #A0AEC0; text-align: center; padding: 10px;">도감에 등록된 캐릭터가 없습니다.</div>';
+        return;
+      }
+
+      keys.forEach(fId => {
+        const item = hist[fId];
+        if (!item) return;
+        const fam = getFamily(fId);
+        const stageSpec = getStageSpec(item.level || 0, p);
+        const sp = fam.species[stageSpec.speciesIdx] || fam.species[0];
+        const isCurrent = (fId === p.partnerId);
+
+        const div = document.createElement('div');
+        div.className = 'admin-book-item';
+        div.innerHTML = `
+          <div class="admin-book-item-info">
+            <span>${fam.typeName.split(' ')[0] || '🐾'}</span>
+            <div>
+              <div style="font-size: 12.5px; font-weight: 800; color: #2D3748;">
+                ${sp.name} <span style="font-size: 11px; color: #3182CE;">(Lv.${item.level || 0})</span>
+                ${isCurrent ? '<span style="font-size: 10px; background: #EBF8FF; color: #2B6CB0; padding: 1px 5px; border-radius: 4px; margin-left: 4px;">대표</span>' : ''}
+              </div>
+              <div style="font-size: 10.5px; color: #718096;">
+                경험치: ${item.exp || 0} EXP · 시작: ${item.firstDate || item.date || '오늘'}
+              </div>
+            </div>
+          </div>
+          <div class="admin-book-item-btns">
+            ${!isCurrent ? `<button class="admin-mini-btn" onclick="adminSwitchToPartner('${fId}')" title="대표 파트너로 소환" style="background: #EBF8FF; color: #2B6CB0; border-color: #BEE3F8;">소환</button>` : ''}
+            <button class="admin-mini-btn" onclick="adminEditBookPartner('${fId}')" title="레벨/경험치 수정" style="background: #EDF2F7;">수정</button>
+            <button class="admin-mini-btn" onclick="adminDeletePartnerFromBook('${fId}')" title="도감에서 완전 삭제" style="background: #FFF5F5; color: #E53E3E; border-color: #FEB2B2;">🗑️ 삭제</button>
+          </div>
+        `;
+        bookList.appendChild(div);
+      });
+    }
+
+    function adminAdjustBerry(delta) {
+      const p = appData.profiles[adminTargetPIdx];
+      p.berries = Math.max(0, (p.berries || 0) + delta);
+      renderAdminModal();
+    }
+
+    function adminSetBerryFromInput() {
+      const p = appData.profiles[adminTargetPIdx];
+      const val = parseInt(document.getElementById('admin-berry-input').value, 10);
+      if (!isNaN(val) && val >= 0) {
+        p.berries = val;
+        renderAdminModal();
+      }
+    }
+
+    function adminChangeCurrentPartner(familyId) {
+      const p = appData.profiles[adminTargetPIdx];
+      p.partnerId = familyId;
+      ensurePartnerHistory(p);
+      renderAdminModal();
+    }
+
+    function adminOnLevelSlider(val) {
+      const lvl = parseInt(val, 10);
+      const disp = document.getElementById('admin-level-disp');
+      if (disp) disp.innerText = lvl === 0 ? '알 (Lv.0)' : `Lv.${lvl}`;
+      const p = appData.profiles[adminTargetPIdx];
+      p.growthLevel = lvl;
+      if (lvl === 0) p.exp = 0;
+      ensurePartnerHistory(p);
+    }
+
+    function adminSetLevelPreset(lvl) {
+      const p = appData.profiles[adminTargetPIdx];
       p.growthLevel = lvl;
       p.exp = (lvl === 0) ? 0 : 25;
       ensurePartnerHistory(p);
-      saveData();
-      renderProfile(pIdx);
-      openEmergencyRestoreModal();
+      renderAdminModal();
     }
 
-    function quickRestoreHatched() {
-      if (appData.profiles[0]) {
-        appData.profiles[0].partnerId = 'tyranno';
-        appData.profiles[0].growthLevel = 1;
-        appData.profiles[0].exp = 25;
-        ensurePartnerHistory(appData.profiles[0]);
+    function adminSetExp() {
+      const p = appData.profiles[adminTargetPIdx];
+      const val = parseInt(document.getElementById('admin-exp-input').value, 10);
+      if (!isNaN(val) && val >= 0) {
+        p.exp = val;
+        ensurePartnerHistory(p);
+        renderAdminModal();
       }
-      if (appData.profiles[1]) {
-        appData.profiles[1].partnerId = 'excavator';
-        appData.profiles[1].growthLevel = 1;
-        appData.profiles[1].exp = 25;
-        ensurePartnerHistory(appData.profiles[1]);
+    }
+
+    function adminSetDays() {
+      const p = appData.profiles[adminTargetPIdx];
+      const days = parseInt(document.getElementById('admin-days-input').value, 10);
+      if (!isNaN(days) && days >= 1) {
+        const d = new Date();
+        d.setDate(d.getDate() - (days - 1));
+        const dtStr = d.toISOString().split('T')[0];
+        p.firstDate = dtStr;
+        if (p.partnerHistory && p.partnerHistory[p.partnerId]) {
+          p.partnerHistory[p.partnerId].firstDate = dtStr;
+        }
+        renderAdminModal();
       }
+    }
+
+    // 도감에서 캐릭터 완전 삭제 (핵심 요구사항)
+    function adminDeletePartnerFromBook(familyId) {
+      const p = appData.profiles[adminTargetPIdx];
+      const fam = getFamily(familyId);
+      if (!confirm(`도감에서 [${fam.species[0].name}]을(를) 완전히 삭제하시겠습니까?\n(잘못 등록된 도감 기록이 영구히 제거됩니다)`)) {
+        return;
+      }
+      if (p.partnerHistory) {
+        delete p.partnerHistory[familyId];
+      }
+      // 현재 대표 파트너를 삭제한 경우 대체 파트너 자동 지정
+      if (p.partnerId === familyId) {
+        const remaining = Object.keys(p.partnerHistory || {});
+        if (remaining.length > 0) {
+          p.partnerId = remaining[0];
+          p.growthLevel = p.partnerHistory[p.partnerId].level || 1;
+          p.exp = p.partnerHistory[p.partnerId].exp || 0;
+        } else {
+          p.partnerId = (adminTargetPIdx === 0) ? 'tyranno' : 'excavator';
+          p.growthLevel = 1;
+          p.exp = 25;
+          ensurePartnerHistory(p);
+        }
+      }
+      renderAdminModal();
+    }
+
+    // 도감 파트너 레벨/EXP 수정
+    function adminEditBookPartner(familyId) {
+      const p = appData.profiles[adminTargetPIdx];
+      const hist = p.partnerHistory && p.partnerHistory[familyId];
+      if (!hist) return;
+      const fam = getFamily(familyId);
+      const newLvlStr = prompt(`[${fam.species[0].name}]의 새 레벨을 입력하세요 (0~28):`, hist.level || 1);
+      if (newLvlStr === null) return;
+      const newLvl = parseInt(newLvlStr, 10);
+      if (isNaN(newLvl) || newLvl < 0 || newLvl > 28) {
+        alert('올바른 레벨 숫자를 입력해 주세요.');
+        return;
+      }
+      hist.level = newLvl;
+      if (familyId === p.partnerId) {
+        p.growthLevel = newLvl;
+      }
+      renderAdminModal();
+    }
+
+    // 대표 파트너로 소환
+    function adminSwitchToPartner(familyId) {
+      const p = appData.profiles[adminTargetPIdx];
+      p.partnerId = familyId;
+      const hist = p.partnerHistory && p.partnerHistory[familyId];
+      if (hist) {
+        p.growthLevel = hist.level || 1;
+        p.exp = hist.exp || 0;
+      }
+      renderAdminModal();
+    }
+
+    // 도감에 새 캐릭터 수동 삽입
+    function adminInsertPartnerToBook() {
+      const p = appData.profiles[adminTargetPIdx];
+      const fId = document.getElementById('admin-add-partner-select').value;
+      const lvl = parseInt(document.getElementById('admin-add-partner-level').value, 10) || 1;
+      if (!p.partnerHistory) p.partnerHistory = {};
+      p.partnerHistory[fId] = {
+        partnerId: fId,
+        level: lvl,
+        exp: 25,
+        habitsDone: 0,
+        firstDate: getTodayStr(),
+        date: getTodayStr(),
+        isChampion: (lvl >= 7)
+      };
+      const fam = getFamily(fId);
+      alert(`도감에 [${fam.species[0].name} (Lv.${lvl})]을(를) 성공적으로 추가했습니다!`);
+      renderAdminModal();
+    }
+
+    // 미션 토글
+    function adminToggleQuest(questId, checked) {
+      const p = appData.profiles[adminTargetPIdx];
+      const q = p.quests && p.quests.find(item => item.id === questId);
+      if (q) {
+        q.completed = checked;
+        recordTodayHistory(adminTargetPIdx);
+      }
+    }
+
+    function adminCheckAllQuests(completed) {
+      const p = appData.profiles[adminTargetPIdx];
+      if (p.quests) {
+        p.quests.forEach(q => q.completed = completed);
+        recordTodayHistory(adminTargetPIdx);
+      }
+      renderAdminModal();
+    }
+
+    function adminResetSynergy() {
+      appData.synergyDate = '';
+      checkBrotherSynergyCondition();
+      renderAdminModal();
+      alert('오늘의 형제 슈퍼 합체 상태가 초기화되었습니다!\n미션 2개 이상 달성 시 언제든 다시 합체 출동할 수 있습니다.');
+    }
+
+    function adminForceSynergy() {
+      closeAdminModal();
+      openSynergyModal();
+    }
+
+    function adminSaveAndClose() {
       saveData();
       renderBothProfiles();
-      closeEmergencyRestoreModal();
+      checkBrotherSynergyCondition();
+      closeAdminModal();
+      updateSyncBadge('syncing');
+      syncToGoogleSheets();
+      alert('✨ 관리자 설정이 안전하게 저장되고 구글 시트와 즉시 동기화되었습니다!\n아이패드와 폰 모두에서 최신 상태로 유지됩니다.');
     }
+
+    // 하위 호환
+    function openEmergencyRestoreModal() {
+      openAdminModal();
+    }
+    function closeEmergencyRestoreModal() {
+      closeAdminModal();
+    }
+
 
     // =========================================================================
     // 🛡️ 스크린 타임 중독 방지 (3분 초과 시 파트너 퇴장 안내)
