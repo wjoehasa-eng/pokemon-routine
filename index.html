@@ -3972,7 +3972,7 @@
         fetch(appData.sheetsSyncUrl, {
           method: 'POST',
           mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
           body: JSON.stringify(appData)
         })
         .then(() => {
@@ -4082,6 +4082,21 @@
       if (incoming.synergyDate) {
         local.synergyDate = incoming.synergyDate;
       }
+
+      // 5. 클라우드 타임머신 스냅샷 병합 (모든 기기 백업 공유)
+      const mergedMap = {};
+      const addSnap = (s) => { if (s && s.id && s.data) mergedMap[s.id] = s; };
+      (local.cloudSnapshots || []).forEach(addSnap);
+      (incoming.cloudSnapshots || []).forEach(addSnap);
+      try {
+        const localRaw = JSON.parse(localStorage.getItem('pokemon_routine_snapshots_v1') || '[]');
+        if (Array.isArray(localRaw)) localRaw.forEach(addSnap);
+      } catch(e){}
+      const mergedList = Object.values(mergedMap).sort((a, b) => (b.id > a.id ? 1 : -1)).slice(0, 5);
+      local.cloudSnapshots = mergedList;
+      try {
+        localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(mergedList));
+      } catch(e){}
 
       return local;
     }
@@ -5801,12 +5816,21 @@
       document.getElementById('sync-modal').classList.remove('active');
     }
 
-    function createManualSnapshot(note = "수동 저장") {
+    function getAllSnapshots() {
+      const map = {};
       try {
-        const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
-        let snapshots = [];
-        try { snapshots = JSON.parse(rawList); } catch(e){}
-        if (!Array.isArray(snapshots)) snapshots = [];
+        const localRaw = JSON.parse(localStorage.getItem('pokemon_routine_snapshots_v1') || '[]');
+        if (Array.isArray(localRaw)) localRaw.forEach(s => { if (s && s.id) map[s.id] = s; });
+      } catch(e){}
+      if (Array.isArray(appData.cloudSnapshots)) {
+        appData.cloudSnapshots.forEach(s => { if (s && s.id) map[s.id] = s; });
+      }
+      return Object.values(map).sort((a, b) => (b.id > a.id ? 1 : -1)).slice(0, 8);
+    }
+
+    function createManualSnapshot(note = "수동 저장", skipCloudPush = false) {
+      try {
+        let snapshots = getAllSnapshots();
 
         const now = new Date();
         const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
@@ -5820,21 +5844,30 @@
 
         const summary = `${p0 ? p0.name + '(' + name0 + ' Lv.' + (p0.growthLevel||0) + ')' : ''} · ${p1 ? p1.name + '(' + name1 + ' Lv.' + (p1.growthLevel||0) + ')' : ''}`;
 
+        const snapData = JSON.parse(JSON.stringify(appData));
+        delete snapData.cloudSnapshots;
+
         const snapshot = {
           id: 'snap_' + Date.now(),
           time: timeStr,
           note: note,
           summary: summary,
-          data: JSON.parse(JSON.stringify(appData))
+          data: snapData
         };
 
         snapshots.unshift(snapshot);
-        if (snapshots.length > 10) snapshots = snapshots.slice(0, 10); // 최근 최대 10개 롤링 보관
+        if (snapshots.length > 5) snapshots = snapshots.slice(0, 5); // 모든 기기 공유용 최근 5개 보관
 
+        appData.cloudSnapshots = snapshots;
         localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(snapshots));
+        if (!skipCloudPush) {
+          saveData();
+        } else {
+          saveData(true);
+        }
         renderSnapshotList();
         if (note === "수동 저장") {
-          alert(`현재 상태가 안전하게 백업되었습니다! (${timeStr})\n\n[${summary}]`);
+          alert(`현재 상태가 클라우드(모든 기기 공유)에 안전하게 백업되었습니다! (${timeStr})\n\n[${summary}]`);
         }
       } catch (e) {
         console.warn("Snapshot error:", e);
@@ -5846,11 +5879,9 @@
       const countEl = document.getElementById('snapshot-count-label');
       if (!container) return;
 
-      const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
-      let snapshots = [];
-      try { snapshots = JSON.parse(rawList); } catch(e){}
+      const snapshots = getAllSnapshots();
 
-      if (countEl) countEl.innerText = `${snapshots.length}개 보관 중`;
+      if (countEl) countEl.innerText = `${snapshots.length}개 클라우드 보관 중`;
       container.innerHTML = '';
 
       if (snapshots.length === 0) {
@@ -5880,9 +5911,7 @@
     }
 
     function restoreSnapshot(snapId) {
-      const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
-      let snapshots = [];
-      try { snapshots = JSON.parse(rawList); } catch(e){}
+      const snapshots = getAllSnapshots();
       const found = snapshots.find(s => s.id === snapId);
       if (!found || !found.data) {
         alert('백업 데이터를 찾을 수 없습니다.');
@@ -5890,20 +5919,21 @@
       }
 
       if (confirm(`선택한 시점(${found.time})으로 되돌리시겠습니까?\n\n[${found.summary}]`)) {
+        const preservedSnaps = appData.cloudSnapshots || snapshots;
         appData = JSON.parse(JSON.stringify(found.data));
+        appData.cloudSnapshots = preservedSnaps;
         saveData();
         renderBothProfiles();
-        alert('성공적으로 해당 시점으로 복원되었습니다! 🎉');
+        alert('성공적으로 해당 시점으로 복원되고 모든 기기에 동기화되었습니다! 🎉');
         closeSyncModal();
       }
     }
 
     function deleteSnapshot(snapId) {
-      const rawList = localStorage.getItem('pokemon_routine_snapshots_v1') || '[]';
-      let snapshots = [];
-      try { snapshots = JSON.parse(rawList); } catch(e){}
-      snapshots = snapshots.filter(s => s.id !== snapId);
+      const snapshots = getAllSnapshots().filter(s => s.id !== snapId);
+      appData.cloudSnapshots = snapshots;
       localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(snapshots));
+      saveData();
       renderSnapshotList();
     }
 
@@ -5958,9 +5988,9 @@
         alert('구글 시트 연동 URL이 설정되어 있지 않습니다.');
         return;
       }
+      createManualSnapshot("시트 저장", true);
       syncToGoogleSheets();
-      createManualSnapshot("시트 저장");
-      alert('현재 기기의 최신 데이터를 구글 시트에 안전하게 강제 저장했습니다!');
+      alert('현재 기기의 최신 데이터와 백업 스냅샷을 구글 시트에 안전하게 강제 저장했습니다!');
     }
 
     function forcePullFromSheets() {
@@ -5969,7 +5999,7 @@
         return;
       }
       if (confirm('구글 시트에서 최신 데이터를 가져와 덮어씌우시겠습니까?\n(만약을 위해 현재 상태가 자동으로 먼저 백업됩니다)')) {
-        createManualSnapshot("시트 불러오기 전 자동저장");
+        createManualSnapshot("시트 불러오기 전 자동저장", true);
         fetch(appData.sheetsSyncUrl)
           .then(res => res.json())
           .then(data => {
