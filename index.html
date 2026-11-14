@@ -3783,22 +3783,32 @@
       }
     }
 
+    let isFirstRemoteFetchPending = false;
+
     function loadData() {
+      let hasLocalBeforeLoad = false;
       try {
         const raw = localStorage.getItem('pokemon_routine_v9') || localStorage.getItem('pokemon_routine_v8');
         if (raw) {
           appData = JSON.parse(raw);
+          hasLocalBeforeLoad = true;
         } else {
           const old = localStorage.getItem('pokemon_routine_v7') || localStorage.getItem('pokemon_routine_v6');
           if (old) {
             const parsed = JSON.parse(old);
             if (parsed && parsed.profiles) {
               appData = parsed;
+              hasLocalBeforeLoad = true;
             }
           }
         }
       } catch (e) {
         console.warn("Storage load fallback:", e);
+      }
+
+      if (!hasLocalBeforeLoad) {
+        isFirstRemoteFetchPending = true;
+        appData.updatedAt = 0;
       }
 
       // 사용자가 요청한 최신 맞춤 미션으로 갱신 (레벨, 성장, 경험치, 도감은 100% 안전 보존!)
@@ -3884,7 +3894,7 @@
 
       recordTodayHistory(0);
       recordTodayHistory(1);
-      saveData();
+      saveData(true, !hasLocalBeforeLoad);
 
       if (appData.sheetsSyncUrl) {
         syncFromGoogleSheets();
@@ -3908,8 +3918,10 @@
       }
     }
 
-    function saveData(skipRemoteSync = false) {
-      appData.updatedAt = Date.now();
+    function saveData(skipRemoteSync = false, preserveTimestamp = false) {
+      if (!preserveTimestamp) {
+        appData.updatedAt = Date.now();
+      }
       recordTodayHistory(0);
       recordTodayHistory(1);
 
@@ -3924,9 +3936,32 @@
         console.warn("Storage save fallback:", e);
       }
 
-      if (!skipRemoteSync && appData.sheetsSyncUrl) {
+      if (!skipRemoteSync && !isFirstRemoteFetchPending && appData.sheetsSyncUrl) {
         syncToGoogleSheets();
       }
+    }
+
+    function calcProgressScore(dataObj) {
+      if (!dataObj || !Array.isArray(dataObj.profiles)) return 0;
+      return dataObj.profiles.reduce((acc, p) => {
+        const lvl = Number(p.growthLevel) || 0;
+        const done = Number(p.totalHabitsDone) || 0;
+        const exp = Number(p.exp) || 0;
+        const qDone = Array.isArray(p.quests) ? p.quests.filter(q => q.completed).length : 0;
+        const histDays = p.dailyHistory ? Object.keys(p.dailyHistory).length : 0;
+        const partners = p.partnerHistory ? Object.keys(p.partnerHistory).length : 0;
+        return acc + lvl * 10000 + done * 100 + qDone * 20 + exp + histDays * 50 + partners * 30;
+      }, 0);
+    }
+
+    function isBlankDefaultData(dataObj) {
+      if (!dataObj || !Array.isArray(dataObj.profiles)) return true;
+      return dataObj.profiles.every(p => {
+        const lvl = Number(p.growthLevel) || 0;
+        const done = Number(p.totalHabitsDone) || 0;
+        const qDone = Array.isArray(p.quests) ? p.quests.filter(q => q.completed).length : 0;
+        return lvl <= 1 && done === 0 && qDone === 0;
+      });
     }
 
     function syncToGoogleSheets() {
@@ -3958,7 +3993,21 @@
 
       const remoteTime = incoming.updatedAt || 0;
       const localTime = local.updatedAt || 0;
-      const isRemoteNewer = (remoteTime > localTime);
+      const localScore = calcProgressScore(local);
+      const remoteScore = calcProgressScore(incoming);
+      const remoteIsBlank = isBlankDefaultData(incoming);
+      const localIsBlank = isBlankDefaultData(local);
+
+      // 🛡️ [핵심 방어선]: 원격 시트가 빈 초기 데이터인데 로컬에 실제 진행 기록이 있으면 원격으로 덮어쓰지 않음!
+      if (remoteIsBlank && !localIsBlank) {
+        setTimeout(() => {
+          if (appData.sheetsSyncUrl) syncToGoogleSheets();
+        }, 400);
+        return local;
+      }
+
+      // 🛡️ [새 기기/새 PWA 첫 동기화]: 로컬이 빈 초기 상태이고 원격에 진행 기록이 있으면 원격을 전면 수용!
+      const isRemoteNewer = (localTime === 0) || (localIsBlank && !remoteIsBlank) || (remoteTime > localTime && remoteScore >= localScore);
 
       incoming.profiles.forEach((remoteP, idx) => {
         const localP = local.profiles && local.profiles[idx];
@@ -4055,6 +4104,7 @@
           })
           .then(data => {
             isSyncing = false;
+            isFirstRemoteFetchPending = false;
             if (data && data.profiles && Array.isArray(data.profiles) && data.profiles.length >= 2) {
               appData = mergeAppData(appData, data);
               saveData(true);
@@ -4065,6 +4115,7 @@
           })
           .catch(err => {
             isSyncing = false;
+            isFirstRemoteFetchPending = false;
             console.warn("Sheets sync fetch error:", err);
             if (!isSilent) updateSyncBadge('error');
           });
