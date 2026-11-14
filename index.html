@@ -2051,6 +2051,20 @@
       color: #C53030;
       border-color: #FED7D7;
     }
+    .sync-indicator-badge.warn {
+      background: #FFFAF0;
+      color: #C05621;
+      border-color: #FBD38D;
+    }
+    .app-version-chip {
+      font-size: 9.5px;
+      font-weight: 800;
+      background: rgba(0,0,0,0.28);
+      padding: 1px 5px;
+      border-radius: 8px;
+      margin-left: 3px;
+      letter-spacing: 0.2px;
+    }
 
     /* 🛠️ 마스터 관리자 모달 스타일 */
     .admin-modal-box {
@@ -2305,9 +2319,9 @@
     <!-- 상단 글로벌 바 -->
     <div class="header-bar">
       <div class="top-action-row">
-        <div class="app-title-badge">🐾 우리 집 루틴 다마고치</div>
+        <div class="app-title-badge">🐾 우리 집 루틴 다마고치 <span class="app-version-chip" id="app-version-chip">v9.4</span></div>
         <div class="top-sync-btns">
-          <span class="sync-indicator-badge" id="sync-status-badge" onclick="forcePullFromSheets(false)" title="터치하여 지금 즉시 새로고침 동기화">🟢 실시간 동기화 완료</span>
+          <span class="sync-indicator-badge syncing" id="sync-status-badge" onclick="manualSyncNow()" title="터치하면 지금 바로 시트와 동기화합니다">🔄 첫 동기화 확인 중...</span>
           <button class="top-btn synergy-top-btn" id="synergy-top-btn" onclick="openSynergyModal()" style="display: none; background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D); color: #FFFFFF; font-weight: 900; animation: synergyPulse 1.5s infinite alternate; box-shadow: 0 0 12px rgba(255, 107, 107, 0.6); border: none;">⚡ 슈퍼 합체 출동!</button>
           <button class="top-btn" onclick="openStatsModal()" style="background: linear-gradient(135deg, #3182CE, #2B6CB0); color: white; border: none; font-weight: 800;">📊 통계 리포트</button>
           <button class="top-btn" onclick="openSyncModal()" style="background: linear-gradient(135deg, #2F855A, #276749); color: white; border: none; font-weight: 800;">💾 백업/복원</button>
@@ -2572,6 +2586,18 @@
         </div>
         <input type="text" class="input-text" id="sheets-url-input" placeholder="Google Apps Script 웹 앱 URL" style="font-size: 11px; padding: 6px 8px; margin-bottom: 4px;">
         <button class="col-stats-btn" style="width: 100%; padding: 4px;" onclick="saveSheetsSyncUrl()">URL 설정 저장</button>
+        <div id="sheet-usage-label" style="font-size: 10.5px; color: #718096; margin-top: 6px; font-weight: 700;">시트 용량 계산 중...</div>
+      </div>
+
+      <!-- 4-1. 앱 버전 & 캐시 새로고침 -->
+      <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span id="app-version-label" style="font-size: 11px; font-weight: 800; color: #4A5568;">앱 버전 v9.4</span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button class="top-btn" onclick="forceUpdateApp()" style="background: #3182CE; color: white;">🔄 최신 버전 새로고침</button>
+            <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: #C05621; color: white;">🛡️ 응급 성장 복구</button>
+          </div>
+        </div>
       </div>
 
       <!-- 5. 텍스트 백업 코드 -->
@@ -3783,171 +3809,244 @@
       }
     }
 
-    let isFirstRemoteFetchPending = false;
+    // =========================================================================
+    // 🧬 v9.4 안정성 엔진 — 데이터 정규화 · 필드단위 병합 · 검증된 클라우드 저장
+    // =========================================================================
+    const APP_VERSION = 'v9.4';
+    const APP_BUILD = '2026-11-14 23:30';
+    const SCHEMA_VERSION = 4;
+    const SHEET_CELL_LIMIT = 50000;   // 구글 시트 단일 셀 최대 문자 수
+    const SHEET_BUDGET = 45000;       // 안전 예산 (셀 한도에서 5,000자 여유)
+    const AUTO_PULL_INTERVAL_MS = 12000;
+    const PULL_HOLD_AFTER_EDIT_MS = 5000;   // 방금 내가 누른 직후엔 원격 pull 보류
+    const PUSH_VERIFY_DELAY_MS = 1300;      // POST 후 시트 반영 확인까지 대기
+    const PUSH_MAX_ATTEMPTS = 3;
+    const FETCH_TIMEOUT_MS = 9000;
+    const SNAPSHOT_LIMIT = 5;
+    const QUEST_TAP_GUARD_MS = 400;         // 같은 미션 연타/두 손가락 방어
 
-    function loadData() {
-      let hasLocalBeforeLoad = false;
-      try {
-        const raw = localStorage.getItem('pokemon_routine_v9') || localStorage.getItem('pokemon_routine_v8');
-        if (raw) {
-          appData = JSON.parse(raw);
-          hasLocalBeforeLoad = true;
-        } else {
-          const old = localStorage.getItem('pokemon_routine_v7') || localStorage.getItem('pokemon_routine_v6');
-          if (old) {
-            const parsed = JSON.parse(old);
-            if (parsed && parsed.profiles) {
-              appData = parsed;
-              hasLocalBeforeLoad = true;
-            }
-          }
-        }
-      } catch (e) {
-        console.warn("Storage load fallback:", e);
+    let isFirstRemoteFetchPending = false;  // 첫 원격 확인 전에는 절대 시트를 덮어쓰지 않음
+    let isSyncing = false;
+    let isPushing = false;
+    let pushQueued = false;
+    let pendingPullAfterModal = false;
+    let lastLocalEditAt = 0;
+    let lastPullAt = 0;
+    let lastPushOkAt = 0;
+    let saveFailedAt = 0;
+    let saveRetryTimer = null;
+    let syncState = 'idle';
+    const BLOCKING_MODAL_IDS = ['admin-modal', 'manage-modal', 'select-modal'];
+
+    function toNum(v, fallback) {
+      const n = Number(v);
+      if (isFinite(n)) return n;
+      return (typeof fallback === 'number') ? fallback : 0;
+    }
+
+    function nextStamp() {
+      const now = Date.now();
+      const cur = (appData && toNum(appData.updatedAt, 0)) || 0;
+      return Math.max(now, cur + 1);
+    }
+
+    function sleep(ms) {
+      return new Promise(function (resolve) { setTimeout(resolve, ms); });
+    }
+
+    function hhmm() {
+      const d = new Date();
+      return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    }
+
+    function measureDoc(obj) {
+      try { return JSON.stringify(obj).length; } catch (e) { return 0; }
+    }
+
+    // -------------------------------------------------------------------------
+    // 1) 데이터 정규화 — 어떤 옛날/깨진 데이터가 들어와도 안전한 모양으로 맞춤
+    // -------------------------------------------------------------------------
+    function normalizeQuestList(list, fallback) {
+      let arr = Array.isArray(list) ? list.filter(function (q) { return q && (q.id || q.text || q.title); }) : null;
+      if (!arr || arr.length === 0) arr = JSON.parse(JSON.stringify(fallback || []));
+      return arr.map(function (q) {
+        return {
+          id: q.id || ('q_' + Math.random().toString(36).slice(2, 9)),
+          text: q.text || q.title || '미션',
+          exp: toNum(q.exp, 20),
+          berry: toNum(q.berry, 1),
+          completed: !!q.completed,
+          at: toNum(q.at, 0)
+        };
+      });
+    }
+
+    function normalizeProfile(p, idx) {
+      const fallbackQuests = (idx === 1) ? HEE_GYEOM_QUESTS : HEE_YOON_QUESTS;
+      const src = (p && typeof p === 'object') ? p : {};
+      const out = {
+        name: src.name || (idx === 1 ? '희겸' : '희윤'),
+        age: src.age || (idx === 1 ? '3세' : '7세'),
+        partnerId: src.partnerId || (idx === 1 ? 'excavator' : 'tyranno'),
+        growthLevel: Math.min(28, Math.max(0, toNum(src.growthLevel, 0))),
+        exp: Math.max(0, toNum(src.exp, 0)),
+        berries: Math.max(0, toNum(src.berries, 0)),
+        streak: Math.max(1, toNum(src.streak, 1)),
+        totalHabitsDone: Math.max(0, toNum(src.totalHabitsDone, 0)),
+        companionDays: Math.max(1, toNum(src.companionDays, 1)),
+        firstDate: src.firstDate || getTodayStr(),
+        lastDate: src.lastDate || getTodayStr(),
+        growthSpeed: src.growthSpeed || 'monthly',
+        couponEnabled: !!src.couponEnabled,
+        couponTitle: src.couponTitle || (idx === 1 ? '주말 뽀로로/타요 놀이터 가기!' : '주말 아빠와 보드게임 30분권!'),
+        showDays: src.showDays !== false,
+        levelAt: toNum(src.levelAt, 0),
+        stateAt: toNum(src.stateAt, 0),
+        questsAt: toNum(src.questsAt, 0),
+        partnerHistory: {},
+        quests: normalizeQuestList(src.quests, fallbackQuests),
+        dailyHistory: (src.dailyHistory && typeof src.dailyHistory === 'object') ? src.dailyHistory : {},
+        treasures: Array.isArray(src.treasures) ? src.treasures.filter(Boolean) : []
+      };
+
+      const hist = (src.partnerHistory && typeof src.partnerHistory === 'object') ? src.partnerHistory : {};
+      Object.keys(hist).forEach(function (pid) {
+        const h = hist[pid] || {};
+        const lvl = Math.min(28, Math.max(0, toNum(h.level, 0)));
+        out.partnerHistory[pid] = {
+          partnerId: pid,
+          level: lvl,
+          exp: Math.max(0, toNum(h.exp, 0)),
+          habitsDone: Math.max(0, toNum(h.habitsDone, 0)),
+          firstDate: h.firstDate || h.date || out.firstDate,
+          date: h.date || h.firstDate || out.firstDate,
+          isChampion: !!(h.isChampion || lvl >= 6)
+        };
+      });
+      ensurePartnerHistory(out);
+      return out;
+    }
+
+    function normalizeAppData(raw) {
+      const d = (raw && typeof raw === 'object') ? raw : {};
+      const srcProfiles = Array.isArray(d.profiles) ? d.profiles : [];
+      // 기기마다 프로필 순서가 뒤집혀도 이름으로 찾아 안전하게 매칭
+      function pick(name, fallbackIdx) {
+        const found = srcProfiles.find(function (p) { return p && String(p.name || '').indexOf(name) >= 0; });
+        return found || srcProfiles[fallbackIdx];
       }
-
-      if (!hasLocalBeforeLoad) {
-        isFirstRemoteFetchPending = true;
-        appData.updatedAt = 0;
+      let p0 = normalizeProfile(pick('희윤', 0), 0);
+      let p1 = normalizeProfile(pick('희겸', 1), 1);
+      if (srcProfiles.length === 1 && String(srcProfiles[0] && srcProfiles[0].name || '').indexOf('희겸') >= 0) {
+        p0 = normalizeProfile(null, 0);
       }
+      return {
+        activeProfile: (d.activeProfile === 1) ? 1 : 0,
+        sheetsSyncUrl: d.sheetsSyncUrl || DEFAULT_SHEETS_SYNC_URL,
+        profiles: [p0, p1],
+        questVersion: d.questVersion || '20261112_custom_v1',
+        synergyDate: d.synergyDate || '',
+        updatedAt: toNum(d.updatedAt, 0),
+        cloudSnapshots: Array.isArray(d.cloudSnapshots) ? d.cloudSnapshots.filter(function (s) { return s && s.id; }) : [],
+        schemaVersion: SCHEMA_VERSION
+      };
+    }
 
-      // 사용자가 요청한 최신 맞춤 미션으로 갱신 (레벨, 성장, 경험치, 도감은 100% 안전 보존!)
-      if (!appData.questVersion || appData.questVersion !== '20261112_custom_v1') {
-        if (appData.profiles && appData.profiles[0]) {
-          appData.profiles[0].quests = JSON.parse(JSON.stringify(HEE_YOON_QUESTS));
-        }
-        if (appData.profiles && appData.profiles[1]) {
-          appData.profiles[1].quests = JSON.parse(JSON.stringify(HEE_GYEOM_QUESTS));
-        }
-        appData.questVersion = '20261112_custom_v1';
-      }
+    // -------------------------------------------------------------------------
+    // 2) 하루 경계 처리 (자정 넘김) — 어제 체크는 어제 것으로 남기고 오늘만 새로 시작
+    // -------------------------------------------------------------------------
+    function buildDayRecord(p, dateStr) {
+      const quests = p.quests || [];
+      const completedCount = quests.filter(function (q) { return q.completed; }).length;
+      const totalCount = quests.length;
+      return {
+        date: dateStr,
+        completedCount: completedCount,
+        totalCount: totalCount,
+        rate: totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0,
+        quests: quests.map(function (q) { return { id: q.id, title: q.text || q.title || '', completed: !!q.completed }; })
+      };
+    }
 
-      // 구글 시트 실시간 동기화 URL 자동 기본 탑재
-      if (!appData.sheetsSyncUrl) {
-        appData.sheetsSyncUrl = DEFAULT_SHEETS_SYNC_URL;
-      }
+    function sameDayContent(a, b) {
+      if (!a || !b) return false;
+      if (toNum(a.completedCount, -1) !== toNum(b.completedCount, -2)) return false;
+      if (toNum(a.totalCount, -1) !== toNum(b.totalCount, -2)) return false;
+      if (toNum(a.rate, -1) !== toNum(b.rate, -2)) return false;
+      return JSON.stringify(a.quests || []) === JSON.stringify(b.quests || []);
+    }
 
+    function recordTodayHistory(pIdx) {
+      const p = appData.profiles && appData.profiles[pIdx];
+      if (!p) return;
+      if (!p.dailyHistory) p.dailyHistory = {};
       const today = getTodayStr();
-      appData.profiles.forEach(p => {
-        if (!p.lastDate) p.lastDate = today;
-        if (!p.firstDate) p.firstDate = today;
-        ensurePartnerHistory(p);
+      const rec = buildDayRecord(p, today);
+      const prev = p.dailyHistory[today];
+      if (prev && sameDayContent(prev, rec)) return;   // 내용이 같으면 시각만 새로 찍지 않음
+      rec.at = Date.now();
+      p.dailyHistory[today] = rec;
+    }
 
-        const d1 = new Date(p.firstDate);
-        const d2 = new Date(today);
-        const diffTime = Math.abs(d2 - d1);
-        p.companionDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1);
+    function startOfTodayMs() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.getTime();
+    }
 
-        if (p.lastDate !== today) {
-          if (!p.dailyHistory) p.dailyHistory = {};
-          if (!p.dailyHistory[p.lastDate] && p.quests) {
-            p.dailyHistory[p.lastDate] = {
-              date: p.lastDate,
-              completedCount: p.quests.filter(q => q.completed).length,
-              totalCount: p.quests.length,
-              rate: p.quests.length > 0 ? Math.round((p.quests.filter(q => q.completed).length / p.quests.length) * 100) : 0,
-              quests: p.quests.map(q => ({ id: q.id, title: q.text || q.title || '', completed: !!q.completed }))
-            };
-          }
-          const allDone = p.quests && p.quests.every(q => q.completed);
-          if (allDone) {
-            p.streak = (p.streak || 1) + 1;
-          }
-          if (p.quests) {
-            p.quests.forEach(q => q.completed = false);
-          }
-          p.lastDate = today;
+    function checkDateRollover(opts) {
+      const options = opts || {};
+      const today = getTodayStr();
+      const dayStart = startOfTodayMs();
+      let changed = false;
+
+      appData.profiles.forEach(function (p) {
+        if (!p.lastDate) { p.lastDate = today; changed = true; return; }
+        if (p.lastDate === today) return;
+
+        if (!p.dailyHistory) p.dailyHistory = {};
+        if (!p.dailyHistory[p.lastDate]) {
+          // 어제(마지막 사용일)의 상태를 그대로 기록으로 남깁니다.
+          p.dailyHistory[p.lastDate] = buildDayRecord(p, p.lastDate);
         }
+        const allDone = p.quests && p.quests.length > 0 && p.quests.every(function (q) { return q.completed; });
+        if (allDone) p.streak = Math.max(1, toNum(p.streak, 1)) + 1;
+
+        const stamp = nextStamp();
+        let touched = false;
+        (p.quests || []).forEach(function (q) {
+          // 오늘 0시 이전에 체크된 것만 해제 → 다른 기기가 오늘 이미 체크한 건 지우지 않음
+          if (q.completed && toNum(q.at, 0) < dayStart) {
+            q.completed = false;
+            q.at = stamp;
+            touched = true;
+          }
+        });
+        p.lastDate = today;
+        if (touched) p.questsAt = stamp;
+        changed = true;
       });
 
-      // 🚑 [1. 긴급 꼬마 티라노 & 포크레인 부화 복원 패치]
-      // 희윤이는 꼬마 티라노(Lv.1), 희겸이는 꼬마 포크레인(Lv.1)으로 즉시 건강하게 부화 복원!
-      const emergencyRestoredKey = 'pokemon_routine_hatch_tyranno_20261112_v5';
-      if (!localStorage.getItem(emergencyRestoredKey)) {
-        if (appData.profiles) {
-          if (appData.profiles[0]) {
-            appData.profiles[0].partnerId = 'tyranno';
-            appData.profiles[0].growthLevel = Math.max(1, appData.profiles[0].growthLevel || 1);
-            ensurePartnerHistory(appData.profiles[0]);
-          }
-          if (appData.profiles[1]) {
-            appData.profiles[1].partnerId = 'excavator';
-            appData.profiles[1].growthLevel = Math.max(1, appData.profiles[1].growthLevel || 1);
-            ensurePartnerHistory(appData.profiles[1]);
-          }
-          localStorage.setItem(emergencyRestoredKey, 'true');
-        }
+      if (changed) {
+        recordTodayHistory(0);
+        recordTodayHistory(1);
+        if (options.quiet) saveData(true, true);
+        else saveData();
       }
-
-      // 🛡️ [2. 알 회귀 방어선]: 만약 둘 다 레벨 0인데 이전에 부화한 백업본이 있다면 즉시 롤백 복원
-      if (appData.profiles && appData.profiles[0].growthLevel === 0 && appData.profiles[1].growthLevel === 0) {
-        const hatchedBackup = localStorage.getItem('pokemon_routine_hatched_backup');
-        if (hatchedBackup) {
-          try {
-            const parsed = JSON.parse(hatchedBackup);
-            if (parsed && parsed.profiles && (parsed.profiles[0].growthLevel >= 1 || parsed.profiles[1].growthLevel >= 1)) {
-              appData = parsed;
-            }
-          } catch(e){}
-        }
-      }
-
-      recordTodayHistory(0);
-      recordTodayHistory(1);
-      saveData(true, !hasLocalBeforeLoad);
-
-      if (appData.sheetsSyncUrl) {
-        syncFromGoogleSheets();
-      }
+      return changed;
     }
 
-    let isSyncing = false;
-
-    function updateSyncBadge(status, text) {
-      const badge = document.getElementById('sync-status-badge');
-      if (!badge) return;
-      if (status === 'syncing') {
-        badge.className = 'sync-indicator-badge syncing';
-        badge.innerText = '🔄 동기화 중...';
-      } else if (status === 'success') {
-        badge.className = 'sync-indicator-badge success';
-        badge.innerText = text || '🟢 실시간 동기화 완료';
-      } else if (status === 'error') {
-        badge.className = 'sync-indicator-badge error';
-        badge.innerText = '⚠️ 시트 동기화 지연';
-      }
-    }
-
-    function saveData(skipRemoteSync = false, preserveTimestamp = false) {
-      if (!preserveTimestamp) {
-        appData.updatedAt = Date.now();
-      }
-      recordTodayHistory(0);
-      recordTodayHistory(1);
-
-      try {
-        const serialized = JSON.stringify(appData);
-        localStorage.setItem('pokemon_routine_v9', serialized);
-        localStorage.setItem('pokemon_routine_backup_latest', serialized);
-        if (appData.profiles && (appData.profiles[0].growthLevel >= 1 || appData.profiles[1].growthLevel >= 1)) {
-          localStorage.setItem('pokemon_routine_hatched_backup', serialized);
-        }
-      } catch (e) {
-        console.warn("Storage save fallback:", e);
-      }
-
-      if (!skipRemoteSync && !isFirstRemoteFetchPending && appData.sheetsSyncUrl) {
-        syncToGoogleSheets();
-      }
-    }
-
+    // -------------------------------------------------------------------------
+    // 3) 필드 단위 병합 — 레벨 후퇴·미션 되살아남·파트너 갈라짐을 구조적으로 차단
+    // -------------------------------------------------------------------------
     function calcProgressScore(dataObj) {
       if (!dataObj || !Array.isArray(dataObj.profiles)) return 0;
-      return dataObj.profiles.reduce((acc, p) => {
-        const lvl = Number(p.growthLevel) || 0;
-        const done = Number(p.totalHabitsDone) || 0;
-        const exp = Number(p.exp) || 0;
-        const qDone = Array.isArray(p.quests) ? p.quests.filter(q => q.completed).length : 0;
+      return dataObj.profiles.reduce(function (acc, p) {
+        if (!p) return acc;
+        const lvl = toNum(p.growthLevel, 0);
+        const done = toNum(p.totalHabitsDone, 0);
+        const exp = toNum(p.exp, 0);
+        const qDone = Array.isArray(p.quests) ? p.quests.filter(function (q) { return q && q.completed; }).length : 0;
         const histDays = p.dailyHistory ? Object.keys(p.dailyHistory).length : 0;
         const partners = p.partnerHistory ? Object.keys(p.partnerHistory).length : 0;
         return acc + lvl * 10000 + done * 100 + qDone * 20 + exp + histDays * 50 + partners * 30;
@@ -3955,206 +4054,627 @@
     }
 
     function isBlankDefaultData(dataObj) {
-      if (!dataObj || !Array.isArray(dataObj.profiles)) return true;
-      return dataObj.profiles.every(p => {
-        const lvl = Number(p.growthLevel) || 0;
-        const done = Number(p.totalHabitsDone) || 0;
-        const qDone = Array.isArray(p.quests) ? p.quests.filter(q => q.completed).length : 0;
-        return lvl <= 1 && done === 0 && qDone === 0;
+      if (!dataObj || !Array.isArray(dataObj.profiles) || dataObj.profiles.length === 0) return true;
+      return dataObj.profiles.every(function (p) {
+        if (!p) return true;
+        const lvl = toNum(p.growthLevel, 0);
+        const done = toNum(p.totalHabitsDone, 0);
+        const hist = p.dailyHistory || {};
+        const histDone = Object.keys(hist).reduce(function (acc, d) {
+          return acc + toNum((hist[d] || {}).completedCount, 0);
+        }, 0);
+        const qDone = Array.isArray(p.quests) ? p.quests.filter(function (q) { return q && q.completed; }).length : 0;
+        return lvl <= 1 && done === 0 && histDone === 0 && qDone === 0;
       });
     }
 
-    function syncToGoogleSheets() {
-      if (!appData.sheetsSyncUrl) return;
-      appData.updatedAt = Date.now();
-      updateSyncBadge('syncing');
-      try {
-        fetch(appData.sheetsSyncUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-          body: JSON.stringify(appData)
-        })
-        .then(() => {
-          setTimeout(() => updateSyncBadge('success', '🟢 클라우드 저장 완료'), 400);
-        })
-        .catch(err => {
-          console.warn("Sheets sync send error:", err);
-          updateSyncBadge('error');
-        });
-      } catch (e) {}
+    function mergeSnapshotLists() {
+      const map = {};
+      for (let i = 0; i < arguments.length; i++) {
+        const list = arguments[i];
+        if (!Array.isArray(list)) continue;
+        list.forEach(function (s) { if (s && s.id && s.data) map[s.id] = s; });
+      }
+      return Object.values(map)
+        .sort(function (a, b) { return (a.id > b.id) ? -1 : ((a.id < b.id) ? 1 : 0); })
+        .slice(0, SNAPSHOT_LIMIT);
     }
 
-    // 🛡️ [스마트 시차 병합 엔진]: 타임스탬프 기반 양방향 최신 반영 + 레벨/미션 후퇴 절대 방지!
+    // 순수 병합 함수: local / incoming 을 건드리지 않고 새 객체를 돌려줍니다.
+    function mergeData(localRaw, incomingRaw) {
+      const L = normalizeAppData(localRaw);
+      const R = normalizeAppData(incomingRaw);
+      // 이 기기가 아직 아무것도 안 한 '빈 기본값'이고 원격에 실제 기록이 있으면 원격을 그대로 따릅니다.
+      //   (새 기기의 기본 열매 5개/기본 파트너가 시트 기록을 덮는 사고 방지)
+      const localWasBlank = isBlankDefaultData(localRaw);
+      const remoteHasData = !isBlankDefaultData(incomingRaw);
+      const trustRemote = localWasBlank && remoteHasData;
+      let changed = false;
+      const today = getTodayStr();
+
+      L.profiles.forEach(function (lp, idx) {
+        const rp = R.profiles[idx];
+        if (!rp) return;
+
+        // (1) 레벨·파트너는 '마지막으로 직접 바꾼 기기'(levelAt)의 값이 이깁니다.
+        //     경험치·열매는 (stateAt) 기준. 두 시각을 분리해
+        //     "오래된 기기가 미션 하나 눌렀다고 레벨이 되돌아가는" 사고를 막습니다.
+        const lLevelAt = toNum(lp.levelAt, 0);
+        const rLevelAt = toNum(rp.levelAt, 0);
+        const lState = toNum(lp.stateAt, 0);
+        const rState = toNum(rp.stateAt, 0);
+        const takeRemoteLevel = (rLevelAt > lLevelAt) || trustRemote;
+        const takeRemoteState = (rState > lState) || trustRemote;
+
+        if (takeRemoteLevel) {
+          if (lp.partnerId !== rp.partnerId || lp.growthLevel !== rp.growthLevel) changed = true;
+          lp.partnerId = rp.partnerId;
+          lp.growthLevel = rp.growthLevel;
+          if (takeRemoteState) lp.exp = rp.exp;
+        } else if (rLevelAt === lLevelAt && rp.growthLevel > lp.growthLevel) {
+          // 시각이 같으면(옛 버전 데이터) 레벨 후퇴만 방지
+          lp.growthLevel = rp.growthLevel;
+          lp.exp = rp.exp;
+          changed = true;
+        }
+
+        if (takeRemoteState) {
+          if (lp.exp !== rp.exp || lp.berries !== rp.berries) changed = true;
+          lp.exp = rp.exp;
+          lp.berries = rp.berries;
+          lp.growthSpeed = rp.growthSpeed;
+          lp.couponEnabled = rp.couponEnabled;
+          lp.couponTitle = rp.couponTitle;
+          lp.showDays = rp.showDays;
+        } else if (rState === lState) {
+          if (rp.exp > lp.exp) { lp.exp = rp.exp; changed = true; }
+          if (rp.berries > lp.berries) { lp.berries = rp.berries; changed = true; }
+        }
+        lp.levelAt = Math.max(lLevelAt, rLevelAt);
+        lp.stateAt = Math.max(lState, rState);
+        if (rp.totalHabitsDone > lp.totalHabitsDone) { lp.totalHabitsDone = rp.totalHabitsDone; changed = true; }
+        if (toNum(rp.streak, 1) > lp.streak) { lp.streak = toNum(rp.streak, 1); changed = true; }
+        if (rp.lastDate > lp.lastDate) { lp.lastDate = rp.lastDate; changed = true; }
+        if (rp.firstDate && rp.firstDate < lp.firstDate) { lp.firstDate = rp.firstDate; changed = true; }
+
+        // (2) 도감: 캐릭터별로 레벨/경험치는 높은 쪽, 시작일은 이른 쪽 보존
+        Object.keys(rp.partnerHistory).forEach(function (pid) {
+          const rh = rp.partnerHistory[pid];
+          const lh = lp.partnerHistory[pid];
+          if (!lh) { lp.partnerHistory[pid] = rh; changed = true; return; }
+          if (rh.level > lh.level) { lh.level = rh.level; lh.exp = rh.exp; changed = true; }
+          else if (rh.level === lh.level && rh.exp > lh.exp) { lh.exp = rh.exp; changed = true; }
+          if (rh.habitsDone > lh.habitsDone) { lh.habitsDone = rh.habitsDone; changed = true; }
+          if (rh.isChampion && !lh.isChampion) { lh.isChampion = true; changed = true; }
+          if (rh.firstDate && (!lh.firstDate || rh.firstDate < lh.firstDate)) { lh.firstDate = rh.firstDate; changed = true; }
+        });
+
+        // (3) 미션 정의: 더 최근에 손댄 쪽(questsAt)의 목록을 기준으로 삼고, 없는 미션은 합칩니다.
+        const lQAt = toNum(lp.questsAt, 0);
+        const rQAt = toNum(rp.questsAt, 0);
+        rp.quests.forEach(function (rq) {
+          const lq = lp.quests.find(function (q) { return q.id === rq.id; });
+          if (!lq) {
+            lp.quests.push({
+              id: rq.id, text: rq.text, exp: rq.exp, berry: rq.berry,
+              completed: rq.completed, at: rq.at
+            });
+            changed = true;
+            return;
+          }
+          if (rQAt > lQAt) {
+            if (lq.text !== rq.text || lq.exp !== rq.exp || lq.berry !== rq.berry) {
+              lq.text = rq.text; lq.exp = rq.exp; lq.berry = rq.berry; changed = true;
+            }
+          }
+          // (4) 체크 상태: 미션별 마지막 조작 시각(at) 승자. 같으면 '체크' 우선(성과 보존)
+          const la = toNum(lq.at, 0);
+          const ra = toNum(rq.at, 0);
+          if (ra > la) {
+            if (lq.completed !== rq.completed) changed = true;
+            lq.completed = rq.completed;
+            lq.at = ra;
+          } else if (ra === la && rq.completed && !lq.completed) {
+            lq.completed = true;
+            changed = true;
+          }
+        });
+        lp.questsAt = Math.max(lQAt, rQAt);
+
+        // (5) 지난 날짜 기록: 날짜별로 더 최근에 기록된 쪽
+        Object.keys(rp.dailyHistory).forEach(function (dt) {
+          if (dt === today) return;   // 오늘은 아래에서 미션 상태로 다시 계산
+          const rr = rp.dailyHistory[dt];
+          if (!rr) return;
+          const lr = lp.dailyHistory[dt];
+          if (!lr) { lp.dailyHistory[dt] = rr; changed = true; return; }
+          const ra = toNum(rr.at, 0);
+          const la = toNum(lr.at, 0);
+          let take = false;
+          if (ra > la) take = true;
+          else if (ra === la) take = toNum(rr.completedCount, 0) > toNum(lr.completedCount, 0);
+          if (take) { lp.dailyHistory[dt] = rr; changed = true; }
+        });
+
+        // (6) 오늘 기록은 병합된 미션 상태에서 다시 계산 → 기기별 숫자 어긋남 제거
+        const derived = buildDayRecord(lp, today);
+        const prevToday = lp.dailyHistory[today];
+        if (!prevToday || !sameDayContent(prevToday, derived)) {
+          derived.at = Date.now();
+          lp.dailyHistory[today] = derived;
+          changed = true;
+        }
+
+        // (7) 탐험 보물: id 기준 합집합
+        if (rp.treasures.length) {
+          const seen = {};
+          lp.treasures.forEach(function (t) { if (t && t.id) seen[t.id] = true; });
+          rp.treasures.forEach(function (t) {
+            if (t && t.id && !seen[t.id]) { lp.treasures.push(t); seen[t.id] = true; changed = true; }
+          });
+          if (lp.treasures.length > 80) { lp.treasures = lp.treasures.slice(0, 80); changed = true; }
+        }
+      });
+
+      // (8) 형제 합체: 더 최근 날짜 유지
+      if (R.synergyDate && R.synergyDate > L.synergyDate) { L.synergyDate = R.synergyDate; changed = true; }
+
+      // (9) 백업 스냅샷: id 합집합 (최신 5개)
+      const mergedSnaps = mergeSnapshotLists(L.cloudSnapshots, R.cloudSnapshots);
+      if (JSON.stringify(mergedSnaps) !== JSON.stringify(L.cloudSnapshots)) { L.cloudSnapshots = mergedSnaps; changed = true; }
+
+      L.updatedAt = Math.max(toNum(L.updatedAt, 0), toNum(R.updatedAt, 0));
+      return { data: L, changed: changed };
+    }
+
+    // 기존 호출부 호환용
     function mergeAppData(local, incoming) {
-      if (!incoming || !incoming.profiles || !Array.isArray(incoming.profiles) || incoming.profiles.length < 2) {
-        return local;
+      const result = mergeData(local, incoming);
+      appData = result.data;
+      try { localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(appData.cloudSnapshots || [])); } catch (e) {}
+      return appData;
+    }
+
+    // -------------------------------------------------------------------------
+    // 4) 저장 예산: 시트 단일 셀 50,000자 초과로 통째 실패하는 사고 예방
+    // -------------------------------------------------------------------------
+    function enforceStorageBudget(data) {
+      const d = data || appData;
+      let size = measureDoc(d);
+      if (!Array.isArray(d.cloudSnapshots)) d.cloudSnapshots = [];
+      let guard = 0;
+      while (size > SHEET_BUDGET && d.cloudSnapshots.length > 0 && guard < 20) {
+        d.cloudSnapshots.pop();          // 가장 오래된 백업부터 정리
+        size = measureDoc(d);
+        guard++;
+      }
+      if (size > SHEET_BUDGET) {
+        d.profiles.forEach(function (p) {
+          if (Array.isArray(p.treasures) && p.treasures.length > 30) p.treasures = p.treasures.slice(0, 30);
+        });
+        size = measureDoc(d);
+      }
+      return size;
+    }
+
+    // -------------------------------------------------------------------------
+    // 5) 로컬 저장
+    // -------------------------------------------------------------------------
+    function persistLocal() {
+      try {
+        const serialized = JSON.stringify(appData);
+        localStorage.setItem('pokemon_routine_v9', serialized);
+        localStorage.setItem('pokemon_routine_backup_latest', serialized);
+        if (appData.profiles[0].growthLevel >= 1 || appData.profiles[1].growthLevel >= 1) {
+          localStorage.setItem('pokemon_routine_hatched_backup', serialized);
+        }
+        return true;
+      } catch (e) {
+        console.warn('Local storage save failed, retry after trimming:', e);
+        try {
+          appData.cloudSnapshots = [];
+          localStorage.setItem('pokemon_routine_v9', JSON.stringify(appData));
+          setSyncBadge('warn', '⚠️ 기기 저장공간 부족 · 백업 정리함');
+          return true;
+        } catch (e2) {
+          console.warn('Local storage save failed again:', e2);
+          setSyncBadge('fail', '⚠️ 기기 저장 실패');
+          return false;
+        }
+      }
+    }
+
+    // saveData(skipRemoteSync, preserveTimestamp)
+    //  - 병합 결과를 저장할 때는 preserveTimestamp=true 로 시각을 건드리지 않습니다.
+    function saveData(skipRemoteSync, preserveTimestamp) {
+      if (!preserveTimestamp) {
+        appData.updatedAt = nextStamp();
+        lastLocalEditAt = Date.now();
+      }
+      recordTodayHistory(0);
+      recordTodayHistory(1);
+      persistLocal();
+
+      if (!skipRemoteSync && !isFirstRemoteFetchPending && appData.sheetsSyncUrl) {
+        requestCloudSave();
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // 6) 배지
+    // -------------------------------------------------------------------------
+    function setSyncBadge(state, text) {
+      syncState = state;
+      const badge = document.getElementById('sync-status-badge');
+      if (!badge) return;
+      const table = {
+        pulling: ['sync-indicator-badge syncing', '🔄 동기화 중...'],
+        pushing: ['sync-indicator-badge syncing', '☁️ 시트 저장 중...'],
+        ok: ['sync-indicator-badge success', text || '🟢 동기화 완료'],
+        warn: ['sync-indicator-badge warn', text || '⚠️ 시트 연결 지연 (기기에 저장됨)'],
+        fail: ['sync-indicator-badge error', text || '⚠️ 저장 실패 (재시도 필요)']
+      };
+      const row = table[state] || table.ok;
+      badge.className = row[0];
+      badge.innerText = row[1];
+      badge.title = '터치하면 지금 바로 시트와 동기화합니다';
+    }
+
+    // 기존 호출부 호환용
+    function updateSyncBadge(status, text) {
+      if (status === 'syncing') setSyncBadge('pulling');
+      else if (status === 'success') setSyncBadge('ok', text || '🟢 동기화 완료');
+      else if (status === 'error') setSyncBadge('fail');
+    }
+
+    function isBlockingModalOpen() {
+      try {
+        return BLOCKING_MODAL_IDS.some(function (id) {
+          const el = document.getElementById(id);
+          return !!(el && el.classList && el.classList.contains('active'));
+        });
+      } catch (e) { return false; }
+    }
+
+    // -------------------------------------------------------------------------
+    // 7) 구글 시트: 쓰기 → 1.3초 뒤 실제 반영 확인 (Read-after-Write)
+    // -------------------------------------------------------------------------
+    function sheetPostUrl() {
+      return appData.sheetsSyncUrl;
+    }
+
+    function sheetReadUrl() {
+      const base = appData.sheetsSyncUrl;
+      return base + (base.indexOf('?') >= 0 ? '&' : '?') + '_t=' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+    }
+
+    async function readStoredDoc() {
+      if (!appData.sheetsSyncUrl) throw new Error('no-url');
+      let controller = null;
+      let timer = null;
+      if (typeof AbortController !== 'undefined') {
+        controller = new AbortController();
+        timer = setTimeout(function () { controller.abort(); }, FETCH_TIMEOUT_MS);
+      }
+      try {
+        const res = await fetch(sheetReadUrl(), {
+          cache: 'no-store',
+          signal: controller ? controller.signal : undefined
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+      } finally {
+        if (timer) clearTimeout(timer);
+      }
+    }
+
+    async function postDoc(payload) {
+      // no-cors: 응답 내용은 볼 수 없으므로 '전송'만 담당. 성공 여부는 아래 GET으로 검증합니다.
+      return fetch(sheetPostUrl(), {
+        method: 'POST',
+        mode: 'no-cors',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: payload
+      });
+    }
+
+    async function verifyStored(sentAt) {
+      try {
+        const doc = await readStoredDoc();
+        if (!doc || !Array.isArray(doc.profiles)) return false;
+        return toNum(doc.updatedAt, 0) >= toNum(sentAt, 0);
+      } catch (e) {
+        return false;
+      }
+    }
+
+    let pushPromise = null;
+
+    function requestCloudSave() {
+      if (!appData.sheetsSyncUrl) return;
+      if (isFirstRemoteFetchPending) return;   // 첫 원격 확인 전에는 덮어쓰지 않음
+      if (isPushing) { pushQueued = true; return; }
+      pushToSheets();
+    }
+
+    // 저장 직전에 시트의 최신 내용과 한 번 더 합칩니다.
+    // (다른 기기가 방금 체크한 내용을 모른 채 덮어써서 지워지는 사고 방지)
+    async function preparePayloadWithRemoteMerge() {
+      if (!appData.sheetsSyncUrl) return;
+      try {
+        const doc = await readStoredDoc();
+        if (!doc || !Array.isArray(doc.profiles) || doc.profiles.length < 2) return;
+        const merged = mergeData(appData, doc);
+        if (merged.changed) {
+          appData = merged.data;
+          persistLocal();
+          if (!isBlockingModalOpen()) renderBothProfiles();
+        }
+        lastPullAt = Date.now();
+      } catch (e) {
+        console.warn('Pre-push merge skipped:', e);
+      }
+    }
+
+    async function pushToSheets() {
+      if (!appData.sheetsSyncUrl) return { ok: false, error: 'no-url' };
+      if (isFirstRemoteFetchPending) return { ok: false, error: 'waiting-first-pull' };
+      if (isPushing) { pushQueued = true; return { ok: false, error: 'busy' }; }
+      isPushing = true;
+      setSyncBadge('pushing');
+      let lastError = null;
+
+      try {
+        await preparePayloadWithRemoteMerge();
+        // 용량 예산을 먼저 맞춘 뒤(오래된 백업 정리) 저장 시각을 '지금'으로 확정
+        enforceStorageBudget(appData);
+        appData.updatedAt = nextStamp();
+        persistLocal();
+
+        for (let attempt = 1; attempt <= PUSH_MAX_ATTEMPTS; attempt++) {
+          const sentAt = appData.updatedAt;
+          const payload = JSON.stringify(appData);
+          if (payload.length > SHEET_CELL_LIMIT) {
+            lastError = 'too-large';
+            break;
+          }
+          try {
+            await postDoc(payload);
+          } catch (e) {
+            lastError = (e && e.message) || String(e);
+          }
+          await sleep(PUSH_VERIFY_DELAY_MS + (attempt - 1) * 500);
+          const ok = await verifyStored(sentAt);
+          if (ok) {
+            lastPushOkAt = Date.now();
+            saveFailedAt = 0;
+            setSyncBadge('ok', '🟢 시트 저장 확인 ' + hhmm());
+            return { ok: true, attempts: attempt, size: payload.length };
+          }
+          lastError = lastError || 'verify-failed';
+        }
+
+        saveFailedAt = Date.now();
+        setSyncBadge('fail', '⚠️ 저장 실패 (재시도 필요)');
+        scheduleSaveRetry();
+        return { ok: false, error: String(lastError || 'verify-failed') };
+      } finally {
+        isPushing = false;
+        if (pushQueued) {
+          pushQueued = false;
+          setTimeout(function () { pushToSheets(); }, 300);
+        }
+      }
+    }
+
+    function scheduleSaveRetry() {
+      if (saveRetryTimer) return;
+      saveRetryTimer = setTimeout(async function () {
+        saveRetryTimer = null;
+        if (!saveFailedAt) return;
+        if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+          saveRetryTimer = setTimeout(scheduleSaveRetry, 60000);
+          return;
+        }
+        const res = await pushToSheets();
+        if (!res.ok) scheduleSaveRetry();
+      }, 30000);
+    }
+
+    // 기존 이름 호환
+    function syncToGoogleSheets() {
+      return pushToSheets();
+    }
+
+    // -------------------------------------------------------------------------
+    // 8) 구글 시트 → 이 기기 (병합)
+    // -------------------------------------------------------------------------
+    async function pullFromSheets(opts) {
+      const options = opts || {};
+      if (!appData.sheetsSyncUrl) return { ok: false, error: 'no-url' };
+      if (isSyncing) return { ok: false, error: 'busy' };
+      if (isPushing) return { ok: false, error: 'pushing' };
+
+      if (!options.force) {
+        if (!isFirstRemoteFetchPending && (Date.now() - lastLocalEditAt) < PULL_HOLD_AFTER_EDIT_MS) {
+          return { ok: false, error: 'hold-after-edit' };
+        }
+        if (isBlockingModalOpen()) {
+          pendingPullAfterModal = true;
+          return { ok: false, error: 'modal-open' };
+        }
       }
 
-      const remoteTime = incoming.updatedAt || 0;
-      const localTime = local.updatedAt || 0;
-      const localScore = calcProgressScore(local);
-      const remoteScore = calcProgressScore(incoming);
-      const remoteIsBlank = isBlankDefaultData(incoming);
-      const localIsBlank = isBlankDefaultData(local);
+      isSyncing = true;
+      if (!options.silent) setSyncBadge('pulling');
 
-      // 🛡️ [핵심 방어선]: 원격 시트가 빈 초기 데이터인데 로컬에 실제 진행 기록이 있으면 원격으로 덮어쓰지 않음!
-      if (remoteIsBlank && !localIsBlank) {
-        setTimeout(() => {
-          if (appData.sheetsSyncUrl) syncToGoogleSheets();
-        }, 400);
-        return local;
+      try {
+        const doc = await readStoredDoc();
+        isSyncing = false;
+        lastPullAt = Date.now();
+
+        if (!doc || !Array.isArray(doc.profiles) || doc.profiles.length < 2) {
+          setSyncBadge('warn', '⚠️ 시트에 기록이 없어요 (기기 기록 유지)');
+          return { ok: false, error: 'invalid-remote' };
+        }
+
+        isFirstRemoteFetchPending = false;
+        const result = mergeData(appData, doc);
+        appData = result.data;
+
+        if (result.changed) {
+          persistLocal();
+          if (!isBlockingModalOpen()) renderBothProfiles();
+          // 병합으로 새로 합쳐진 내용은 시트에도 반영해 기기 간 수렴을 보장
+          requestCloudSave();
+        }
+        setSyncBadge('ok', '🟢 동기화 완료 ' + hhmm());
+        return { ok: true, changed: result.changed };
+      } catch (e) {
+        isSyncing = false;
+        console.warn('Sheets pull error:', e);
+        setSyncBadge('warn', '⚠️ 시트 연결 지연 (기기에 저장됨)');
+        return { ok: false, error: (e && e.message) || String(e) };
+      }
+    }
+
+    // 기존 이름 호환
+    function syncFromGoogleSheets(isSilent) {
+      return pullFromSheets({ silent: !!isSilent });
+    }
+
+    async function manualSyncNow() {
+      const res = await pullFromSheets({ force: true });
+      if (res.ok) setSyncBadge('ok', '🟢 동기화 완료 ' + hhmm());
+      else if (res.error === 'invalid-remote') setSyncBadge('warn', '⚠️ 시트에 기록이 없어요');
+      else setSyncBadge('warn', '⚠️ 시트 연결 지연 (기기에 저장됨)');
+    }
+
+    // -------------------------------------------------------------------------
+    // 9) 데이터 불러오기(부트)
+    // -------------------------------------------------------------------------
+    function loadData() {
+      let raw = null;
+      let hasLocalBeforeLoad = false;
+      const keys = ['pokemon_routine_v9', 'pokemon_routine_v8', 'pokemon_routine_v7', 'pokemon_routine_v6'];
+      for (let i = 0; i < keys.length; i++) {
+        try { raw = localStorage.getItem(keys[i]); } catch (e) { raw = null; }
+        if (raw) break;
       }
 
-      // 🛡️ [새 기기/새 PWA 첫 동기화]: 로컬이 빈 초기 상태이고 원격에 진행 기록이 있으면 원격을 전면 수용!
-      const isRemoteNewer = (localTime === 0) || (localIsBlank && !remoteIsBlank) || (remoteTime > localTime && remoteScore >= localScore);
+      let parsed = null;
+      if (raw) {
+        try { parsed = JSON.parse(raw); } catch (e) { console.warn('Storage parse fallback:', e); }
+      }
 
-      incoming.profiles.forEach((remoteP, idx) => {
-        const localP = local.profiles && local.profiles[idx];
-        if (!localP) return;
+      if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+        appData = normalizeAppData(parsed);
+        hasLocalBeforeLoad = true;
+      } else {
+        appData = normalizeAppData({
+          profiles: [{
+            name: '희윤', age: '7세', partnerId: 'tyranno', growthLevel: 1, exp: 25, berries: 5,
+            streak: 1, totalHabitsDone: 0, companionDays: 1, firstDate: getTodayStr(), lastDate: getTodayStr()
+          }, {
+            name: '희겸', age: '3세', partnerId: 'excavator', growthLevel: 0, exp: 0, berries: 3,
+            streak: 1, totalHabitsDone: 0, companionDays: 1, firstDate: getTodayStr(), lastDate: getTodayStr()
+          }]
+        });
+        appData.updatedAt = 0;
+        isFirstRemoteFetchPending = true;
+      }
 
-        const remoteLvl = Number(remoteP.growthLevel) || 0;
-        const localLvl = Number(localP.growthLevel) || 0;
+      // 구글 시트 실시간 동기화 URL 자동 기본 탑재
+      if (!appData.sheetsSyncUrl) appData.sheetsSyncUrl = DEFAULT_SHEETS_SYNC_URL;
 
-        if (isRemoteNewer) {
-          // 원격이 더 최신이면 원격의 레벨, 경험치, 사과 수량, 파트너 정확히 반영
-          localP.growthLevel = remoteLvl;
-          localP.exp = remoteP.exp || 0;
-          if (typeof remoteP.berries === 'number') {
-            localP.berries = remoteP.berries;
-          }
-          if (remoteP.partnerId) {
-            localP.partnerId = remoteP.partnerId;
-          }
-          if (remoteP.partnerHistory) {
-            localP.partnerHistory = remoteP.partnerHistory;
-          }
-        } else {
-          // 로컬이 최신이거나 같을 때는 레벨 후퇴만 방지
-          if (remoteLvl > localLvl) {
-            localP.growthLevel = remoteLvl;
-            localP.exp = remoteP.exp || 0;
-          } else if (remoteLvl === localLvl) {
-            localP.exp = Math.max(localP.exp || 0, remoteP.exp || 0);
-          }
-          if (typeof localP.berries !== 'number' || isNaN(localP.berries)) {
-            localP.berries = (typeof remoteP.berries === 'number') ? remoteP.berries : 0;
-          }
-          if (remoteP.partnerHistory) {
-            if (!localP.partnerHistory) localP.partnerHistory = {};
-            Object.keys(remoteP.partnerHistory).forEach(pid => {
-              if (!localP.partnerHistory[pid]) {
-                localP.partnerHistory[pid] = remoteP.partnerHistory[pid];
+      // 사용자가 요청한 최신 맞춤 미션 반영 (레벨·성장·도감은 그대로 보존)
+      if (appData.questVersion !== '20261112_custom_v1') {
+        appData.profiles[0].quests = normalizeQuestList(HEE_YOON_QUESTS, HEE_YOON_QUESTS);
+        appData.profiles[1].quests = normalizeQuestList(HEE_GYEOM_QUESTS, HEE_GYEOM_QUESTS);
+        appData.questVersion = '20261112_custom_v1';
+      }
+
+      // 🛡️ 알 회귀 방어선: 로컬이 정말로 비어 있을 때만 백업본에서 되살립니다.
+      //   (예전의 '무조건 파트너를 티라노/포크레인으로 되돌리는' 일회성 패치는 제거)
+      if (appData.profiles[0].growthLevel === 0 && appData.profiles[1].growthLevel === 0) {
+        try {
+          const hbRaw = localStorage.getItem('pokemon_routine_hatched_backup');
+          if (hbRaw) {
+            const rb = normalizeAppData(JSON.parse(hbRaw));
+            const stamp = Date.now();
+            rb.profiles.forEach(function (rp, i) {
+              const lp = appData.profiles[i];
+              if (lp && lp.growthLevel === 0 && rp.growthLevel >= 1) {
+                lp.growthLevel = rp.growthLevel;
+                lp.exp = rp.exp;
+                lp.berries = Math.max(lp.berries, rp.berries);
+                lp.partnerId = rp.partnerId;
+                lp.partnerHistory = rp.partnerHistory;
+                lp.totalHabitsDone = Math.max(lp.totalHabitsDone, rp.totalHabitsDone);
+                lp.stateAt = stamp;
               }
             });
           }
-        }
+        } catch (e) { console.warn('Hatched backup recovery failed:', e); }
+      }
 
-        // 부화 안전 보장
-        if (localLvl >= 1 && localP.growthLevel < 1) {
-          localP.growthLevel = localLvl;
-        }
-
-        localP.streak = Math.max(localP.streak || 1, remoteP.streak || 1);
-        localP.totalHabitsDone = Math.max(localP.totalHabitsDone || 0, remoteP.totalHabitsDone || 0);
-
-        // 3. 미션 상태 병합: 당일 체크는 한쪽이라도 체크했으면 체크 상태 보존
-        if (localP.quests && remoteP.quests) {
-          localP.quests.forEach(lq => {
-            const rq = remoteP.quests.find(q => q.id === lq.id || (q.text && q.text === lq.text));
-            if (rq && rq.completed) {
-              lq.completed = true;
-            }
-          });
-        }
-
-        // 4. 일일 통계 히스토리 병합
-        if (remoteP.dailyHistory) {
-          if (!localP.dailyHistory) localP.dailyHistory = {};
-          Object.keys(remoteP.dailyHistory).forEach(dt => {
-            if (!localP.dailyHistory[dt]) {
-              localP.dailyHistory[dt] = remoteP.dailyHistory[dt];
-            }
-          });
-        }
+      appData.profiles.forEach(function (p) {
+        ensurePartnerHistory(p);
+        const d1 = new Date(p.firstDate);
+        const d2 = new Date(getTodayStr());
+        p.companionDays = Math.max(1, Math.ceil(Math.abs(d2 - d1) / (1000 * 60 * 60 * 24)) + 1);
       });
 
-      if (incoming.synergyDate) {
-        local.synergyDate = incoming.synergyDate;
-      }
+      // 자정을 넘겨 앱이 켜져 있던 경우도 여기서 정리
+      checkDateRollover({ quiet: true });
+      recordTodayHistory(0);
+      recordTodayHistory(1);
+      saveData(true, true);   // 원격 push 없이, 시각도 건드리지 않고 저장만
 
-      // 5. 클라우드 타임머신 스냅샷 병합 (모든 기기 백업 공유)
-      const mergedMap = {};
-      const addSnap = (s) => { if (s && s.id && s.data) mergedMap[s.id] = s; };
-      (local.cloudSnapshots || []).forEach(addSnap);
-      (incoming.cloudSnapshots || []).forEach(addSnap);
-      try {
-        const localRaw = JSON.parse(localStorage.getItem('pokemon_routine_snapshots_v1') || '[]');
-        if (Array.isArray(localRaw)) localRaw.forEach(addSnap);
-      } catch(e){}
-      const mergedList = Object.values(mergedMap).sort((a, b) => (b.id > a.id ? 1 : -1)).slice(0, 5);
-      local.cloudSnapshots = mergedList;
-      try {
-        localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(mergedList));
-      } catch(e){}
-
-      return local;
+      broadcastVersion();
+      if (appData.sheetsSyncUrl) pullFromSheets({ silent: false });
     }
 
-    // ⚡ 고속 동기화: 캐시 방지 파라미터 + no-store 헤더로 0.5초 쾌속 응답
-    function syncFromGoogleSheets(isSilent = false) {
+    function broadcastVersion() {
+      try {
+        const chip = document.getElementById('app-version-chip');
+        if (chip) chip.innerText = APP_VERSION;
+        const label = document.getElementById('app-version-label');
+        if (label) label.innerText = '앱 버전 ' + APP_VERSION + ' · 빌드 ' + APP_BUILD;
+      } catch (e) {}
+    }
+
+    // -------------------------------------------------------------------------
+    // 10) 자동 동기화 루프 (12초) — 날짜 경계·모달·직후 조작을 모두 고려
+    // -------------------------------------------------------------------------
+    function tickSync() {
       if (!appData.sheetsSyncUrl) return;
-      if (isSyncing) return;
-      isSyncing = true;
-      if (!isSilent) updateSyncBadge('syncing');
-
-      const cacheBuster = '_t=' + Date.now();
-      const url = appData.sheetsSyncUrl + (appData.sheetsSyncUrl.includes('?') ? '&' : '?') + cacheBuster;
-
-      try {
-        fetch(url, { cache: 'no-store' })
-          .then(res => {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            return res.json();
-          })
-          .then(data => {
-            isSyncing = false;
-            isFirstRemoteFetchPending = false;
-            if (data && data.profiles && Array.isArray(data.profiles) && data.profiles.length >= 2) {
-              appData = mergeAppData(appData, data);
-              saveData(true);
-              renderBothProfiles();
-              checkBrotherSynergyCondition();
-              updateSyncBadge('success', '🟢 실시간 동기화 완료');
-            }
-          })
-          .catch(err => {
-            isSyncing = false;
-            isFirstRemoteFetchPending = false;
-            console.warn("Sheets sync fetch error:", err);
-            if (!isSilent) updateSyncBadge('error');
-          });
-      } catch (e) {
-        isSyncing = false;
+      if (checkDateRollover()) return;
+      if (typeof document !== 'undefined' && document.visibilityState && document.visibilityState !== 'visible') return;
+      if (isPushing || isSyncing) return;
+      if (isBlockingModalOpen()) { pendingPullAfterModal = true; return; }
+      if (pendingPullAfterModal) {
+        pendingPullAfterModal = false;
+        pullFromSheets({ silent: true });
+        return;
       }
+      pullFromSheets({ silent: true });
     }
 
-    // 🔄 자동 백그라운드 동기화 (기기 전환, 화면 켜짐, 주기적 감지)
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && appData.sheetsSyncUrl) {
-        syncFromGoogleSheets(false);
-      }
-    });
-    window.addEventListener('focus', () => {
-      if (appData.sheetsSyncUrl) {
-        syncFromGoogleSheets(false);
-      }
-    });
-    setInterval(() => {
-      if (document.visibilityState === 'visible' && appData.sheetsSyncUrl && !isSyncing) {
-        syncFromGoogleSheets(true);
-      }
-    }, 12000);
+    if (typeof document !== 'undefined' && document.addEventListener) {
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') tickSync();
+      });
+    }
+    if (typeof window !== 'undefined' && window.addEventListener) {
+      window.addEventListener('focus', function () { tickSync(); });
+      window.addEventListener('online', function () {
+        if (saveFailedAt) pushToSheets();
+        else tickSync();
+      });
+    }
+    setInterval(tickSync, AUTO_PULL_INTERVAL_MS);
 
     // 오디오
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -5393,18 +5913,32 @@
 
     function switchPortraitTab(idx) {
       appData.activeProfile = idx;
-      saveData();
+      saveData(true, true);   // 화면 전환은 기록 변경이 아니므로 시트로 밀지 않음
       renderBothProfiles();
       speak(idx, "안녕! 오늘도 힘차게 해보자! 🌟");
     }
 
+    let lastQuestTap = { key: '', at: 0 };
+
     function handleQuestClick(pIdx, questId) {
       const p = appData.profiles[pIdx];
+      if (!p || !Array.isArray(p.quests)) return;
       const q = p.quests.find(item => item.id === questId);
       if (!q) return;
 
+      // ⚡ 연타·두 손가락 동시 터치 방어: 같은 미션을 400ms 안에 또 누르면 무시
+      const key = pIdx + ':' + questId;
+      const now = Date.now();
+      if (lastQuestTap.key === key && (now - lastQuestTap.at) < QUEST_TAP_GUARD_MS) return;
+      lastQuestTap = { key: key, at: now };
+
+      // 자정을 넘겨 앱이 켜져 있었어도 오늘 미션부터 시작되게
+      checkDateRollover();
+
+      const stamp = nextStamp();
       if (!q.completed) {
         q.completed = true;
+        q.at = stamp;
         playDing();
         fireConfetti(pIdx);
         p.berries = (p.berries || 0) + (q.berry || 1);
@@ -5413,12 +5947,15 @@
         addExp(pIdx, q.exp);
       } else {
         q.completed = false;
+        q.at = stamp;
         p.exp = Math.max(0, p.exp - q.exp);
         p.berries = Math.max(0, (p.berries || 0) - (q.berry || 1));
         p.totalHabitsDone = Math.max(0, (p.totalHabitsDone || 1) - 1);
         speak(pIdx, "미션을 다시 도전 상태로 바꿨어!");
       }
 
+      p.questsAt = stamp;
+      p.stateAt = stamp;   // 열매·경험치가 함께 바뀌므로 성장 묶음도 이 기기가 최신
       recordTodayHistory(pIdx);
       ensurePartnerHistory(p);
       saveData();
@@ -5428,14 +5965,28 @@
 
     function addExp(pIdx, amount) {
       const p = appData.profiles[pIdx];
-      p.exp += amount;
-      const currentStage = getStageSpec(p.growthLevel || 0, p);
+      if (!p) return;
+      const gain = Math.max(0, toNum(amount, 0));
+      p.exp = Math.max(0, toNum(p.exp, 0)) + gain;
 
-      if (p.exp >= currentStage.maxExp) {
-        p.exp -= currentStage.maxExp;
+      const maxLevel = GROWTH_STAGES.length - 1;
+      let leveled = false;
+      let guard = 0;
+      // 경험치가 한 번에 여러 칸을 넘겨도 레벨이 순서대로 오르도록 반복 처리
+      while (guard < 40) {
+        guard++;
+        if ((p.growthLevel || 0) >= maxLevel) break;
+        const stage = getStageSpec(p.growthLevel || 0, p);
+        if (p.exp < stage.maxExp) break;
+        p.exp -= stage.maxExp;
         p.growthLevel = (p.growthLevel || 0) + 1;
-        triggerStageUp(pIdx, p.growthLevel);
+        leveled = true;
       }
+      if ((p.growthLevel || 0) >= maxLevel) {
+        const topStage = getStageSpec(maxLevel, p);
+        if (p.exp >= topStage.maxExp) p.exp = topStage.maxExp - 1;  // 최고 단계에서 경험치 폭주 방지
+      }
+      if (leveled) triggerStageUp(pIdx, p.growthLevel);
       ensurePartnerHistory(p);
     }
 
@@ -5538,8 +6089,10 @@
         speak(pIdx, "열매가 부족해! 미션을 완료해줘! 🍎");
         return;
       }
+      checkDateRollover();
       p.berries--;
       playNom();
+      p.stateAt = nextStamp();
       addExp(pIdx, 20);
       speak(pIdx, "냠냠! 맛있다! 힘이 불끈불끈! (+20 EXP 쑥쑥!) ❤️");
       saveData();
@@ -5692,6 +6245,7 @@
       p.growthLevel = saved ? saved.level : 1;
       p.exp = saved ? saved.exp : 0;
 
+      p.levelAt = nextStamp();
       saveData();
       renderProfile(targetHofPIdx);
       closeHallOfFame();
@@ -5792,6 +6346,7 @@
         speak(targetPartnerSelectPIdx, "새로운 알이 도착했어! 정성껏 함께하자! 🥚");
       }
 
+      p.levelAt = nextStamp();
       ensurePartnerHistory(p);
       saveData();
       renderProfile(targetPartnerSelectPIdx);
@@ -5800,6 +6355,7 @@
 
     function closeSelectModal() {
       document.getElementById('select-modal').classList.remove('active');
+      resumeDeferredPull();
     }
 
     // =========================================================================
@@ -5808,6 +6364,7 @@
     function openSyncModal() {
       document.getElementById('sheets-url-input').value = appData.sheetsSyncUrl || '';
       document.getElementById('backup-code-text').value = '';
+      broadcastVersion();
       renderSnapshotList();
       document.getElementById('sync-modal').classList.add('active');
     }
@@ -5856,10 +6413,16 @@
         };
 
         snapshots.unshift(snapshot);
-        if (snapshots.length > 5) snapshots = snapshots.slice(0, 5); // 모든 기기 공유용 최근 5개 보관
+        snapshots = snapshots.slice(0, SNAPSHOT_LIMIT); // 모든 기기 공유용 최근 5개 보관
 
         appData.cloudSnapshots = snapshots;
-        localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(snapshots));
+        // ⚠️ 시트 단일 셀 50,000자 한도: 넘치면 오래된 백업부터 자동 정리
+        enforceStorageBudget(appData);
+        try {
+          localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(appData.cloudSnapshots));
+        } catch (storageError) {
+          console.warn('Snapshot storage full:', storageError);
+        }
         if (!skipCloudPush) {
           saveData();
         } else {
@@ -5882,6 +6445,13 @@
       const snapshots = getAllSnapshots();
 
       if (countEl) countEl.innerText = `${snapshots.length}개 클라우드 보관 중`;
+      const usageEl = document.getElementById('sheet-usage-label');
+      if (usageEl) {
+        const used = measureDoc(appData);
+        const pct = Math.min(100, Math.round((used / SHEET_BUDGET) * 100));
+        usageEl.innerText = `시트 용량 ${used.toLocaleString()} / ${SHEET_BUDGET.toLocaleString()}자 (${pct}%)`;
+        usageEl.style.color = (used > SHEET_BUDGET) ? '#C53030' : (pct > 80 ? '#C05621' : '#718096');
+      }
       container.innerHTML = '';
 
       if (snapshots.length === 0) {
@@ -5920,8 +6490,16 @@
 
       if (confirm(`선택한 시점(${found.time})으로 되돌리시겠습니까?\n\n[${found.summary}]`)) {
         const preservedSnaps = appData.cloudSnapshots || snapshots;
-        appData = JSON.parse(JSON.stringify(found.data));
+        appData = normalizeAppData(JSON.parse(JSON.stringify(found.data)));
         appData.cloudSnapshots = preservedSnaps;
+        // 복원한 상태가 다른 기기의 옛 기록에 밀리지 않도록 '지금' 시점으로 확정
+        const stamp = nextStamp();
+        appData.profiles.forEach(p => {
+          p.stateAt = stamp;
+          p.levelAt = stamp;
+          p.questsAt = stamp;
+          (p.quests || []).forEach(q => { q.at = stamp; });
+        });
         saveData();
         renderBothProfiles();
         alert('성공적으로 해당 시점으로 복원되고 모든 기기에 동기화되었습니다! 🎉');
@@ -5932,7 +6510,7 @@
     function deleteSnapshot(snapId) {
       const snapshots = getAllSnapshots().filter(s => s.id !== snapId);
       appData.cloudSnapshots = snapshots;
-      localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(snapshots));
+      try { localStorage.setItem('pokemon_routine_snapshots_v1', JSON.stringify(snapshots)); } catch (e) {}
       saveData();
       renderSnapshotList();
     }
@@ -5965,7 +6543,14 @@
           const parsed = JSON.parse(evt.target.result);
           if (parsed && parsed.profiles && Array.isArray(parsed.profiles)) {
             if (confirm('선택한 파일의 백업 데이터로 복원하시겠습니까?')) {
-              appData = parsed;
+              appData = normalizeAppData(parsed);
+              const stamp = nextStamp();
+              appData.profiles.forEach(p => {
+                p.stateAt = stamp;
+                p.levelAt = stamp;
+                p.questsAt = stamp;
+                (p.quests || []).forEach(q => { q.at = stamp; });
+              });
               saveData();
               renderBothProfiles();
               createManualSnapshot("파일 복원");
@@ -5983,37 +6568,60 @@
       e.target.value = '';
     }
 
-    function forcePushToSheets() {
+    async function forcePushToSheets() {
       if (!appData.sheetsSyncUrl) {
         alert('구글 시트 연동 URL이 설정되어 있지 않습니다.');
         return;
       }
+      if (!confirm('이 기기의 현재 상태를 구글 시트의 기준 기록으로 저장할까요?\n(다른 기기는 이 기록을 따라가게 됩니다)')) return;
       createManualSnapshot("시트 저장", true);
-      syncToGoogleSheets();
-      alert('현재 기기의 최신 데이터와 백업 스냅샷을 구글 시트에 안전하게 강제 저장했습니다!');
+      isFirstRemoteFetchPending = false;   // 사용자가 직접 확정 저장을 선택함
+      appData.updatedAt = nextStamp();
+      persistLocal();
+      setSyncBadge('pushing');
+      const res = await pushToSheets();
+      if (res.ok) {
+        alert('✅ 구글 시트에 저장하고 실제 반영까지 확인했습니다.\n(시트 용량 ' + res.size.toLocaleString() + '자 · ' + res.attempts + '회 시도)');
+      } else {
+        alert('⚠️ 구글 시트 저장을 확인하지 못했습니다.\n원인: ' + (res.error || '알 수 없음') + '\n기기에는 안전하게 저장되어 있으니 잠시 뒤 다시 시도해 주세요.');
+      }
     }
 
-    function forcePullFromSheets() {
+    async function forcePullFromSheets(skipConfirm) {
       if (!appData.sheetsSyncUrl) {
         alert('구글 시트 연동 URL이 설정되어 있지 않습니다.');
         return;
       }
-      if (confirm('구글 시트에서 최신 데이터를 가져와 덮어씌우시겠습니까?\n(만약을 위해 현재 상태가 자동으로 먼저 백업됩니다)')) {
-        createManualSnapshot("시트 불러오기 전 자동저장", true);
-        fetch(appData.sheetsSyncUrl)
-          .then(res => res.json())
-          .then(data => {
-            if (data && data.profiles) {
-              appData = mergeAppData(appData, data);
-              saveData(true);
-              renderBothProfiles();
-              renderSnapshotList();
-              alert('구글 시트에서 안전하게 데이터를 불러왔습니다! 🎉');
-            } else {
-              alert('구글 시트에 유효한 데이터가 없습니다.');
-            }
-          })
-          .catch(err => alert('구글 시트 통신 오류: ' + err.message));
+      if (!skipConfirm && !confirm('구글 시트의 기록으로 이 기기를 덮어쓸까요?\n(현재 상태는 타임머신에 먼저 자동 백업됩니다)')) return;
+      createManualSnapshot("시트 불러오기 전 자동저장", true);
+      setSyncBadge('pulling');
+      try {
+        const doc = await readStoredDoc();
+        if (!doc || !Array.isArray(doc.profiles)) {
+          alert('구글 시트에 유효한 기록이 없습니다.');
+          setSyncBadge('warn', '⚠️ 시트에 기록이 없어요');
+          return;
+        }
+        const preservedSnaps = mergeSnapshotLists(appData.cloudSnapshots, doc.cloudSnapshots);
+        appData = normalizeAppData(doc);
+        appData.cloudSnapshots = preservedSnaps;
+        isFirstRemoteFetchPending = false;
+        // 이 기기의 현재 상태를 '지금' 기준으로 확정 → 다른 기기도 이 상태로 수렴
+        const stamp = nextStamp();
+        appData.profiles.forEach(p => {
+          p.stateAt = stamp;
+          p.levelAt = stamp;
+          p.questsAt = stamp;
+          (p.quests || []).forEach(q => { q.at = stamp; });
+        });
+        saveData(true);
+        renderBothProfiles();
+        renderSnapshotList();
+        const res = await pushToSheets();
+        alert('구글 시트 기록으로 이 기기를 맞췄습니다.' + (res.ok ? '\n(시트 반영 확인 완료)' : '\n(시트 반영은 아직 확인되지 않았습니다. 자동으로 다시 시도합니다.)'));
+      } catch (e) {
+        setSyncBadge('warn', '⚠️ 시트 연결 지연');
+        alert('구글 시트 통신 오류: ' + ((e && e.message) || e));
       }
     }
 
@@ -6040,7 +6648,14 @@
         const json = decodeURIComponent(escape(atob(code)));
         const parsed = JSON.parse(json);
         if (parsed && parsed.profiles) {
-          appData = parsed;
+          appData = normalizeAppData(parsed);
+          const stamp = nextStamp();
+          appData.profiles.forEach(p => {
+            p.stateAt = stamp;
+            p.levelAt = stamp;
+            p.questsAt = stamp;
+            (p.quests || []).forEach(q => { q.at = stamp; });
+          });
           saveData();
           renderBothProfiles();
           alert('데이터 복원이 완료되었습니다! 🎉');
@@ -6129,6 +6744,7 @@
         completed: false
       });
       input.value = '';
+      p.questsAt = nextStamp();
       saveData();
       renderManageList();
       renderProfile(targetManagePIdx);
@@ -6137,6 +6753,7 @@
     function deleteQuest(idx) {
       const p = appData.profiles[targetManagePIdx];
       p.quests.splice(idx, 1);
+      p.questsAt = nextStamp();
       saveData();
       renderManageList();
       renderProfile(targetManagePIdx);
@@ -6152,6 +6769,7 @@
       }
       p.growthSpeed = document.getElementById('growth-speed-select').value;
       p.showDays = document.getElementById('days-enable-toggle').checked;
+      p.stateAt = nextStamp();
       saveData();
       renderProfile(targetManagePIdx);
       closeManageModal();
@@ -6159,14 +6777,18 @@
 
     function closeManageModal() {
       document.getElementById('manage-modal').classList.remove('active');
+      resumeDeferredPull();
     }
 
     function resetQuestsPrompt(pIdx) {
       const p = appData.profiles[pIdx];
       if (confirm(`${p.name}이의 오늘 미션 체크를 모두 초기화할까요? (함께한 일수와 성장은 그대로 유지됩니다)`)) {
+        const stamp = nextStamp();
         if (p.quests) {
-          p.quests.forEach(q => q.completed = false);
+          p.quests.forEach(q => { q.completed = false; q.at = stamp; });
+          p.questsAt = stamp;
         }
+        recordTodayHistory(pIdx);
         saveData();
         renderProfile(pIdx);
       }
@@ -6179,28 +6801,7 @@
     let currentStatsChild = 0; // 0: 희윤, 1: 희겸
     let currentStatsPeriod = 'week'; // 'week' | 'month' | 'year'
 
-    function recordTodayHistory(pIdx) {
-      const p = appData.profiles && appData.profiles[pIdx];
-      if (!p) return;
-      if (!p.dailyHistory) p.dailyHistory = {};
-      const today = getTodayStr();
-      const quests = p.quests || [];
-      const completedCount = quests.filter(q => q.completed).length;
-      const totalCount = quests.length;
-      const rate = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-
-      p.dailyHistory[today] = {
-        date: today,
-        completedCount: completedCount,
-        totalCount: totalCount,
-        rate: rate,
-        quests: quests.map(q => ({
-          id: q.id,
-          title: q.text || q.title || '',
-          completed: !!q.completed
-        }))
-      };
-    }
+    // recordTodayHistory 는 상단 안정성 엔진(v9.4)에 통합되었습니다.
 
     function openStatsModal(pIdx = 0) {
       currentStatsChild = pIdx;
@@ -6548,6 +7149,9 @@
       addExp(1, 50);
 
       appData.synergyDate = today;
+      const synergyStamp = nextStamp();
+      p0.stateAt = synergyStamp;
+      p1.stateAt = synergyStamp;
       saveData();
       renderBothProfiles();
       checkBrotherSynergyCondition();
@@ -6701,6 +7305,7 @@
 
       const newTreasure = generateInfiniteTreasure();
       p.treasures.unshift(newTreasure);
+      p.stateAt = nextStamp();
       p.berries = (p.berries || 0) + 1;
       addExp(currentExploreProfileIdx, newTreasure.expBonus);
 
@@ -6761,6 +7366,13 @@
 
     function closeAdminModal() {
       document.getElementById('admin-modal').classList.remove('active');
+      resumeDeferredPull();
+    }
+
+    function resumeDeferredPull() {
+      if (!pendingPullAfterModal) return;
+      pendingPullAfterModal = false;
+      setTimeout(() => { pullFromSheets({ silent: true }); }, 500);
     }
 
     function switchAdminChild(pIdx) {
@@ -6950,6 +7562,7 @@
     function adminChangeCurrentPartner(familyId) {
       const p = appData.profiles[adminTargetPIdx];
       p.partnerId = familyId;
+      p.levelAt = nextStamp();
       ensurePartnerHistory(p);
       renderAdminModal();
     }
@@ -6961,6 +7574,7 @@
       const p = appData.profiles[adminTargetPIdx];
       p.growthLevel = lvl;
       if (lvl === 0) p.exp = 0;
+      p.levelAt = nextStamp();
       ensurePartnerHistory(p);
     }
 
@@ -6968,6 +7582,7 @@
       const p = appData.profiles[adminTargetPIdx];
       p.growthLevel = lvl;
       p.exp = (lvl === 0) ? 0 : 25;
+      p.levelAt = nextStamp();
       ensurePartnerHistory(p);
       renderAdminModal();
     }
@@ -7040,6 +7655,7 @@
       hist.level = newLvl;
       if (familyId === p.partnerId) {
         p.growthLevel = newLvl;
+        p.levelAt = nextStamp();
       }
       renderAdminModal();
     }
@@ -7048,6 +7664,7 @@
     function adminSwitchToPartner(familyId) {
       const p = appData.profiles[adminTargetPIdx];
       p.partnerId = familyId;
+      p.levelAt = nextStamp();
       const hist = p.partnerHistory && p.partnerHistory[familyId];
       if (hist) {
         p.growthLevel = hist.level || 1;
@@ -7081,7 +7698,10 @@
       const p = appData.profiles[adminTargetPIdx];
       const q = p.quests && p.quests.find(item => item.id === questId);
       if (q) {
+        const stamp = nextStamp();
         q.completed = checked;
+        q.at = stamp;
+        p.questsAt = stamp;
         recordTodayHistory(adminTargetPIdx);
       }
     }
@@ -7089,7 +7709,9 @@
     function adminCheckAllQuests(completed) {
       const p = appData.profiles[adminTargetPIdx];
       if (p.quests) {
-        p.quests.forEach(q => q.completed = completed);
+        const stamp = nextStamp();
+        p.quests.forEach(q => { q.completed = completed; q.at = stamp; });
+        p.questsAt = stamp;
         recordTodayHistory(adminTargetPIdx);
       }
       renderAdminModal();
@@ -7097,6 +7719,7 @@
 
     function adminResetSynergy() {
       appData.synergyDate = '';
+      appData.profiles.forEach(p => { p.stateAt = nextStamp(); });
       checkBrotherSynergyCondition();
       renderAdminModal();
       alert('오늘의 형제 슈퍼 합체 상태가 초기화되었습니다!\n미션 2개 이상 달성 시 언제든 다시 합체 출동할 수 있습니다.');
@@ -7107,22 +7730,87 @@
       openSynergyModal();
     }
 
-    function adminSaveAndClose() {
-      saveData();
+    async function adminSaveAndClose() {
+      const stamp = nextStamp();
+      appData.profiles.forEach(p => { p.stateAt = stamp; p.levelAt = stamp; ensurePartnerHistory(p); });
+      saveData(true);            // 기기 저장 (시트 push는 아래에서 결과까지 확인)
       renderBothProfiles();
       checkBrotherSynergyCondition();
       closeAdminModal();
-      updateSyncBadge('syncing');
-      syncToGoogleSheets();
-      alert('✨ 관리자 설정이 안전하게 저장되고 구글 시트와 즉시 동기화되었습니다!\n아이패드와 폰 모두에서 최신 상태로 유지됩니다.');
+      const res = await pushToSheets();
+      if (res.ok) {
+        alert('✨ 관리자 설정을 저장하고 구글 시트 반영까지 확인했습니다!\n아이패드와 폰 모두 같은 상태로 맞춰집니다.');
+      } else {
+        alert('⚠️ 기기에는 저장했지만 구글 시트 반영을 확인하지 못했습니다.\n배지에 [저장 실패]가 보이면 잠시 뒤 자동으로 다시 시도합니다.\n(' + (res.error || '확인 실패') + ')');
+      }
     }
 
-    // 하위 호환
+    // =========================================================================
+    // 🛡️ 응급 성장 복구 (예전에 미정의라 눌러도 죽던 버튼들)
+    // =========================================================================
     function openEmergencyRestoreModal() {
-      openAdminModal();
+      const modal = document.getElementById('restore-modal');
+      if (modal) modal.classList.add('active');
+      else openAdminModal();
     }
     function closeEmergencyRestoreModal() {
-      closeAdminModal();
+      const modal = document.getElementById('restore-modal');
+      if (modal) modal.classList.remove('active');
+      else closeAdminModal();
+    }
+
+    function manualSetLevel(pIdx, level, partnerId) {
+      const p = appData.profiles && appData.profiles[pIdx];
+      if (!p) return;
+      const targetLevel = Math.max(0, Math.min(GROWTH_STAGES.length - 1, toNum(level, 0)));
+      if (!confirm(`${p.name}이의 성장 단계를 Lv.${targetLevel}(으)로 맞출까요?`)) return;
+      const stamp = nextStamp();
+      if (partnerId) p.partnerId = partnerId;
+      p.growthLevel = targetLevel;
+      p.exp = (targetLevel === 0) ? 0 : 25;
+      p.levelAt = stamp;
+      p.stateAt = stamp;
+      ensurePartnerHistory(p);
+      saveData();
+      renderBothProfiles();
+      closeEmergencyRestoreModal();
+      alert(`${p.name}이의 성장 상태를 Lv.${targetLevel}로 맞췄습니다.`);
+    }
+
+    function quickRestoreHatched() {
+      if (!confirm('두 아이 모두 알을 깨고 Lv.1 상태로 복구할까요?\n(도감 기록은 그대로 보존됩니다)')) return;
+      const stamp = nextStamp();
+      appData.profiles.forEach((p, i) => {
+        if (!p.partnerId) p.partnerId = (i === 0) ? 'tyranno' : 'excavator';
+        p.growthLevel = Math.max(1, p.growthLevel || 0);
+        p.exp = Math.max(25, p.exp || 0);
+        p.levelAt = stamp;
+        p.stateAt = stamp;
+        ensurePartnerHistory(p);
+      });
+      saveData();
+      renderBothProfiles();
+      closeEmergencyRestoreModal();
+      alert('두 아이 모두 Lv.1로 복구했습니다. 기기와 시트에 함께 반영됩니다.');
+    }
+
+    // 🔄 PWA/브라우저 캐시에 옛 코드가 남아있을 때: 캐시만 비우고 최신 코드로 새로 시작
+    async function forceUpdateApp() {
+      if (!confirm('최신 버전으로 새로고침할까요?\n(저장된 성장 기록은 그대로 유지됩니다)')) return;
+      try {
+        if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister()));
+        }
+      } catch (e) {}
+      try {
+        if (window.caches && caches.keys) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+      } catch (e) {}
+      const base = location.href.split('#')[0].split('?')[0];
+      location.replace(base + '?v=' + Date.now());
     }
 
 
