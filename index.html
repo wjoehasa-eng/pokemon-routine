@@ -4017,8 +4017,11 @@
         (p.quests || []).forEach(function (q) {
           // 오늘 0시 이전에 체크된 것만 해제 → 다른 기기가 오늘 이미 체크한 건 지우지 않음
           if (q.completed && toNum(q.at, 0) < dayStart) {
+            const hadEvidence = toNum(q.at, 0) > 0;
             q.completed = false;
-            q.at = stamp;
+            // 옛 버전 데이터(체크 시각 없음)는 시각을 새로 만들지 않습니다.
+            //  → 다른 기기(시트)의 '오늘 체크'와 병합할 때 지워지지 않고 보존되도록
+            q.at = hadEvidence ? stamp : 0;
             touched = true;
           }
         });
@@ -4089,6 +4092,7 @@
       const localWasBlank = isBlankDefaultData(localRaw);
       const remoteHasData = !isBlankDefaultData(incomingRaw);
       const trustRemote = localWasBlank && remoteHasData;
+      const remoteDocIsNewer = toNum(R.updatedAt, 0) >= toNum(L.updatedAt, 0);
       let changed = false;
       const today = getTodayStr();
 
@@ -4127,8 +4131,18 @@
           lp.couponTitle = rp.couponTitle;
           lp.showDays = rp.showDays;
         } else if (rState === lState) {
-          if (rp.exp > lp.exp) { lp.exp = rp.exp; changed = true; }
-          if (rp.berries > lp.berries) { lp.berries = rp.berries; changed = true; }
+          // 시각이 같을 때: 시트 쪽 문서가 더 최신이면 시트 값을 그대로 따릅니다.
+          //  (옛 버전 기기의 동떨어진 열매 수가 시트로 역류하는 것 방지)
+          if (remoteDocIsNewer) {
+            if (lp.exp !== rp.exp || lp.berries !== rp.berries) {
+              lp.exp = rp.exp;
+              lp.berries = rp.berries;
+              changed = true;
+            }
+          } else {
+            if (rp.exp > lp.exp) { lp.exp = rp.exp; changed = true; }
+            if (rp.berries > lp.berries) { lp.berries = rp.berries; changed = true; }
+          }
         }
         lp.levelAt = Math.max(lLevelAt, rLevelAt);
         lp.stateAt = Math.max(lState, rState);
