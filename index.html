@@ -6468,7 +6468,7 @@
         }
         renderSnapshotList();
         if (note === "수동 저장") {
-          alert(`현재 상태가 클라우드(모든 기기 공유)에 안전하게 백업되었습니다! (${timeStr})\n\n[${summary}]`);
+          alert(`현재 상태를 백업으로 저장했습니다! (${timeStr})\n\n[${summary}]\n\n☁️ 다른 기기와의 공유는 상단 배지가 '🟢 시트 저장 확인'으로 바뀌면 완료됩니다.`);
         }
       } catch (e) {
         console.warn("Snapshot error:", e);
@@ -6540,7 +6540,7 @@
         });
         saveData();
         renderBothProfiles();
-        alert('성공적으로 해당 시점으로 복원되고 모든 기기에 동기화되었습니다! 🎉');
+        alert('해당 시점으로 복원했습니다! 🎉\n다른 기기에는 잠시 뒤(최대 10초) 같은 상태로 맞춰집니다.');
         closeSyncModal();
       }
     }
