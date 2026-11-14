@@ -4017,11 +4017,10 @@
         (p.quests || []).forEach(function (q) {
           // 오늘 0시 이전에 체크된 것만 해제 → 다른 기기가 오늘 이미 체크한 건 지우지 않음
           if (q.completed && toNum(q.at, 0) < dayStart) {
-            const hadEvidence = toNum(q.at, 0) > 0;
             q.completed = false;
-            // 옛 버전 데이터(체크 시각 없음)는 시각을 새로 만들지 않습니다.
-            //  → 다른 기기(시트)의 '오늘 체크'와 병합할 때 지워지지 않고 보존되도록
-            q.at = hadEvidence ? stamp : 0;
+            // '오늘 0시'로 기록 → 어제 체크를 오늘로 넘기지 않으면서,
+            //  병합할 때 이 해제가 '사용자의 새 조작'으로 오해되지 않게 함
+            q.at = dayStart;
             touched = true;
           }
         });
@@ -4071,6 +4070,33 @@
       });
     }
 
+    // 미션 하나의 체크 상태를 두 기기 기록에서 결정합니다.
+    //  - 양쪽 다 조작 시각이 있으면 최신 조작 승리
+    //  - 한쪽만 시각이 있으면(옛 데이터) 그쪽이 우선하되,
+    //    '오늘 다른 기기에서 체크한 것'은 자정 롤오버보다 우선 보존
+    function resolveQuestState(lq, rq, lProfileToday, rProfileToday, dayStart) {
+      const la = toNum(lq.at, 0);
+      const ra = toNum(rq.at, 0);
+      if (la > 0 && ra > 0) {
+        if (ra > la) return { completed: rq.completed, at: ra };
+        if (la > ra) return { completed: lq.completed, at: la };
+        return { completed: !!(lq.completed || rq.completed), at: Math.max(la, ra) };
+      }
+      if (la === 0 && ra === 0) {
+        return { completed: !!(lq.completed || rq.completed), at: 0 };   // 옛 데이터: 체크 보존
+      }
+      const evidence = (la > 0) ? lq : rq;
+      const legacy = (la > 0) ? rq : lq;
+      if (legacy.completed && !evidence.completed) {
+        const legacyIsToday = (la > 0) ? rProfileToday : lProfileToday;
+        const evidenceIsToday = ((la > 0) ? lProfileToday : rProfileToday) && (toNum(evidence.at, 0) !== dayStart);
+        if (legacyIsToday && !evidenceIsToday) {
+          return { completed: true, at: 0 };   // 오늘 체크 보존
+        }
+      }
+      return { completed: evidence.completed, at: evidence.at };
+    }
+
     function mergeSnapshotLists() {
       const map = {};
       for (let i = 0; i < arguments.length; i++) {
@@ -4095,10 +4121,14 @@
       const remoteDocIsNewer = toNum(R.updatedAt, 0) >= toNum(L.updatedAt, 0);
       let changed = false;
       const today = getTodayStr();
+      const dayStartMs = startOfTodayMs();
 
       L.profiles.forEach(function (lp, idx) {
         const rp = R.profiles[idx];
         if (!rp) return;
+        // 병합 전 각 기기의 '오늘' 여부를 기억 (아래에서 lastDate를 합치기 전에)
+        const lProfileToday = (lp.lastDate === today);
+        const rProfileToday = (rp.lastDate === today);
 
         // (1) 레벨·파트너는 '마지막으로 직접 바꾼 기기'(levelAt)의 값이 이깁니다.
         //     경험치·열매는 (stateAt) 기준. 두 시각을 분리해
@@ -4181,17 +4211,11 @@
               lq.text = rq.text; lq.exp = rq.exp; lq.berry = rq.berry; changed = true;
             }
           }
-          // (4) 체크 상태: 미션별 마지막 조작 시각(at) 승자. 같으면 '체크' 우선(성과 보존)
-          const la = toNum(lq.at, 0);
-          const ra = toNum(rq.at, 0);
-          if (ra > la) {
-            if (lq.completed !== rq.completed) changed = true;
-            lq.completed = rq.completed;
-            lq.at = ra;
-          } else if (ra === la && rq.completed && !lq.completed) {
-            lq.completed = true;
-            changed = true;
-          }
+          // (4) 체크 상태: 미션별 마지막 조작 시각(at) 승자 (옛 데이터는 체크 보존)
+          const resolved = resolveQuestState(lq, rq, lProfileToday, rProfileToday, dayStartMs);
+          if (lq.completed !== resolved.completed) changed = true;
+          lq.completed = resolved.completed;
+          lq.at = resolved.at;
         });
         lp.questsAt = Math.max(lQAt, rQAt);
 
