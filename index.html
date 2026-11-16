@@ -2365,7 +2365,7 @@
     <!-- 상단 글로벌 바 -->
     <div class="header-bar">
       <div class="top-action-row">
-        <div class="app-title-badge">🐾 우리 집 루틴 다마고치 <span class="app-version-chip" id="app-version-chip">v9.6</span></div>
+        <div class="app-title-badge">🐾 우리 집 루틴 다마고치 <span class="app-version-chip" id="app-version-chip">v9.7</span></div>
         <div class="top-sync-btns">
           <span class="sync-indicator-badge syncing" id="sync-status-badge" onclick="manualSyncNow()" title="터치하면 지금 바로 시트와 동기화합니다">🔄 첫 동기화 확인 중...</span>
           <button class="top-btn synergy-top-btn" id="synergy-top-btn" onclick="openSynergyModal()" style="display: none; background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D); color: #FFFFFF; font-weight: 900; animation: synergyPulse 1.5s infinite alternate; box-shadow: 0 0 12px rgba(255, 107, 107, 0.6); border: none;">⚡ 슈퍼 합체 출동!</button>
@@ -2692,7 +2692,7 @@
       <!-- 4-1. 앱 버전 & 캐시 새로고침 -->
       <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span id="app-version-label" style="font-size: 11px; font-weight: 800; color: #4A5568;">앱 버전 v9.6</span>
+          <span id="app-version-label" style="font-size: 11px; font-weight: 800; color: #4A5568;">앱 버전 v9.7</span>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <button class="top-btn" onclick="forceUpdateApp()" style="background: #3182CE; color: white;">🔄 최신 버전 새로고침</button>
             <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: #C05621; color: white;">🛡️ 응급 성장 복구</button>
@@ -4120,10 +4120,10 @@
     }
 
     // =========================================================================
-    // 🧬 v9.4~v9.5 안정성 엔진 — 데이터 정규화 · 필드단위 병합 · 검증된 클라우드 저장
+    // 🧬 v9.4~v9.7 안정성 엔진 — 데이터 정규화 · 필드단위 병합 · 검증된 클라우드 저장
     // =========================================================================
-    const APP_VERSION = 'v9.6';
-    const APP_BUILD = '2026-11-16 20:30';
+    const APP_VERSION = 'v9.7';
+    const APP_BUILD = '2026-11-17 08:20';
     const SCHEMA_VERSION = 4;
     const SHEET_CELL_LIMIT = 50000;   // 구글 시트 단일 셀 최대 문자 수
     const SHEET_BUDGET = 45000;       // 안전 예산 (셀 한도에서 5,000자 여유)
@@ -4146,6 +4146,7 @@
     let saveFailedAt = 0;
     let saveRetryTimer = null;
     let syncState = 'idle';
+    let hasRenderedOnce = false;   // 첫 화면 렌더 전에는 자정 정리 결과를 다시 그리지 않음 (v9.7)
     const BLOCKING_MODAL_IDS = ['admin-modal', 'manage-modal', 'select-modal'];
 
     function toNum(v, fallback) {
@@ -4338,6 +4339,33 @@
       return d.getTime();
     }
 
+    // 🛡️ v9.7: '오늘 체크'로 인정할 수 있는 유일한 증거는 at(마지막 조작 시각)입니다.
+    //   at >  dayStart → 오늘 0시 이후에 직접 누른 체크  (오늘 것 → 인정)
+    //   at == dayStart → 자정 초기화 표시             (해제 상태)
+    //   at <  dayStart → 어제 이전의 체크              (오늘 체크리스트에서 내림)
+    //   at == 0        → 시각을 알 수 없는 옛 데이터   (오늘 것으로 볼 수 없음)
+    function normalizeQuestForToday(q, dayStart) {
+      const at = toNum(q && q.at, 0);
+      const done = !!(q && q.completed);
+      if (done && at > dayStart) return { completed: true, at: at };
+      return { completed: false, at: Math.max(at, dayStart) };
+    }
+
+    // 오늘로 인정할 수 없는(어제 이전) 체크를 오늘 체크리스트에서 내립니다.
+    //  v9.7 근본 수정: lastDate가 이미 오늘이어도 항상 검사합니다.
+    function clearStaleTodayQuests(p, dayStart) {
+      let touched = false;
+      (p.quests || []).forEach(function (q) {
+        if (!q || !q.completed) return;
+        if (toNum(q.at, 0) > dayStart) return;   // 오늘 직접 누른 체크는 그대로
+        q.completed = false;
+        // '오늘 0시'로 기록 → 병합에서 어제 체크(at < dayStart)를 이기고, 오늘 새 체크에는 양보
+        q.at = dayStart;
+        touched = true;
+      });
+      return touched;
+    }
+
     function checkDateRollover(opts) {
       const options = opts || {};
       const today = getTodayStr();
@@ -4345,32 +4373,28 @@
       let changed = false;
 
       appData.profiles.forEach(function (p) {
-        if (!p.lastDate) { p.lastDate = today; changed = true; return; }
-        if (p.lastDate === today) return;
-
         if (!p.dailyHistory) p.dailyHistory = {};
-        if (!p.dailyHistory[p.lastDate]) {
-          // 어제(마지막 사용일)의 상태를 그대로 기록으로 남깁니다.
-          p.dailyHistory[p.lastDate] = buildDayRecord(p, p.lastDate);
-        }
-        const allDone = p.quests && p.quests.length > 0 && p.quests.every(function (q) { return q.completed; });
-        if (allDone) p.streak = Math.max(1, toNum(p.streak, 1)) + 1;
+        const isNewDay = (p.lastDate !== today);
 
-        const stamp = nextStamp();
-        let touched = false;
-        (p.quests || []).forEach(function (q) {
-          // 오늘 0시 이전에 체크된 것만 해제 → 다른 기기가 오늘 이미 체크한 건 지우지 않음
-          if (q.completed && toNum(q.at, 0) < dayStart) {
-            q.completed = false;
-            // '오늘 0시'로 기록 → 어제 체크를 오늘로 넘기지 않으면서,
-            //  병합할 때 이 해제가 '사용자의 새 조작'으로 오해되지 않게 함
-            q.at = dayStart;
-            touched = true;
+        // 날짜가 실제로 넘어간 순간에만: 어제 기록 보존 + 연속 달성 1회 집계
+        if (isNewDay) {
+          if (p.lastDate && !p.dailyHistory[p.lastDate]) {
+            // 어제(마지막 사용일)의 상태를 그대로 기록으로 남깁니다.
+            p.dailyHistory[p.lastDate] = buildDayRecord(p, p.lastDate);
           }
-        });
-        p.lastDate = today;
-        if (touched) p.questsAt = stamp;
-        changed = true;
+          if (p.lastDate) {
+            const allDone = p.quests && p.quests.length > 0 && p.quests.every(function (q) { return q.completed; });
+            if (allDone) p.streak = Math.max(1, toNum(p.streak, 1)) + 1;
+          }
+        }
+
+        // 🔧 v9.7 핵심 수정: lastDate가 이미 오늘이어도(다른 기기가 먼저 자정을 넘긴 뒤라도)
+        //   어제 이전에 체크된 미션이 오늘 체크리스트에 남아 있으면 반드시 내립니다.
+        const touched = clearStaleTodayQuests(p, dayStart);
+        if (touched || isNewDay) {
+          p.lastDate = today;
+          changed = true;
+        }
       });
 
       if (changed) {
@@ -4378,6 +4402,10 @@
         recordTodayHistory(1);
         if (options.quiet) saveData(true, true);
         else saveData();
+        // 정리 결과를 화면에 즉시 반영 (아이가 어제 체크를 오늘 것으로 보지 않게)
+        if (hasRenderedOnce && typeof renderBothProfiles === 'function' && !isBlockingModalOpen()) {
+          try { renderBothProfiles(); } catch (e) {}
+        }
       }
       return changed;
     }
@@ -4414,31 +4442,18 @@
       });
     }
 
-    // 미션 하나의 체크 상태를 두 기기 기록에서 결정합니다.
-    //  - 양쪽 다 조작 시각이 있으면 최신 조작 승리
-    //  - 한쪽만 시각이 있으면(옛 데이터) 그쪽이 우선하되,
-    //    '오늘 다른 기기에서 체크한 것'은 자정 롤오버보다 우선 보존
+    // 미션 하나의 체크 상태를 두 기기 기록에서 결정합니다. (v9.7 재작성)
+    //  - 양쪽을 '오늘' 기준으로 정규화한 뒤(at >= dayStart) 더 최근 조작이 이깁니다.
+    //  - 어제 이전 체크(at < dayStart)나 시각 없는 체크(at=0)는 오늘 것으로 인정하지 않으므로,
+    //    다른 기기가 오늘 직접 누른 체크(at > dayStart)에 절대 이기지 못합니다.
+    //    (lProfileToday/rProfileToday는 옛 호출부 호환용으로만 남겨 둡니다)
     function resolveQuestState(lq, rq, lProfileToday, rProfileToday, dayStart) {
-      const la = toNum(lq.at, 0);
-      const ra = toNum(rq.at, 0);
-      if (la > 0 && ra > 0) {
-        if (ra > la) return { completed: rq.completed, at: ra };
-        if (la > ra) return { completed: lq.completed, at: la };
-        return { completed: !!(lq.completed || rq.completed), at: Math.max(la, ra) };
-      }
-      if (la === 0 && ra === 0) {
-        return { completed: !!(lq.completed || rq.completed), at: 0 };   // 옛 데이터: 체크 보존
-      }
-      const evidence = (la > 0) ? lq : rq;
-      const legacy = (la > 0) ? rq : lq;
-      if (legacy.completed && !evidence.completed) {
-        const legacyIsToday = (la > 0) ? rProfileToday : lProfileToday;
-        const evidenceIsToday = ((la > 0) ? lProfileToday : rProfileToday) && (toNum(evidence.at, 0) !== dayStart);
-        if (legacyIsToday && !evidenceIsToday) {
-          return { completed: true, at: 0 };   // 오늘 체크 보존
-        }
-      }
-      return { completed: evidence.completed, at: evidence.at };
+      const ds = toNum(dayStart, 0);
+      const l = normalizeQuestForToday(lq, ds);
+      const r = normalizeQuestForToday(rq, ds);
+      if (l.at > r.at) return l;
+      if (r.at > l.at) return r;
+      return { completed: !!(l.completed || r.completed), at: l.at };
     }
 
     function mergeSnapshotLists() {
@@ -4588,9 +4603,11 @@
         rp.quests.forEach(function (rq) {
           const lq = lp.quests.find(function (q) { return q.id === rq.id; });
           if (!lq) {
+            // v9.7: 새로 합쳐지는 미션도 '오늘' 기준으로 정규화 (어제 체크가 오늘로 새지 않게)
+            const added = normalizeQuestForToday(rq, dayStartMs);
             lp.quests.push({
               id: rq.id, text: rq.text, exp: rq.exp, berry: rq.berry,
-              completed: rq.completed, at: rq.at
+              completed: added.completed, at: added.at
             });
             changed = true;
             return;
@@ -4607,6 +4624,9 @@
           lq.at = resolved.at;
         });
         lp.questsAt = Math.max(lQAt, rQAt);
+
+        // (4-2) v9.7 안전망: 병합 결과에 어제 이전 체크가 남아 있으면 오늘 것으로 쓰지 않습니다.
+        if (clearStaleTodayQuests(lp, dayStartMs)) changed = true;
 
         // (5) 지난 날짜 기록: 날짜별로 더 최근에 기록된 쪽
         Object.keys(rp.dailyHistory).forEach(function (dt) {
@@ -4958,10 +4978,19 @@
         }
 
         isFirstRemoteFetchPending = false;
+        // v9.7: 시트에 어제 이전 체크가 남아 있으면(=자정 초기화 누락) 병합 뒤 정리된 내용을 다시 올려
+        //  모든 기기의 시트가 스스로 깨끗해지게 합니다.
+        const dayStartMs = startOfTodayMs();
+        const remoteDirty = (doc.profiles || []).some(function (rp) {
+          if (!rp || !Array.isArray(rp.quests)) return false;
+          return rp.quests.some(function (q) {
+            return !!(q && q.completed) && toNum(q.at, 0) <= dayStartMs;
+          });
+        });
         const result = mergeData(appData, doc);
         appData = result.data;
 
-        if (result.changed) {
+        if (result.changed || remoteDirty) {
           persistLocal();
           if (!isBlockingModalOpen()) renderBothProfiles();
           // 병합으로 새로 합쳐진 내용은 시트에도 반영해 기기 간 수렴을 보장
@@ -5090,6 +5119,8 @@
     // -------------------------------------------------------------------------
     function tickSync() {
       if (!appData.sheetsSyncUrl) return;
+      // 날짜가 바뀌었으면 정리·저장·화면 갱신까지 checkDateRollover 안에서 끝내고,
+      //  원격 병합은 다음 tick에서 합니다. (visibilitychange·focus에서도 같은 경로)
       if (checkDateRollover()) return;
       if (typeof document !== 'undefined' && document.visibilityState && document.visibilityState !== 'visible') return;
       if (isPushing || isSyncing) return;
@@ -6339,6 +6370,7 @@
     }
 
     function renderBothProfiles() {
+      hasRenderedOnce = true;
       updateTimeTheme();
       applyChildNames();
       renderProfile(0);
