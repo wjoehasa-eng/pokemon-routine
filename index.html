@@ -2372,6 +2372,16 @@
       display: flex; align-items: center; justify-content: center;
     }
     .pokemon-img { max-width: 66%; max-height: 66%; }
+    /* 포켓몬·동물처럼 그림 파일인 캐릭터도 무대에 맞게 크게 */
+    .pokemon-img:not(.art-img) {
+      width: 76% !important; height: 76% !important;
+      max-width: 76% !important; max-height: 76% !important;
+      object-fit: contain;
+    }
+    /* 직접 그린 SVG 캐릭터도 큰 무대에 맞춰 확대 (진화 스케일은 그대로 유지) */
+    .pokemon-wrapper svg:not(.egg-svg) {
+      width: 70% !important; height: 70% !important;
+    }
     .pokemon-img.art-img {
       width: var(--art, 100%) !important;
       height: var(--art, 100%) !important;
