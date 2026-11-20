@@ -2355,6 +2355,319 @@
       font-weight: 700;
     }
 
+    /* ============================================================
+       🌟 v9.8 — 핵심 5종 3D 일러스트 & 스테이지 진화 풀 이펙트
+       ============================================================ */
+
+    /* 1) 캐릭터 무대 크기 : 아이패드/PC 240px+, 모바일도 넉넉하게 */
+    .stage { --char: 170px; }
+    @media (min-width: 700px) { .stage { --char: 228px; } }
+    @media (orientation: landscape) and (min-width: 540px), (min-width: 800px) { .stage { --char: 252px; } }
+    @media (min-width: 1200px) { .stage { --char: 288px; } }
+    @media (orientation: landscape) and (max-height: 500px) { .stage { --char: 126px; } }
+
+    .pokemon-wrapper { width: var(--char); height: var(--char); margin-bottom: 4px; }
+    .pokemon-wrapper > .char-slot {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pokemon-img { max-width: 66%; max-height: 66%; }
+    .pokemon-img.art-img {
+      width: 100%; height: 100%;
+      max-width: 100%; max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 12px rgba(22, 44, 84, 0.22));
+      will-change: transform;
+    }
+    .pokemon-shadow { width: 58%; height: 14px; bottom: 4px; }
+
+    /* 2) 무대 배경(씬) 레이어 */
+    .scene {
+      position: absolute; inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .stage > .pokemon-wrapper,
+    .stage > .pokemon-name-tag,
+    .stage > .exp-container,
+    .stage > .stage-actions { z-index: 2; }
+    .pokemon-speech { z-index: 12; }
+
+    /* 1단계 : 상쾌한 햇살 초원 */
+    .stage[data-tier="1"] {
+      background: linear-gradient(180deg, #C7EBFF 0%, #E4F7FF 40%, #D9F5C9 68%, #B4E79B 100%);
+    }
+    /* 2단계 : 빛나는 구름 신전 */
+    .stage[data-tier="2"] {
+      background: radial-gradient(circle at 50% 76%, #FFF8D0 0%, #FFE2AE 24%, #F7B8E2 56%, #A98CF7 100%);
+    }
+    /* 3단계 : 황금빛 우주 전설 무대 */
+    .stage[data-tier="3"] {
+      background: radial-gradient(circle at 50% 60%, #7A66DC 0%, #43308A 30%, #1D1246 62%, #070517 100%);
+    }
+
+    .sc-sun, .sc-cloud, .sc-hills, .sc-starfield, .sc-ring, .sc-flare, .sc-orbit, .sc-floor { display: none; }
+
+    .sc-sun {
+      position: absolute; top: 8px; right: 12px; width: 54px; height: 54px; border-radius: 50%;
+      background: radial-gradient(circle, #FFFDE7 0%, #FFE071 52%, rgba(255,214,60,0) 74%);
+      animation: sunGlowV98 3.6s ease-in-out infinite alternate;
+    }
+    @keyframes sunGlowV98 { 0% { transform: scale(0.94); opacity: 0.85; } 100% { transform: scale(1.08); opacity: 1; } }
+
+    .sc-cloud {
+      position: absolute; height: 16px; width: 62px; border-radius: 999px;
+      background: rgba(255,255,255,0.92); filter: blur(0.6px);
+    }
+    .sc-cloud::before, .sc-cloud::after {
+      content: ''; position: absolute; background: inherit; border-radius: 50%;
+    }
+    .sc-cloud::before { width: 26px; height: 26px; top: -12px; left: 10px; }
+    .sc-cloud::after { width: 18px; height: 18px; top: -8px; right: 10px; }
+    .sc-cloud.c1 { top: 16%; left: -14%; opacity: 0.9; animation: driftV98 24s linear infinite; }
+    .sc-cloud.c2 { top: 36%; right: -18%; left: auto; transform: scale(0.8); opacity: 0.75; animation: driftBackV98 30s linear infinite; }
+    .sc-cloud.c3 { top: 56%; left: -20%; transform: scale(0.6); opacity: 0.6; animation: driftV98 34s linear infinite; animation-delay: -8s; }
+    @keyframes driftV98 { 0% { left: -22%; } 100% { left: 108%; } }
+    @keyframes driftBackV98 { 0% { right: -22%; } 100% { right: 108%; } }
+
+    .sc-hills {
+      position: absolute; left: -12%; right: -12%; bottom: -2px; height: 30%;
+      background: radial-gradient(ellipse at 50% 100%, #8FE072 0%, #6FCB55 58%, #55B342 100%);
+      border-radius: 50% 50% 0 0 / 76% 76% 0 0;
+      box-shadow: inset 0 6px 14px rgba(255,255,255,0.35);
+    }
+    .sc-hills::before {
+      content: ''; position: absolute; left: -4%; bottom: 0; width: 46%; height: 62%;
+      background: radial-gradient(ellipse at 50% 100%, #A7EC8B 0%, #7CD463 70%, #6AC355 100%);
+      border-radius: 50% 50% 0 0 / 84% 84% 0 0;
+    }
+    .sc-hills::after {
+      content: ''; position: absolute; right: -2%; bottom: 0; width: 40%; height: 48%;
+      background: radial-gradient(ellipse at 50% 100%, #97E67C 0%, #74CE5C 70%, #5FBA4A 100%);
+      border-radius: 50% 50% 0 0 / 84% 84% 0 0;
+    }
+
+    .sc-starfield {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1.6px 1.6px at 12% 16%, #FFFFFF 45%, transparent 47%),
+        radial-gradient(1.4px 1.4px at 76% 10%, #EAF2FF 45%, transparent 47%),
+        radial-gradient(1.8px 1.8px at 34% 26%, #FFFFFF 45%, transparent 47%),
+        radial-gradient(1.3px 1.3px at 58% 34%, #CFE4FF 45%, transparent 47%),
+        radial-gradient(1.7px 1.7px at 88% 28%, #FFFFFF 45%, transparent 47%),
+        radial-gradient(1.4px 1.4px at 22% 48%, #E7D9FF 45%, transparent 47%),
+        radial-gradient(1.5px 1.5px at 66% 58%, #FFFFFF 45%, transparent 47%),
+        radial-gradient(1.3px 1.3px at 46% 12%, #FFF6CF 45%, transparent 47%),
+        radial-gradient(1.6px 1.6px at 8% 72%, #D9E8FF 45%, transparent 47%),
+        radial-gradient(1.4px 1.4px at 92% 66%, #FFFFFF 45%, transparent 47%);
+      background-repeat: no-repeat;
+      animation: twinkleV98 3.2s ease-in-out infinite alternate;
+    }
+    @keyframes twinkleV98 { 0% { opacity: 0.45; } 100% { opacity: 1; } }
+
+    .sc-flare {
+      position: absolute; left: 50%; top: 52%; width: 128%; height: 96%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255,236,168,0.62) 0%, rgba(255,206,102,0.26) 38%, rgba(255,206,102,0) 70%);
+      animation: flareBreatheV98 2.8s ease-in-out infinite alternate;
+    }
+    @keyframes flareBreatheV98 { 0% { opacity: 0.55; transform: translate(-50%,-50%) scale(0.92); } 100% { opacity: 1; transform: translate(-50%,-50%) scale(1.06); } }
+
+    .sc-ring {
+      position: absolute; left: 50%; top: 54%; border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .sc-ring.r1 {
+      width: 84%; height: 84%;
+      border: 3px dashed rgba(255,228,150,0.62);
+      box-shadow: inset 0 0 22px rgba(255,222,120,0.28), 0 0 18px rgba(255,222,120,0.18);
+      animation: ringSpinV98 18s linear infinite;
+    }
+    .sc-ring.r2 {
+      width: 62%; height: 62%;
+      border: 2px solid rgba(158,205,255,0.42);
+      box-shadow: inset 0 0 16px rgba(140,190,255,0.25);
+      animation: ringSpinV98 12s linear infinite reverse;
+    }
+    @keyframes ringSpinV98 {
+      from { transform: translate(-50%,-50%) rotate(0deg); }
+      to { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+
+    .sc-orbit {
+      position: absolute; left: 50%; top: 54%; width: 100%; height: 100%;
+      transform: translate(-50%, -50%); border-radius: 50%;
+      animation: ringSpinV98 9s linear infinite;
+    }
+    .sc-orbit::before {
+      content: '✨'; position: absolute; top: -10px; left: 50%;
+      transform: translateX(-50%); font-size: 20px;
+      filter: drop-shadow(0 0 8px #FFE066);
+    }
+    .sc-orbit::after {
+      content: '⭐'; position: absolute; bottom: -8px; left: 50%;
+      transform: translateX(-50%); font-size: 15px;
+      filter: drop-shadow(0 0 8px #FFD54F);
+    }
+
+    .sc-floor {
+      position: absolute; left: 50%; bottom: 6%; width: 68%; height: 18px;
+      transform: translateX(-50%); border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 72%);
+    }
+
+    .stage[data-tier="1"] .sc-sun,
+    .stage[data-tier="1"] .sc-cloud,
+    .stage[data-tier="1"] .sc-hills,
+    .stage[data-tier="1"] .sc-floor { display: block; }
+
+    .stage[data-tier="2"] .sc-sun,
+    .stage[data-tier="2"] .sc-cloud,
+    .stage[data-tier="2"] .sc-flare,
+    .stage[data-tier="2"] .sc-ring.r1,
+    .stage[data-tier="2"] .sc-floor { display: block; }
+
+    .stage[data-tier="3"] .sc-starfield,
+    .stage[data-tier="3"] .sc-ring,
+    .stage[data-tier="3"] .sc-flare,
+    .stage[data-tier="3"] .sc-orbit { display: block; }
+
+    /* 밤에는 살짝 어둡게 (단계 배경은 그대로 유지) */
+    .sc-night {
+      position: absolute; inset: 0; display: none;
+      background: linear-gradient(180deg, rgba(16,20,52,0.5) 0%, rgba(8,10,28,0.66) 100%);
+    }
+    .stage.stage-night .sc-night { display: block; }
+    .stage.stage-night[data-tier="3"] .sc-night { display: none; }
+
+    /* 3) 단계별 글자 대비 */
+    .stage[data-tier="1"] .name-title { color: #16375E !important; }
+    .stage[data-tier="1"] .sub-title,
+    .stage[data-tier="1"] .exp-labels { color: #3F5773 !important; }
+    .stage[data-tier="2"] .name-title { color: #5A3600 !important; text-shadow: 0 1px 0 rgba(255,255,255,0.75); }
+    .stage[data-tier="2"] .sub-title,
+    .stage[data-tier="2"] .exp-labels { color: #6B4913 !important; }
+    .stage[data-tier="3"] .name-title { color: #FFF6D5 !important; text-shadow: 0 2px 12px rgba(255,206,86,0.75); }
+    .stage[data-tier="3"] .sub-title,
+    .stage[data-tier="3"] .exp-labels { color: #DCD2FF !important; }
+    .stage[data-tier="3"] .companion-stat-pill {
+      background: rgba(255,255,255,0.16) !important;
+      border-color: rgba(255,235,150,0.55) !important;
+      color: #FFF6D5 !important;
+    }
+    .stage[data-tier="2"] .exp-bar-bg,
+    .stage[data-tier="3"] .exp-bar-bg { background: rgba(255,255,255,0.55); }
+    .stage.stage-night[data-tier="1"] .name-title,
+    .stage.stage-night[data-tier="2"] .name-title { color: #FFFDF5 !important; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    .stage.stage-night[data-tier="1"] .sub-title,
+    .stage.stage-night[data-tier="2"] .sub-title,
+    .stage.stage-night[data-tier="1"] .exp-labels,
+    .stage.stage-night[data-tier="2"] .exp-labels { color: #E8ECF8 !important; }
+
+    /* 4) 오라 : 캐릭터 전체를 감싸는 큼직한 빛 */
+    .aura-ring {
+      width: 96%; height: 96%;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: none;
+    }
+    .aura-sparkle {
+      background: radial-gradient(circle at 50% 50%, rgba(255,238,158,0.6) 0%, rgba(255,208,84,0.26) 46%, rgba(255,200,60,0) 74%);
+      animation: auraPulseV98 2.2s ease-in-out infinite alternate;
+    }
+    .aura-fire {
+      background: conic-gradient(from 0deg,
+        rgba(255,90,0,0) 0deg, rgba(255,150,0,0.9) 56deg, rgba(255,60,0,0) 120deg,
+        rgba(255,196,0,0.85) 196deg, rgba(255,60,0,0) 272deg, rgba(255,140,0,0.75) 336deg,
+        rgba(255,90,0,0) 360deg);
+      -webkit-mask: radial-gradient(circle, transparent 50%, #000 57%, #000 78%, transparent 85%);
+      mask: radial-gradient(circle, transparent 50%, #000 57%, #000 78%, transparent 85%);
+      filter: blur(3px);
+      animation: ringSpinV98 3.6s linear infinite, fireBreatheV98 1.6s ease-in-out infinite alternate;
+    }
+    .aura-champion {
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,244,190,0.58) 0%, rgba(255,214,90,0.26) 42%, rgba(255,214,90,0) 70%),
+        conic-gradient(from 0deg,
+          rgba(255,215,0,0) 0deg, rgba(255,228,130,0.95) 34deg, rgba(255,255,255,0.92) 78deg,
+          rgba(255,215,0,0) 130deg, rgba(186,124,255,0.8) 204deg, rgba(255,215,0,0) 258deg,
+          rgba(96,206,255,0.8) 318deg, rgba(255,215,0,0) 360deg);
+      -webkit-mask: radial-gradient(circle, transparent 44%, #000 52%, #000 80%, transparent 88%);
+      mask: radial-gradient(circle, transparent 44%, #000 52%, #000 80%, transparent 88%);
+      filter: blur(2.4px) drop-shadow(0 0 12px rgba(255,222,120,0.65));
+      animation: ringSpinV98 5.5s linear infinite;
+    }
+    @keyframes auraPulseV98 {
+      0% { transform: translate(-50%,-50%) scale(0.9); opacity: 0.55; }
+      100% { transform: translate(-50%,-50%) scale(1.06); opacity: 1; }
+    }
+    @keyframes fireBreatheV98 { 0% { opacity: 0.62; } 100% { opacity: 1; } }
+
+    /* 5) 진화/레벨업 축하 폭발 연출 */
+    .evo-burst { position: fixed; inset: 0; pointer-events: none; z-index: 4000; display: none; }
+    .evo-burst.show { display: block; }
+    .eb-flash {
+      position: absolute; inset: 0; opacity: 0;
+      background: radial-gradient(circle at 50% 44%, rgba(255,255,255,0.96) 0%, rgba(255,250,205,0.7) 18%, rgba(255,240,160,0) 62%);
+    }
+    .evo-burst.show .eb-flash { animation: ebFlash 1.5s ease-out forwards; }
+    @keyframes ebFlash {
+      0% { opacity: 0; transform: scale(0.55); }
+      12% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.3); }
+    }
+    .eb-ring {
+      position: absolute; left: 50%; top: 44%; width: 64px; height: 64px; margin: -32px 0 0 -32px;
+      border-radius: 50%; border: 4px solid rgba(255,224,120,0.92); opacity: 0;
+    }
+    .evo-burst.show .eb-ring { animation: ebRing 1.5s ease-out forwards; }
+    .evo-burst.show .eb-ring.d2 { animation-delay: 0.18s; border-color: rgba(160,212,255,0.9); }
+    .evo-burst.show .eb-ring.d3 { animation-delay: 0.36s; border-color: rgba(255,160,220,0.85); }
+    @keyframes ebRing {
+      0% { opacity: 0.95; transform: scale(0.22); }
+      100% { opacity: 0; transform: scale(8.5); }
+    }
+    .eb-banner {
+      position: absolute; left: 50%; top: 24%; transform: translate(-50%, 0) scale(0.6);
+      opacity: 0; text-align: center; width: 92%;
+    }
+    .evo-burst.show .eb-banner { animation: ebBanner 2s cubic-bezier(0.2, 1.25, 0.4, 1) forwards; }
+    @keyframes ebBanner {
+      0% { opacity: 0; transform: translate(-50%, 12px) scale(0.5); }
+      18% { opacity: 1; transform: translate(-50%, 0) scale(1.1); }
+      72% { opacity: 1; transform: translate(-50%, -6px) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -26px) scale(1); }
+    }
+    .eb-kicker {
+      display: block; font-size: 15px; font-weight: 900; letter-spacing: 0.16em;
+      color: #FFE066; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .eb-title {
+      display: block; font-size: 30px; font-weight: 900; line-height: 1.2; margin-top: 2px;
+      color: #FFFFFF; text-shadow: 0 4px 16px rgba(0,0,0,0.55), 0 0 22px rgba(255,215,0,0.85);
+    }
+    .evo-burst[data-tier="3"] .eb-title {
+      font-size: 34px;
+      background: linear-gradient(180deg, #FFFDE7 0%, #FFD54F 46%, #FF9800 100%);
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 3px 9px rgba(0,0,0,0.55));
+    }
+    .evo-burst[data-tier="3"] .eb-kicker { color: #B6F3FF; }
+
+    /* 진화 모달의 일러스트는 크고 배경 없이 */
+    .evo-img.art-img {
+      width: 210px; height: 210px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 14px rgba(22, 44, 84, 0.24));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sc-orbit, .sc-ring, .aura-fire, .aura-champion, .sc-cloud { animation: none !important; }
+      .evo-burst.show .eb-banner, .evo-burst.show .eb-flash, .evo-burst.show .eb-ring { animation-duration: 0.9s; }
+    }
   </style>
 </head>
 <body>
@@ -2365,7 +2678,7 @@
     <!-- 상단 글로벌 바 -->
     <div class="header-bar">
       <div class="top-action-row">
-        <div class="app-title-badge">🐾 우리 집 루틴 다마고치 <span class="app-version-chip" id="app-version-chip">v9.7</span></div>
+        <div class="app-title-badge">🐾 우리 집 루틴 다마고치 <span class="app-version-chip" id="app-version-chip">v9.8</span></div>
         <div class="top-sync-btns">
           <span class="sync-indicator-badge syncing" id="sync-status-badge" onclick="manualSyncNow()" title="터치하면 지금 바로 시트와 동기화합니다">🔄 첫 동기화 확인 중...</span>
           <button class="top-btn synergy-top-btn" id="synergy-top-btn" onclick="openSynergyModal()" style="display: none; background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D); color: #FFFFFF; font-weight: 900; animation: synergyPulse 1.5s infinite alternate; box-shadow: 0 0 12px rgba(255, 107, 107, 0.6); border: none;">⚡ 슈퍼 합체 출동!</button>
@@ -2407,12 +2720,26 @@
           </div>
         </div>
 
-        <div class="stage" id="stage-0">
+        <div class="stage" id="stage-0" data-tier="1">
+          <div class="scene" aria-hidden="true">
+            <span class="sc-sun"></span>
+            <span class="sc-cloud c1"></span>
+            <span class="sc-cloud c2"></span>
+            <span class="sc-cloud c3"></span>
+            <span class="sc-hills"></span>
+            <span class="sc-starfield"></span>
+            <span class="sc-flare"></span>
+            <span class="sc-ring r1"></span>
+            <span class="sc-ring r2"></span>
+            <span class="sc-orbit"></span>
+            <span class="sc-floor"></span>
+            <span class="sc-night"></span>
+          </div>
           <div class="pokemon-speech" id="speech-0">안녕! 오늘도 힘차게 출동! ✨</div>
           <div class="pokemon-wrapper" onclick="petPokemon(0)">
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-0"></div>
-            <div id="disp-0"></div>
+            <div id="disp-0" class="char-slot"></div>
             <div class="accessory-layer" id="acc-0"></div>
           </div>
 
@@ -2472,12 +2799,26 @@
           </div>
         </div>
 
-        <div class="stage" id="stage-1">
+        <div class="stage" id="stage-1" data-tier="1">
+          <div class="scene" aria-hidden="true">
+            <span class="sc-sun"></span>
+            <span class="sc-cloud c1"></span>
+            <span class="sc-cloud c2"></span>
+            <span class="sc-cloud c3"></span>
+            <span class="sc-hills"></span>
+            <span class="sc-starfield"></span>
+            <span class="sc-flare"></span>
+            <span class="sc-ring r1"></span>
+            <span class="sc-ring r2"></span>
+            <span class="sc-orbit"></span>
+            <span class="sc-floor"></span>
+            <span class="sc-night"></span>
+          </div>
           <div class="pokemon-speech" id="speech-1">부릉부릉! 출동 준비 완료! 🚜</div>
           <div class="pokemon-wrapper" onclick="petPokemon(1)">
             <div class="pokemon-shadow"></div>
             <div class="aura-ring" id="aura-1"></div>
-            <div id="disp-1"></div>
+            <div id="disp-1" class="char-slot"></div>
             <div class="accessory-layer" id="acc-1"></div>
           </div>
 
@@ -2525,6 +2866,18 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- 진화/레벨업 축하 폭발 연출 (v9.8) -->
+  <div class="evo-burst" id="evo-burst" data-tier="1" aria-hidden="true">
+    <div class="eb-flash"></div>
+    <div class="eb-ring"></div>
+    <div class="eb-ring d2"></div>
+    <div class="eb-ring d3"></div>
+    <div class="eb-banner">
+      <span class="eb-kicker" id="eb-kicker">LEVEL UP!</span>
+      <span class="eb-title" id="eb-title">새로운 모습!</span>
     </div>
   </div>
 
@@ -2692,7 +3045,7 @@
       <!-- 4-1. 앱 버전 & 캐시 새로고침 -->
       <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span id="app-version-label" style="font-size: 11px; font-weight: 800; color: #4A5568;">앱 버전 v9.7</span>
+          <span id="app-version-label" style="font-size: 11px; font-weight: 800; color: #4A5568;">앱 버전 v9.8</span>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <button class="top-btn" onclick="forceUpdateApp()" style="background: #3182CE; color: white;">🔄 최신 버전 새로고침</button>
             <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: #C05621; color: white;">🛡️ 응급 성장 복구</button>
@@ -3168,9 +3521,9 @@
         eggColor: '#F6AD55',
         dialogueType: 'excavator',
         species: [
-          { name: '꼬마 포크레인', isCustomSvg: 'excavator_baby' },
-          { name: '드릴 파워 굴착기', isCustomSvg: 'excavator_mid' },
-          { name: '포크레인 킹 로봇', isCustomSvg: 'titan_robot' }
+          { name: '꼬마 포크레인', img: 'assets/partners/excavator_1.webp', art: true },
+          { name: '드릴 파워 굴착기', img: 'assets/partners/excavator_2.webp', art: true },
+          { name: '포크레인 킹 로봇', img: 'assets/partners/excavator_3.webp', art: true }
         ]
       },
       {
@@ -3216,9 +3569,9 @@
         eggColor: '#FEB2B2',
         dialogueType: 'dump',
         species: [
-          { name: '꼬마 덤프', isCustomSvg: 'dump_baby' },
-          { name: '슈퍼 메가 덤프', isCustomSvg: 'dump_mid' },
-          { name: '덤프 타이탄 로봇', isCustomSvg: 'dump_robot' }
+          { name: '꼬마 덤프', img: 'assets/partners/dumptruck_1.webp', art: true },
+          { name: '슈퍼 메가 덤프', img: 'assets/partners/dumptruck_2.webp', art: true },
+          { name: '덤프 타이탄 로봇', img: 'assets/partners/dumptruck_3.webp', art: true }
         ]
       },
       {
@@ -3276,9 +3629,9 @@
         eggColor: '#FC8181',
         dialogueType: 'firetruck',
         species: [
-          { name: '꼬마 소방차', isCustomSvg: 'fire_baby' },
-          { name: '메가 사다리 소방차', isCustomSvg: 'fire_mid' },
-          { name: '하이퍼 레스큐 소방로봇', isCustomSvg: 'rescue_robot' }
+          { name: '꼬마 소방차', img: 'assets/partners/firetruck_1.webp', art: true },
+          { name: '메가 사다리 소방차', img: 'assets/partners/firetruck_2.webp', art: true },
+          { name: '하이퍼 레스큐 소방로봇', img: 'assets/partners/firetruck_3.webp', art: true }
         ]
       },
       {
@@ -3288,9 +3641,9 @@
         eggColor: '#90CDF4',
         dialogueType: 'police',
         species: [
-          { name: '꼬마 순찰차', isCustomSvg: 'police_baby' },
-          { name: '고속 추격 패트롤카', isCustomSvg: 'police_mid' },
-          { name: '저스티스 경찰로봇', isCustomSvg: 'police_robot' }
+          { name: '꼬마 순찰차', img: 'assets/partners/police_1.webp', art: true },
+          { name: '고속 추격 패트롤카', img: 'assets/partners/police_2.webp', art: true },
+          { name: '저스티스 경찰로봇', img: 'assets/partners/police_3.webp', art: true }
         ]
       },
       {
@@ -3314,9 +3667,9 @@
         eggColor: '#68D391',
         dialogueType: 'beast',
         species: [
-          { name: '꼬마 티라노', isCustomSvg: 'dino_baby' },
-          { name: '가시뿔 파이터 티라노', isCustomSvg: 'dino_mid' },
-          { name: '절대군주 티라노 킹', isCustomSvg: 'dino_king' }
+          { name: '꼬마 티라노', img: 'assets/partners/tyranno_1.webp', art: true },
+          { name: '가시뿔 파이터 티라노', img: 'assets/partners/tyranno_2.webp', art: true },
+          { name: '절대군주 티라노 킹', img: 'assets/partners/tyranno_3.webp', art: true }
         ]
       },
       {
@@ -4122,8 +4475,8 @@
     // =========================================================================
     // 🧬 v9.4~v9.7 안정성 엔진 — 데이터 정규화 · 필드단위 병합 · 검증된 클라우드 저장
     // =========================================================================
-    const APP_VERSION = 'v9.7';
-    const APP_BUILD = '2026-11-17 08:20';
+    const APP_VERSION = 'v9.8';
+    const APP_BUILD = '2026-11-20 15:40';
     const SCHEMA_VERSION = 4;
     const SHEET_CELL_LIMIT = 50000;   // 구글 시트 단일 셀 최대 문자 수
     const SHEET_BUDGET = 45000;       // 안전 예산 (셀 한도에서 5,000자 여유)
@@ -6114,7 +6467,9 @@
       [0, 1].forEach(idx => {
         const el = document.getElementById(`stage-${idx}`);
         if (el) {
-          el.className = `stage ${themeClass}`;
+          // v9.8: data-tier(성장 단계)는 그대로 두고 시간대 클래스만 교체합니다.
+          ['stage-morning', 'stage-day', 'stage-evening', 'stage-night'].forEach(c => el.classList.remove(c));
+          el.classList.add(themeClass);
         }
       });
     }
@@ -6155,7 +6510,7 @@
     }
 
     
-    function renderAutoAccessories(pIdx, level, isEgg) {
+    function renderAutoAccessories(pIdx, level, isEgg, isArt) {
       const accEl = document.getElementById(`acc-${pIdx}`);
       const partTagEl = document.getElementById(`part-tag-${pIdx}`);
       if (!accEl) return;
@@ -6220,7 +6575,7 @@
         tagText = '👑 평생 반려몬 황금 마스터!';
       }
 
-      accEl.innerHTML = accHtml;
+      accEl.innerHTML = isArt ? '' : accHtml;   // v9.8: 일러스트 캐릭터는 이모지 스티커 대신 몸체가 직접 진화합니다.
 
       if (partTagEl) {
         if (tagText) {
@@ -6275,6 +6630,11 @@
 
       if (crownEl) crownEl.style.display = stage.crown ? 'inline' : 'none';
 
+      // 🌟 v9.8 : 성장 단계(티어)를 무대에 반영 → 배경·오라·캐릭터가 통째로 바뀕니다.
+      const tierIdx = Math.max(0, Math.min(2, toNum(stage.speciesIdx, 0)));
+      const stageEl = document.getElementById(`stage-${pIdx}`);
+      if (stageEl) stageEl.dataset.tier = String(stage.isEgg ? 1 : tierIdx + 1);
+
       if (auraEl) {
         auraEl.className = 'aura-ring';
         if (stage.aura === 'sparkle') auraEl.classList.add('aura-sparkle');
@@ -6302,7 +6662,13 @@
           const expRatio = Math.min(1, (p.exp || 0) / stage.maxExp);
           const liveScale = (stage.scale * (1 + expRatio * 0.12)).toFixed(2);
 
-          if (currentSpecies.isCustomSvg) {
+          if (currentSpecies.art) {
+            // 고품질 일러스트: 단계가 오를수록 몸집도 커집니다 (1단계 → 2단계 → 3단계)
+            const artPct = Math.round([66, 85, 100][tierIdx] * (1 + expRatio * 0.05));
+            dispEl.innerHTML = `
+              <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img art-img ${sleepClass}" style="width:${artPct}%;height:${artPct}%;" decoding="async">
+            `;
+          } else if (currentSpecies.isCustomSvg) {
             dispEl.innerHTML = `
               <div class="${sleepClass}" style="display:flex; justify-content:center; align-items:center;">
                 ${renderCustomSvg(currentSpecies.isCustomSvg, liveScale)}
@@ -6320,7 +6686,7 @@
       }
 
       // 🔥 매일매일 자동으로 장착되는 다이내믹 파츠 렌더링!
-      renderAutoAccessories(pIdx, stage.level, stage.isEgg);
+      renderAutoAccessories(pIdx, stage.level, stage.isEgg, !!currentSpecies.art);
 
       const happiness = isHungryOrSleepy ? 40 : Math.min(100, 50 + (completedCount * 10));
       document.getElementById(`stat-pill-${pIdx}`).innerText = `❤️ 행복도 ${happiness}% · 습관 ${p.totalHabitsDone || 0}개 완료`;
@@ -6369,6 +6735,27 @@
 
     }
 
+    // 🌟 v9.8 : 다음 단계 일러스트를 미리 받아 두어 진화 순간이 끊기지 않게 합니다.
+    let partnerArtPreloaded = false;
+    function preloadPartnerArt() {
+      if (partnerArtPreloaded) return;
+      partnerArtPreloaded = true;
+      try {
+        [0, 1].forEach(i => {
+          const p = appData.profiles[i];
+          if (!p) return;
+          const fam = getFamily(p.partnerId);
+          (fam.species || []).forEach(sp => {
+            if (sp && sp.art && sp.img) {
+              const im = new Image();
+              im.decoding = 'async';
+              im.src = sp.img;
+            }
+          });
+        });
+      } catch (e) {}
+    }
+
     function renderBothProfiles() {
       hasRenderedOnce = true;
       updateTimeTheme();
@@ -6376,6 +6763,7 @@
       renderProfile(0);
       renderProfile(1);
       checkBrotherSynergyCondition();
+      preloadPartnerArt();
 
       // 세로 모드 탭 활성화 상태
       document.getElementById('tab-0').classList.toggle('active', appData.activeProfile === 0);
@@ -6468,6 +6856,23 @@
 
     let activeModalPIdx = 0;
 
+    // 🌟 v9.8 : 화면 전체 변신 섬광 + 대형 축하 배너
+    let evoBurstTimer = null;
+    function playEvolutionBurst(tier, title, kicker) {
+      const el = document.getElementById('evo-burst');
+      if (!el) return;
+      const kickEl = document.getElementById('eb-kicker');
+      const titleEl = document.getElementById('eb-title');
+      el.dataset.tier = String(Math.max(1, Math.min(3, toNum(tier, 1))));
+      if (kickEl) kickEl.textContent = kicker || 'LEVEL UP!';
+      if (titleEl) titleEl.textContent = title || '새로운 모습!';
+      el.classList.remove('show');
+      void el.offsetWidth;
+      el.classList.add('show');
+      clearTimeout(evoBurstTimer);
+      evoBurstTimer = setTimeout(() => el.classList.remove('show'), 2100);
+    }
+
     function triggerStageUp(pIdx, newLevel) {
       activeModalPIdx = pIdx;
       const p = appData.profiles[pIdx];
@@ -6528,7 +6933,18 @@
 
       ensurePartnerHistory(p);
 
-      if (currentSpecies.isCustomSvg) {
+      const newTierIdx = Math.max(0, Math.min(2, toNum(newStage.speciesIdx, 0)));
+      const prevTierIdx = Math.max(0, Math.min(2, toNum(getStageSpec(Math.max(0, newLevel - 1), p).speciesIdx, 0)));
+      const tierUp = newTierIdx > prevTierIdx;
+      playEvolutionBurst(
+        newTierIdx + 1,
+        currentSpecies.name,
+        tierUp ? (newTierIdx === 2 ? '최종 진화!' : '진화!') : 'LEVEL UP!'
+      );
+
+      if (currentSpecies.art) {
+        imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img art-img" alt="${currentSpecies.name}">`;
+      } else if (currentSpecies.isCustomSvg) {
         imgContainer.innerHTML = renderCustomSvg(currentSpecies.isCustomSvg, 1.2);
       } else {
         imgContainer.innerHTML = `<img src="${currentSpecies.img}" class="evo-img">`;
