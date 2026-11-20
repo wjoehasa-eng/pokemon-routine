@@ -2360,7 +2360,7 @@
        ============================================================ */
 
     /* 1) 캐릭터 무대 크기 : 아이패드/PC 240px+, 모바일도 넉넉하게 */
-    .stage { --char: 170px; }
+    .stage { --char: 186px; }
     @media (min-width: 700px) { .stage { --char: 228px; } }
     @media (orientation: landscape) and (min-width: 540px), (min-width: 800px) { .stage { --char: 252px; } }
     @media (min-width: 1200px) { .stage { --char: 288px; } }
@@ -2373,12 +2373,15 @@
     }
     .pokemon-img { max-width: 66%; max-height: 66%; }
     .pokemon-img.art-img {
-      width: 100%; height: 100%;
-      max-width: 100%; max-height: 100%;
+      width: var(--art, 100%) !important;
+      height: var(--art, 100%) !important;
+      max-width: 100% !important; max-height: 100% !important;
       object-fit: contain;
       filter: drop-shadow(0 8px 12px rgba(22, 44, 84, 0.22));
       will-change: transform;
     }
+    .stage[data-tier="2"] .pokemon-shadow { background: rgba(90, 50, 140, 0.22); }
+    .stage[data-tier="3"] .pokemon-shadow { background: rgba(255, 255, 255, 0.22); }
     .pokemon-shadow { width: 58%; height: 14px; bottom: 4px; }
 
     /* 2) 무대 배경(씬) 레이어 */
@@ -6664,9 +6667,9 @@
 
           if (currentSpecies.art) {
             // 고품질 일러스트: 단계가 오를수록 몸집도 커집니다 (1단계 → 2단계 → 3단계)
-            const artPct = Math.round([66, 85, 100][tierIdx] * (1 + expRatio * 0.05));
+            const artPct = Math.round([72, 86, 100][tierIdx] * (1 + expRatio * 0.04));
             dispEl.innerHTML = `
-              <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img art-img ${sleepClass}" style="width:${artPct}%;height:${artPct}%;" decoding="async">
+              <img src="${currentSpecies.img}" alt="${currentSpecies.name}" class="pokemon-img art-img ${sleepClass}" style="--art:${artPct}%;" decoding="async">
             `;
           } else if (currentSpecies.isCustomSvg) {
             dispEl.innerHTML = `
