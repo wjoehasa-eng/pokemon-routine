@@ -2357,6 +2357,7 @@
 
     /* ============================================================
        🌟 v9.8 — 핵심 5종 3D 일러스트 & 스테이지 진화 풀 이펙트
+       🎨 v9.9 — 2·3단계 그림톤 통일 (1단계 3D 토이 화풍 그대로) + 이미지 캐시 버스팅
        ============================================================ */
 
     /* 1) 캐릭터 무대 크기 : 아이패드/PC 240px+, 모바일도 넉넉하게 */
@@ -2691,7 +2692,7 @@
     <!-- 상단 글로벌 바 -->
     <div class="header-bar">
       <div class="top-action-row">
-        <div class="app-title-badge">🐾 우리 집 루틴 다마고치 <span class="app-version-chip" id="app-version-chip">v9.8</span></div>
+        <div class="app-title-badge">🐾 우리 집 루틴 다마고치 <span class="app-version-chip" id="app-version-chip">v9.9</span></div>
         <div class="top-sync-btns">
           <span class="sync-indicator-badge syncing" id="sync-status-badge" onclick="manualSyncNow()" title="터치하면 지금 바로 시트와 동기화합니다">🔄 첫 동기화 확인 중...</span>
           <button class="top-btn synergy-top-btn" id="synergy-top-btn" onclick="openSynergyModal()" style="display: none; background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD93D); color: #FFFFFF; font-weight: 900; animation: synergyPulse 1.5s infinite alternate; box-shadow: 0 0 12px rgba(255, 107, 107, 0.6); border: none;">⚡ 슈퍼 합체 출동!</button>
@@ -3058,7 +3059,7 @@
       <!-- 4-1. 앱 버전 & 캐시 새로고침 -->
       <div style="background: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span id="app-version-label" style="font-size: 11px; font-weight: 800; color: #4A5568;">앱 버전 v9.8</span>
+          <span id="app-version-label" style="font-size: 11px; font-weight: 800; color: #4A5568;">앱 버전 v9.9</span>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <button class="top-btn" onclick="forceUpdateApp()" style="background: #3182CE; color: white;">🔄 최신 버전 새로고침</button>
             <button class="top-btn" onclick="openEmergencyRestoreModal()" style="background: #C05621; color: white;">🛡️ 응급 성장 복구</button>
@@ -3534,9 +3535,9 @@
         eggColor: '#F6AD55',
         dialogueType: 'excavator',
         species: [
-          { name: '꼬마 포크레인', img: 'assets/partners/excavator_1.webp', art: true },
-          { name: '드릴 파워 굴착기', img: 'assets/partners/excavator_2.webp', art: true },
-          { name: '포크레인 킹 로봇', img: 'assets/partners/excavator_3.webp', art: true }
+          { name: '꼬마 포크레인', img: 'assets/partners/excavator_1.webp?v=99', art: true },
+          { name: '드릴 파워 굴착기', img: 'assets/partners/excavator_2.webp?v=99', art: true },
+          { name: '포크레인 킹 로봇', img: 'assets/partners/excavator_3.webp?v=99', art: true }
         ]
       },
       {
@@ -3582,9 +3583,9 @@
         eggColor: '#FEB2B2',
         dialogueType: 'dump',
         species: [
-          { name: '꼬마 덤프', img: 'assets/partners/dumptruck_1.webp', art: true },
-          { name: '슈퍼 메가 덤프', img: 'assets/partners/dumptruck_2.webp', art: true },
-          { name: '덤프 타이탄 로봇', img: 'assets/partners/dumptruck_3.webp', art: true }
+          { name: '꼬마 덤프', img: 'assets/partners/dumptruck_1.webp?v=99', art: true },
+          { name: '슈퍼 메가 덤프', img: 'assets/partners/dumptruck_2.webp?v=99', art: true },
+          { name: '덤프 타이탄 로봇', img: 'assets/partners/dumptruck_3.webp?v=99', art: true }
         ]
       },
       {
@@ -3642,9 +3643,9 @@
         eggColor: '#FC8181',
         dialogueType: 'firetruck',
         species: [
-          { name: '꼬마 소방차', img: 'assets/partners/firetruck_1.webp', art: true },
-          { name: '메가 사다리 소방차', img: 'assets/partners/firetruck_2.webp', art: true },
-          { name: '하이퍼 레스큐 소방로봇', img: 'assets/partners/firetruck_3.webp', art: true }
+          { name: '꼬마 소방차', img: 'assets/partners/firetruck_1.webp?v=99', art: true },
+          { name: '메가 사다리 소방차', img: 'assets/partners/firetruck_2.webp?v=99', art: true },
+          { name: '하이퍼 레스큐 소방로봇', img: 'assets/partners/firetruck_3.webp?v=99', art: true }
         ]
       },
       {
@@ -3654,9 +3655,9 @@
         eggColor: '#90CDF4',
         dialogueType: 'police',
         species: [
-          { name: '꼬마 순찰차', img: 'assets/partners/police_1.webp', art: true },
-          { name: '고속 추격 패트롤카', img: 'assets/partners/police_2.webp', art: true },
-          { name: '저스티스 경찰로봇', img: 'assets/partners/police_3.webp', art: true }
+          { name: '꼬마 순찰차', img: 'assets/partners/police_1.webp?v=99', art: true },
+          { name: '고속 추격 패트롤카', img: 'assets/partners/police_2.webp?v=99', art: true },
+          { name: '저스티스 경찰로봇', img: 'assets/partners/police_3.webp?v=99', art: true }
         ]
       },
       {
@@ -3680,9 +3681,9 @@
         eggColor: '#68D391',
         dialogueType: 'beast',
         species: [
-          { name: '꼬마 티라노', img: 'assets/partners/tyranno_1.webp', art: true },
-          { name: '가시뿔 파이터 티라노', img: 'assets/partners/tyranno_2.webp', art: true },
-          { name: '절대군주 티라노 킹', img: 'assets/partners/tyranno_3.webp', art: true }
+          { name: '꼬마 티라노', img: 'assets/partners/tyranno_1.webp?v=99', art: true },
+          { name: '가시뿔 파이터 티라노', img: 'assets/partners/tyranno_2.webp?v=99', art: true },
+          { name: '절대군주 티라노 킹', img: 'assets/partners/tyranno_3.webp?v=99', art: true }
         ]
       },
       {
@@ -4488,8 +4489,8 @@
     // =========================================================================
     // 🧬 v9.4~v9.7 안정성 엔진 — 데이터 정규화 · 필드단위 병합 · 검증된 클라우드 저장
     // =========================================================================
-    const APP_VERSION = 'v9.8';
-    const APP_BUILD = '2026-11-20 15:40';
+    const APP_VERSION = 'v9.9';
+    const APP_BUILD = '2026-11-20 16:20';
     const SCHEMA_VERSION = 4;
     const SHEET_CELL_LIMIT = 50000;   // 구글 시트 단일 셀 최대 문자 수
     const SHEET_BUDGET = 45000;       // 안전 예산 (셀 한도에서 5,000자 여유)
